@@ -30,7 +30,6 @@ bin
 .settings
 .project
 
-gradle
 log
 logs
 replays

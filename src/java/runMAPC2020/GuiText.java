@@ -26,17 +26,16 @@ public class GuiText
         }
         
         public List<String> listFiles() {
-            LinkedList<String> listFiles = new LinkedList();
+            List<String> listFiles = new LinkedList<>();
             File folder=null;
             try {
-                folder = new File( new File( "." ).getCanonicalPath());
+                folder = new File( new File( "src/jcm/" ).getCanonicalPath());
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             for (File fileEntry : folder.listFiles()) {
                 if (fileEntry.isFile() && fileEntry.getName().contains(".jcm")) {
-                    listFiles.add(fileEntry.getName());
+                    listFiles.add("src/jcm/"+fileEntry.getName());
                 } 
             }
             return listFiles;                   

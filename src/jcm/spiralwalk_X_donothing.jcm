@@ -83,29 +83,29 @@ focus: envb.artb10
 }
 
 workspace enva {
-artifact arta1: env.connection.EISAccess("clientconf/eisa1.json")
-artifact arta2: env.connection.EISAccess("clientconf/eisa2.json")
-artifact arta3: env.connection.EISAccess("clientconf/eisa3.json")
-artifact arta4: env.connection.EISAccess("clientconf/eisa4.json")
-artifact arta5: env.connection.EISAccess("clientconf/eisa5.json")
-artifact arta6: env.connection.EISAccess("clientconf/eisa6.json")
-artifact arta7: env.connection.EISAccess("clientconf/eisa7.json")
-artifact arta8: env.connection.EISAccess("clientconf/eisa8.json")
-artifact arta9: env.connection.EISAccess("clientconf/eisa9.json")
-artifact arta10: env.connection.EISAccess("clientconf/eisa10.json")
+artifact  arta1: connection.EISAccess("clientconf/eisa1.json")
+artifact  arta2: connection.EISAccess("clientconf/eisa2.json")
+artifact  arta3: connection.EISAccess("clientconf/eisa3.json")
+artifact  arta4: connection.EISAccess("clientconf/eisa4.json")
+artifact  arta5: connection.EISAccess("clientconf/eisa5.json")
+artifact  arta6: connection.EISAccess("clientconf/eisa6.json")
+artifact  arta7: connection.EISAccess("clientconf/eisa7.json")
+artifact  arta8: connection.EISAccess("clientconf/eisa8.json")
+artifact  arta9: connection.EISAccess("clientconf/eisa9.json")
+artifact arta10: connection.EISAccess("clientconf/eisa10.json")
 }
 
 workspace envb {
-artifact artb1: env.connection.EISAccess("clientconf/eisb1.json")
-artifact artb2: env.connection.EISAccess("clientconf/eisb2.json")
-artifact artb3: env.connection.EISAccess("clientconf/eisb3.json")
-artifact artb4: env.connection.EISAccess("clientconf/eisb4.json")
-artifact artb5: env.connection.EISAccess("clientconf/eisb5.json")
-artifact artb6: env.connection.EISAccess("clientconf/eisb6.json")
-artifact artb7: env.connection.EISAccess("clientconf/eisb7.json")
-artifact artb8: env.connection.EISAccess("clientconf/eisb8.json")
-artifact artb9: env.connection.EISAccess("clientconf/eisb9.json")
-artifact artb10: env.connection.EISAccess("clientconf/eisb10.json")
+artifact  artb1: connection.EISAccess("clientconf/eisb1.json")
+artifact  artb2: connection.EISAccess("clientconf/eisb2.json")
+artifact  artb3: connection.EISAccess("clientconf/eisb3.json")
+artifact  artb4: connection.EISAccess("clientconf/eisb4.json")
+artifact  artb5: connection.EISAccess("clientconf/eisb5.json")
+artifact  artb6: connection.EISAccess("clientconf/eisb6.json")
+artifact  artb7: connection.EISAccess("clientconf/eisb7.json")
+artifact  artb8: connection.EISAccess("clientconf/eisb8.json")
+artifact  artb9: connection.EISAccess("clientconf/eisb9.json")
+artifact artb10: connection.EISAccess("clientconf/eisb10.json")
 }
 
 

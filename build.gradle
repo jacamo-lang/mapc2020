@@ -1,15 +1,10 @@
 /*
-   Project JaCaMo REST
-
-   Gradle build file for JaCaMo Applications
-   October 13, 2018 - 16:23:38
+   Project JaCaMo for MAPC 2020
 */
 
 defaultTasks 'run'
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'maven-publish'
 
 version '0.1'
 group   'org.jacamo.mapc'
@@ -30,8 +25,8 @@ repositories {
 dependencies {
 	implementation 'org.jacamo:jacamo:0.8'
 	implementation 'org.jason-lang:jason:2.4'
-  implementation name: 'eismassim-4.1-jar-with-dependencies'
-  implementation name: 'server-2019-2.1-jar-with-dependencies'
+    implementation name: 'eismassim-4.1-jar-with-dependencies'
+    implementation name: 'server-2019-2.1-jar-with-dependencies'
 
 	testCompile group: 'junit', name: 'junit', version: '4.12'
 }
@@ -52,7 +47,7 @@ sourceSets {
 
 task run (type: JavaExec, dependsOn: 'classes') {
     group      ' MAPC'
-    description 'runs the team'
+    description 'run teams'
     doFirst {
         mkdir 'log'
     }
@@ -61,6 +56,7 @@ task run (type: JavaExec, dependsOn: 'classes') {
     args 'src/jcm/randomwalk_X_donothing.jcm'
     classpath sourceSets.main.runtimeClasspath
 }
+
 
 /*task run (type: JavaExec, dependsOn: 'classes') {
     group      ' MAPC'
@@ -85,4 +81,5 @@ clean {
     delete 'bin'
     delete 'build'
     delete 'log'
+    delete 'logs'
 }
