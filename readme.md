@@ -11,5 +11,5 @@ Execute `./gradlew run` and press enter to start the simulation and see the exec
 To add the project in your workspace, use the Eclipse menu `File|Import|Existing Gradle Project` and select the project directory.
 
 Then
-1. use gradle tasks to run the team
+1. use gradle tasks to run the team, or
 2. select and run `runMAPC2020.Run`
