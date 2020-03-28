@@ -4,7 +4,7 @@ JaCaMo team for [MAPC 2020](https://multiagentcontest.org/2020/)
 # Running a team
 
 
-Execute `./gradlew run` and press enter to start the simulation and see the execution on a (browser)[http://127.0.0.1:8000].
+Execute `./gradlew run` and press enter to start the simulation and see the execution on a [browser](http://127.0.0.1:8000).
 
 # Configuring an Eclipse Project
 
