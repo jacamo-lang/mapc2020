@@ -1,0 +1,87 @@
+/*
+   Project JaCaMo REST
+
+   Gradle build file for JaCaMo Applications
+   October 13, 2018 - 16:23:38
+*/
+
+defaultTasks 'run'
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
+
+version '0.1'
+group   'org.jacamo.mapc'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+
+    maven { url "http://jacamo.sourceforge.net/maven2" }
+    maven { url "https://raw.github.com/jacamo-lang/mvn-repo/master" }
+    flatDir {
+       dirs 'libs'
+    }
+}
+
+dependencies {
+	implementation 'org.jacamo:jacamo:0.8'
+	implementation 'org.jason-lang:jason:2.4'
+  implementation name: 'eismassim-4.1-jar-with-dependencies'
+  implementation name: 'server-2019-2.1-jar-with-dependencies'
+
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/env'
+            srcDir 'src/agt'
+            srcDir 'src/org'
+            srcDir 'src/java'
+        }
+        resources {
+            srcDir 'src/resources'
+        }
+    }
+}
+
+task run (type: JavaExec, dependsOn: 'classes') {
+    group      ' MAPC'
+    description 'runs the team'
+    doFirst {
+        mkdir 'log'
+    }
+    main 'runMAPC2020.RunTeam'
+    args 'randomwalk_X_donothing.jcm'
+    classpath sourceSets.main.runtimeClasspath
+}
+
+/*task run (type: JavaExec, dependsOn: 'classes') {
+    group      ' MAPC'
+    description 'runs the team1'
+    doFirst {
+        mkdir 'log'
+    }
+    main 'jacamo.infra.JaCaMoLauncher'
+    args 'randomwalk_X_donothing.jcm'
+    classpath sourceSets.main.runtimeClasspath
+}*/
+
+task fixTab {
+    ant.fixcrlf(eol: 'lf',  includes: '**/*.txt,**/*.bat, **/*.adoc', srcdir: '.')
+    ant.fixcrlf(tab: 'remove', tablength: '4', javafiles: 'true', includes: '**/*.java,**/*.xml', srcdir: 'src')
+    ant.fixcrlf(tab: 'remove', tablength: '4', javafiles: 'true', includes: '**/*.java,**/*.xml,**/*.asl,**/*.jcm', srcdir: '.')
+    //ant.fixcrlf(tab: 'remove', tablength: '4', javafiles: 'true', includes: '**/*.java,**/*.xml,**/*.asl,**/*.jcm,**/*.txt', srcdir: 'doc')
+}
+
+
+clean {
+    delete 'bin'
+    delete 'build'
+    delete 'log'
+}

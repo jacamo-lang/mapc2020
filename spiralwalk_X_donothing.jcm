@@ -1,5 +1,5 @@
 mas env.connection {
-	
+    
 agent agenta1: agentSpiralWalk.asl{ 
  join: enva
 focus: enva.arta1

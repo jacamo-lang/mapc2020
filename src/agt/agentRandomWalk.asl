@@ -3,9 +3,9 @@
 
 directions([n,s,w,e]).
 
-@step[atomic]	
+@step[atomic]   
 +step( S ): directions(LDIRECTIONS)
-	<-
-		.nth(math.floor(math.random(4)),LDIRECTIONS,D);
-		action(move(D));
-	.	
+    <-
+        .nth(math.floor(math.random(4)),LDIRECTIONS,D);
+        action(move(D));
+    .   
