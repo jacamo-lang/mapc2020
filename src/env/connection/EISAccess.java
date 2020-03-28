@@ -1,4 +1,4 @@
-package env.connection;
+package connection;
 
 //CArtAgO artifact code for project mapc2018udesc
 

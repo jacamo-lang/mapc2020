@@ -1,4 +1,4 @@
-package env.connection;
+package connection;
 
 import jason.JasonException;
 import jason.NoValueException;

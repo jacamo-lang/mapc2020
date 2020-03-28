@@ -1,83 +1,83 @@
 mas env.connection {
-    
-agent agenta1: agentSpiralWalk.asl{ 
+
+agent agenta1: agentRandomWalk.asl{
  join: enva
 focus: enva.arta1
 }
-agent agenta2: agentSpiralWalk.asl{ 
+agent agenta2: agentRandomWalk.asl{
  join: envb
 focus: enva.arta2
 }
-agent agenta3: agentSpiralWalk.asl{ 
+agent agenta3: agentRandomWalk.asl{
  join: enva
 focus: enva.arta3
 }
-agent agenta4: agentSpiralWalk.asl{ 
+agent agenta4: agentRandomWalk.asl{
  join: enva
 focus: enva.arta4
 }
-agent agenta5: agentSpiralWalk.asl{ 
+agent agenta5: agentRandomWalk.asl{
  join: enva
 focus: enva.arta5
 }
-agent agenta6: agentSpiralWalk.asl{ 
+agent agenta6: agentRandomWalk.asl{
  join: enva
 focus: enva.arta6
 }
-agent agenta7: agentSpiralWalk.asl{ 
+agent agenta7: agentRandomWalk.asl{
  join: enva
 focus: enva.arta7
 }
-agent agenta8: agentSpiralWalk.asl{ 
+agent agenta8: agentRandomWalk.asl{
  join: enva
 focus: enva.arta8
 }
-agent agenta9: agentSpiralWalk.asl{ 
+agent agenta9: agentRandomWalk.asl{
  join: enva
 focus: enva.arta9
 }
-agent agenta10: agentSpiralWalk.asl{ 
+agent agenta10: agentRandomWalk.asl{
  join: enva
 focus: enva.arta10
 }
 
-agent agentb1: agentDoNothing.asl{ 
+agent agentb1: agentDoNothing.asl{
  join: envb
 focus: envb.artb1
 }
-agent agentb2: agentDoNothing.asl{ 
+agent agentb2: agentDoNothing.asl{
  join: envb
 focus: envb.artb2
 }
-agent agentb3: agentDoNothing.asl{ 
+agent agentb3: agentDoNothing.asl{
  join: envb
 focus: envb.artb3
 }
-agent agentb4: agentDoNothing.asl{ 
+agent agentb4: agentDoNothing.asl{
  join: envb
 focus: envb.artb4
 }
-agent agentb5: agentDoNothing.asl{ 
+agent agentb5: agentDoNothing.asl{
  join: envb
 focus: envb.artb5
 }
-agent agentb6: agentDoNothing.asl{ 
+agent agentb6: agentDoNothing.asl{
  join: envb
 focus: envb.artb6
 }
-agent agentb7: agentDoNothing.asl{ 
+agent agentb7: agentDoNothing.asl{
  join: envb
 focus: envb.artb7
 }
-agent agentb8: agentDoNothing.asl{ 
+agent agentb8: agentDoNothing.asl{
  join: envb
 focus: envb.artb8
 }
-agent agentb9: agentDoNothing.asl{ 
+agent agentb9: agentDoNothing.asl{
  join: envb
 focus: envb.artb9
 }
-agent agentb10: agentDoNothing.asl{ 
+agent agentb10: agentDoNothing.asl{
  join: envb
 focus: envb.artb10
 }
@@ -108,6 +108,4 @@ artifact artb9: env.connection.EISAccess("clientconf/eisb9.json")
 artifact artb10: env.connection.EISAccess("clientconf/eisb10.json")
 }
 
- asl-path: src/agt
-src/agt/inc
- }
+}

@@ -31,3 +31,6 @@ bin
 .project
 
 gradle
+log
+logs
+replays

@@ -56,8 +56,9 @@ task run (type: JavaExec, dependsOn: 'classes') {
     doFirst {
         mkdir 'log'
     }
+    standardInput = System.in
     main 'runMAPC2020.RunTeam'
-    args 'randomwalk_X_donothing.jcm'
+    args 'src/jcm/randomwalk_X_donothing.jcm'
     classpath sourceSets.main.runtimeClasspath
 }
 
@@ -68,7 +69,7 @@ task run (type: JavaExec, dependsOn: 'classes') {
         mkdir 'log'
     }
     main 'jacamo.infra.JaCaMoLauncher'
-    args 'randomwalk_X_donothing.jcm'
+    args 'src/jcm/randomwalk_X_donothing.jcm'
     classpath sourceSets.main.runtimeClasspath
 }*/
 
