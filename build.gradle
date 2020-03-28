@@ -82,4 +82,5 @@ clean {
     delete 'build'
     delete 'log'
     delete 'logs'
+    delete 'replays'
 }
