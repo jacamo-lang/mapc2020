@@ -1,0 +1,113 @@
+mas env.connection {
+	
+agent agenta1: agentSpiralWalk.asl{ 
+ join: enva
+focus: enva.arta1
+}
+agent agenta2: agentSpiralWalk.asl{ 
+ join: envb
+focus: enva.arta2
+}
+agent agenta3: agentSpiralWalk.asl{ 
+ join: enva
+focus: enva.arta3
+}
+agent agenta4: agentSpiralWalk.asl{ 
+ join: enva
+focus: enva.arta4
+}
+agent agenta5: agentSpiralWalk.asl{ 
+ join: enva
+focus: enva.arta5
+}
+agent agenta6: agentSpiralWalk.asl{ 
+ join: enva
+focus: enva.arta6
+}
+agent agenta7: agentSpiralWalk.asl{ 
+ join: enva
+focus: enva.arta7
+}
+agent agenta8: agentSpiralWalk.asl{ 
+ join: enva
+focus: enva.arta8
+}
+agent agenta9: agentSpiralWalk.asl{ 
+ join: enva
+focus: enva.arta9
+}
+agent agenta10: agentSpiralWalk.asl{ 
+ join: enva
+focus: enva.arta10
+}
+
+agent agentb1: agentDoNothing.asl{ 
+ join: envb
+focus: envb.artb1
+}
+agent agentb2: agentDoNothing.asl{ 
+ join: envb
+focus: envb.artb2
+}
+agent agentb3: agentDoNothing.asl{ 
+ join: envb
+focus: envb.artb3
+}
+agent agentb4: agentDoNothing.asl{ 
+ join: envb
+focus: envb.artb4
+}
+agent agentb5: agentDoNothing.asl{ 
+ join: envb
+focus: envb.artb5
+}
+agent agentb6: agentDoNothing.asl{ 
+ join: envb
+focus: envb.artb6
+}
+agent agentb7: agentDoNothing.asl{ 
+ join: envb
+focus: envb.artb7
+}
+agent agentb8: agentDoNothing.asl{ 
+ join: envb
+focus: envb.artb8
+}
+agent agentb9: agentDoNothing.asl{ 
+ join: envb
+focus: envb.artb9
+}
+agent agentb10: agentDoNothing.asl{ 
+ join: envb
+focus: envb.artb10
+}
+
+workspace enva {
+artifact arta1: env.connection.EISAccess("clientconf/eisa1.json")
+artifact arta2: env.connection.EISAccess("clientconf/eisa2.json")
+artifact arta3: env.connection.EISAccess("clientconf/eisa3.json")
+artifact arta4: env.connection.EISAccess("clientconf/eisa4.json")
+artifact arta5: env.connection.EISAccess("clientconf/eisa5.json")
+artifact arta6: env.connection.EISAccess("clientconf/eisa6.json")
+artifact arta7: env.connection.EISAccess("clientconf/eisa7.json")
+artifact arta8: env.connection.EISAccess("clientconf/eisa8.json")
+artifact arta9: env.connection.EISAccess("clientconf/eisa9.json")
+artifact arta10: env.connection.EISAccess("clientconf/eisa10.json")
+}
+
+workspace envb {
+artifact artb1: env.connection.EISAccess("clientconf/eisb1.json")
+artifact artb2: env.connection.EISAccess("clientconf/eisb2.json")
+artifact artb3: env.connection.EISAccess("clientconf/eisb3.json")
+artifact artb4: env.connection.EISAccess("clientconf/eisb4.json")
+artifact artb5: env.connection.EISAccess("clientconf/eisb5.json")
+artifact artb6: env.connection.EISAccess("clientconf/eisb6.json")
+artifact artb7: env.connection.EISAccess("clientconf/eisb7.json")
+artifact artb8: env.connection.EISAccess("clientconf/eisb8.json")
+artifact artb9: env.connection.EISAccess("clientconf/eisb9.json")
+artifact artb10: env.connection.EISAccess("clientconf/eisb10.json")
+}
+
+ asl-path: src/agt
+src/agt/inc
+ }

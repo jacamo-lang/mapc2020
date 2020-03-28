@@ -1,0 +1,76 @@
+{
+  "server" : {
+    "tournamentMode" : "round-robin",
+    "teamsPerMatch" : 2,
+    "teamSize" : 10,
+    "launch" : "key",
+    "port" : 12300,
+    "backlog" : 10000,
+    "agentTimeout" : 4000,
+    "resultPath" : "results",
+    "logLevel" : "normal",
+    "logPath" : "logs",
+    "replayPath" : "replays",
+    "maxPacketLength" : 65536
+  },
+
+  "manual-mode" : [
+    ["A", "B"],
+    ["B", "C"],
+    ["A", "C"]
+  ],
+
+  "match" : [
+    {
+      "NOsetup" : "conf/setup/test.txt",
+
+      "steps" : 500,
+      "randomSeed" : 17,
+      "randomFail" : 1,
+      "entities" : [{"standard" : 10}],
+
+      "clearSteps" : 3,
+      "clearEnergyCost" : 30,
+      "disableDuration" : 4,
+      "maxEnergy" : 300,
+      "attachLimit" : 10,
+
+      "grid" : {
+        "height" : 50,
+        "width" : 50,
+        "NOfile" : "conf/maps/test40x40.bmp",
+        "instructions": [
+          ["cave", 0.45, 9, 5, 4],
+          ["line-border", 1],
+          ["ragged-border", 3]
+        ],
+        "goals": {
+          "number" : 3,
+          "size" : [1,2]
+        }
+      },
+
+      "blockTypes" : [3, 3],
+      "dispensers" : [5, 10],
+
+      "tasks" : {
+        "size" : [2, 4],
+        "duration" : [100, 200],
+        "probability" : 0.05
+      },
+
+      "events" : {
+        "chance" : 15,
+        "radius" : [3, 5],
+        "warning" : 5,
+        "create" : [-3, 1],
+        "perimeter" : 2
+      }
+    }
+  ],
+
+  "teams" : {
+    "A" : "$(teams/A.json)",
+    "B" : "$(teams/B.json)"
+  }
+}
