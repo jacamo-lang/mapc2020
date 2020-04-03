@@ -14,13 +14,14 @@ public class Control {
             @Override
             public void run() {
                 try {
+                    //Start the server
+                    Server.main(new String[] {"-conf", "serverconf/SampleConfig.json", "--monitor"});
                     //abre o browser automaticamente
                     if (browser && Desktop.isDesktopSupported()) {
                         Desktop.getDesktop().browse(new URI("http://127.0.0.1:8000"));
                     }
-                    Server.main(new String[] {"-conf", "serverconf/SampleConfig.json", "--monitor"});
                 } catch (UnsupportedOperationException e) {
-                	System.err.println("No browser supported "+e.getMessage());
+                    System.err.println("No browser supported "+e.getMessage());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
