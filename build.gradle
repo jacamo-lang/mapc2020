@@ -9,8 +9,8 @@ apply plugin: 'java'
 version '0.1'
 group   'org.jacamo.mapc'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 1.13
+targetCompatibility = 1.13
 
 repositories {
     mavenCentral()
@@ -43,6 +43,10 @@ sourceSets {
             srcDir 'src/resources'
         }
     }
+}
+
+if (JavaVersion.current() != project.targetCompatibility) {
+    throw new GradleException("The java version used ${JavaVersion.current()}, it is expected version ${project.targetCompatibility}.")
 }
 
 task run (type: JavaExec, dependsOn: 'classes') {
