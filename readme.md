@@ -33,7 +33,7 @@ Run once:
 docker volume create --name gradle-cache
 ```
 
-Run the team:
+Run the team (replace USERNAME with your username checking if .gradle/ location is correct):
 ```
-docker run -ti --rm -u gradle -v gradle-cache:/home/gradle/.gradle -v "$PWD":/home/gradle/project -w /home/gradle/project -p 8000:8000 gradle:6.3.0-jdk13 gradle run
+docker run -ti --rm -u gradle -v gradle-cache:/home/USERNAME/.gradle -v "$PWD":/home/USERNAME/project -w /home/USERNAME/project -p 8000:8000 gradle:6.3.0-jdk13 gradle run
 ```
