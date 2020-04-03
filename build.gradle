@@ -45,8 +45,8 @@ sourceSets {
     }
 }
 
-if (JavaVersion.current() != project.targetCompatibility) {
-    throw new GradleException("The java version used ${JavaVersion.current()}, it is expected version ${project.targetCompatibility}.")
+if (JavaVersion.current() < project.targetCompatibility) {
+    println "The java version used ${JavaVersion.current()}, it is expected version ${project.targetCompatibility}."
 }
 
 task run (type: JavaExec, dependsOn: 'classes') {
