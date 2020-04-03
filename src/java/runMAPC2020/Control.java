@@ -18,7 +18,9 @@ public class Control {
                     if (browser && Desktop.isDesktopSupported()) {
                         Desktop.getDesktop().browse(new URI("http://127.0.0.1:8000"));
                     }
-                    Server.main(new String[] {"-conf", "serverconf/SampleConfig.json", "--monitor"});                   
+                    Server.main(new String[] {"-conf", "serverconf/SampleConfig.json", "--monitor"});
+                } catch (UnsupportedOperationException e) {
+                	System.err.println("No browser supported "+e.getMessage());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
