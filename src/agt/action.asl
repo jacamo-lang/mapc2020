@@ -1,9 +1,9 @@
-+!do( A ) : not step(_)  // not started yet
++!do( A,R ) : not step(_)  // not started yet
     <- .wait( {+step(_)} );
-       !do(A)
+       !do(A,R)
     .
 
-+!do( A ) : step(S)
++!do( A,R ) : step(S)
     <- action(A);
        //.print("Doing ",A," at step ",S);
        // wait next step
@@ -11,6 +11,8 @@
        if (lastActionResult(failed_random)) {
          // try again
          .print(A," randomly failed, trying again ...");
-         !do(A);
+         !do(A,R);
+       } else {
+         ?lastActionResult(R);
        }
     .

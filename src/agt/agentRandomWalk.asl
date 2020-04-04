@@ -21,6 +21,6 @@ directions([n,s,w,e]).
 
 +!walk : directions(LDIRECTIONS)
    <- .nth(math.floor(math.random(4)),LDIRECTIONS,D);
-      !do(move(D));
+      !do(move(D),R); // R is the result of the execution, success, fail, ...
       !walk;
    .
