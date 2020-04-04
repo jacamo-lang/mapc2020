@@ -30,13 +30,13 @@ public class EISAccess extends Artifact implements AgentListener {
     private List<ObsProperty> lastRoundPropeties = new ArrayList<>();
 
     void init(String conf) {
-        ei = new EnvironmentInterface(conf);
-        this.Agname = ei.getEntities().getFirst();
-        try {
-            ei.start();
-        } catch (ManagementException e) {
-            e.printStackTrace();
-        }
+         ei = new EnvironmentInterface(conf);     
+         this.Agname=ei.getEntities().get(0);
+            try {
+                ei.start();
+            } catch (ManagementException e) {
+                e.printStackTrace();
+            }
 
         try {
             ei.registerAgent(this.Agname);
@@ -72,12 +72,14 @@ public class EISAccess extends Artifact implements AgentListener {
                     boolean newstep = true;
                     for (Percept pe : lp) {
                         if (pe.getName().equals("step")) {
-                            if (pe.getParameters().getFirst().toString().equals(this.lastStep)) {
-                                newstep = false;
+                            if (pe.getParameters().get(0).toString().equals(this.lastStep)) {
+                                newstep=false;
                                 break;
                             } else {
                                 this.lastStep = pe.getParameters().getFirst().toString();
                             }
+                            else 
+                                this.lastStep=pe.getParameters().get(0).toString();
                         }
                     }
                     if (newstep) {

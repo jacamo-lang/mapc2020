@@ -25,8 +25,8 @@ repositories {
 dependencies {
 	implementation 'org.jacamo:jacamo:0.8'
 	implementation 'org.jason-lang:jason:2.4'
-    implementation name: 'eismassim-4.1-jar-with-dependencies'
-    implementation name: 'server-2019-2.1-jar-with-dependencies'
+    implementation name: 'eismassim-4.2-jar-with-dependencies'
+    implementation name: 'server-2020-1.0-jar-with-dependencies'
 
 	testCompile group: 'junit', name: 'junit', version: '4.12'
 }

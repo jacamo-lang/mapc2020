@@ -1,62 +1,62 @@
 mas env.connection {
 
-agent agenta0: agentRandomWalk.asl{
+agent agenta0: agentDoNothing.asl{
  join: enva
 focus: enva.arta0
 }
-agent agenta1: agentRandomWalk.asl{
+agent agenta1: agentDoNothing.asl{
  join: envb
 focus: enva.arta1
 }
-agent agenta2: agentRandomWalk.asl{
+agent agenta2: agentDoNothing.asl{
  join: enva
 focus: enva.arta2
 }
-agent agenta3: agentRandomWalk.asl{
+agent agenta3: agentDoNothing.asl{
  join: enva
 focus: enva.arta3
 }
-agent agenta4: agentRandomWalk.asl{
+agent agenta4: agentDoNothing.asl{
  join: enva
 focus: enva.arta4
 }
-agent agenta5: agentRandomWalk.asl{
+agent agenta5: agentDoNothing.asl{
  join: enva
 focus: enva.arta5
 }
-agent agenta6: agentRandomWalk.asl{
+agent agenta6: agentDoNothing.asl{
  join: enva
 focus: enva.arta6
 }
-agent agenta7: agentRandomWalk.asl{
+agent agenta7: agentDoNothing.asl{
  join: enva
 focus: enva.arta7
 }
-agent agenta8: agentRandomWalk.asl{
+agent agenta8: agentDoNothing.asl{
  join: enva
 focus: enva.arta8
 }
-agent agenta9: agentRandomWalk.asl{
+agent agenta9: agentDoNothing.asl{
  join: enva
 focus: enva.arta9
 }
-agent agenta10: agentRandomWalk.asl{
+agent agenta10: agentDoNothing.asl{
  join: enva
 focus: enva.arta10
 }
-agent agenta11: agentRandomWalk.asl{
+agent agenta11: agentDoNothing.asl{
  join: enva
 focus: enva.arta11
 }
-agent agenta12: agentRandomWalk.asl{
+agent agenta12: agentDoNothing.asl{
  join: enva
 focus: enva.arta12
 }
-agent agenta13: agentRandomWalk.asl{
+agent agenta13: agentDoNothing.asl{
  join: enva
 focus: enva.arta13
 }
-agent agenta14: agentRandomWalk.asl{
+agent agenta14: agentDoNothing.asl{
  join: enva
 focus: enva.arta14
 }

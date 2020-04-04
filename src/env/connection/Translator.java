@@ -15,6 +15,7 @@ import jason.asSyntax.parser.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 
 import eis.iilang.Action;
 import eis.iilang.Function;
@@ -53,9 +54,10 @@ public class Translator {
             if((d == Math.floor(d)) && !Double.isInfinite(d)) return new Numeral((int)d);
             return new Numeral(d);
         } else if (t.isList()) {
-            Collection<Parameter> terms = new ArrayList<Parameter>();
-            for (Term listTerm : (ListTerm) t)
-                terms.add(termToParameter(listTerm));
+        	ListTerm lt=(ListTerm) t;
+            Parameter[] terms = new Parameter[lt.size()];
+            for (int i=0;i<lt.size();i++)
+                terms[i]=termToParameter(lt.get(i));
             return new ParameterList(terms);
         } else if (t.isString()) {
             return new Identifier(((StringTerm) t).getString());
@@ -97,13 +99,13 @@ public class Translator {
     
     
     
-    public static Term[] parametersToTerms(LinkedList<Parameter> pe) {
-        Term [] ret = new Term[pe.size()];
+    public static Term[] parametersToTerms(List<Parameter> list) {
+        Term [] ret = new Term[list.size()];
         Term aux=null;
-        for (int i=0; i<pe.size();i++) {
+        for (int i=0; i<list.size();i++) {
             aux=null;
-            if (pe.get(i) instanceof Numeral) {
-                aux = ASSyntax.createNumber(((Numeral) pe.get(i)).getValue().doubleValue());
+            if (list.get(i) instanceof Numeral) {
+                aux = ASSyntax.createNumber(((Numeral) list.get(i)).getValue().doubleValue());
             } //else if (pe.get(i) instanceof Identifier) {
 //              try {
 //                  Identifier id = (Identifier) pe.get(i);
@@ -114,11 +116,11 @@ public class Translator {
 //              }
             else {
                 try {                   
-                    if (pe.get(i).toProlog().equals("")) {
+                    if (list.get(i).toProlog().equals("")) {
                         aux = ASSyntax.createLiteral("null");
                     }
                     else {
-                        aux = ASSyntax.parseTerm(pe.get(i).toString().toLowerCase());//pe.get(i).toProlog());
+                        aux = ASSyntax.parseTerm(list.get(i).toString().toLowerCase());//pe.get(i).toProlog());
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();
