@@ -76,10 +76,8 @@ public class EISAccess extends Artifact implements AgentListener {
                                 newstep=false;
                                 break;
                             } else {
-                                this.lastStep = pe.getParameters().getFirst().toString();
+                                this.lastStep = pe.getParameters().get(0).toString();
                             }
-                            else 
-                                this.lastStep=pe.getParameters().get(0).toString();
                         }
                     }
                     if (newstep) {
