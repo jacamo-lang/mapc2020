@@ -1,12 +1,16 @@
 package connection;
 
+import java.util.ArrayList;
+
 //CArtAgO artifact code for project mapc2018udesc
 
 import java.util.Collection;
-import java.util.ArrayList;
+import java.util.List;
 
-
-import cartago.*;
+import cartago.Artifact;
+import cartago.INTERNAL_OPERATION;
+import cartago.OPERATION;
+import cartago.ObsProperty;
 import eis.AgentListener;
 import eis.exceptions.AgentException;
 import eis.exceptions.ManagementException;
@@ -17,90 +21,101 @@ import jason.asSyntax.Literal;
 import massim.eismassim.EnvironmentInterface;
 
 public class EISAccess extends Artifact implements AgentListener {
-    
- private EnvironmentInterface ei;
- private String Agname="";
- private Boolean receiving=false;
- private int awaitTime = 100;
- private String lastStep = "-1";
- private ArrayList<ObsProperty> lastRoundPropeties = new ArrayList<ObsProperty>();
+
+    private EnvironmentInterface ei;
+    private String Agname = "";
+    private Boolean receiving = false;
+    private int awaitTime = 100;
+    private String lastStep = "-1";
+    private List<ObsProperty> lastRoundPropeties = new ArrayList<>();
 
     void init(String conf) {
-         ei = new EnvironmentInterface(conf);
-         this.Agname=ei.getEntities().getFirst();
-            try {
-                ei.start();
-            } catch (ManagementException e) {
-                e.printStackTrace();
-            }
+        ei = new EnvironmentInterface(conf);
+        this.Agname = ei.getEntities().getFirst();
+        try {
+            ei.start();
+        } catch (ManagementException e) {
+            e.printStackTrace();
+        }
 
-         try {
-             ei.registerAgent(this.Agname);
-         } catch (AgentException e1) {
+        try {
+            ei.registerAgent(this.Agname);
+        } catch (AgentException e1) {
             e1.printStackTrace();
-         }
+        }
 
-         ei.attachAgentListener(this.Agname, this);
+        ei.attachAgentListener(this.Agname, this);
 
-         try {
-             ei.associateEntity(this.Agname, this.Agname);
-         } catch (RelationException e1) {
-             e1.printStackTrace();
-         }
-            if (ei != null) {
-                this.receiving = true;
-                execInternalOp("updatepercept");
-            }
+        try {
+            ei.associateEntity(this.Agname, this.Agname);
+        } catch (RelationException e1) {
+            e1.printStackTrace();
+        }
+        if (ei != null) {
+            this.receiving = true;
+            execInternalOp("updatepercept");
+        }
     }
-    
-    
-    @INTERNAL_OPERATION void updatepercept() {      
+
+    @INTERNAL_OPERATION
+    void updatepercept() {
         while (!ei.isEntityConnected(this.Agname)) {
             await_time(this.awaitTime);
         }
-        
+
+        // TODO: could we use a kind of callback instead of pooling?
         while (this.receiving) {
             if (ei != null) {
-                
+
                 try {
-                    Collection<Percept> lp = 
-                            ei.getAllPercepts(this.Agname).get(this.Agname);    
-                    boolean newstep=true;
-                    for (Percept pe:lp) {
+                    Collection<Percept> lp = ei.getAllPercepts(this.Agname).get(this.Agname);
+                    boolean newstep = true;
+                    for (Percept pe : lp) {
                         if (pe.getName().equals("step")) {
                             if (pe.getParameters().getFirst().toString().equals(this.lastStep)) {
-                                newstep=false;
+                                newstep = false;
                                 break;
+                            } else {
+                                this.lastStep = pe.getParameters().getFirst().toString();
                             }
-                            else 
-                                this.lastStep=pe.getParameters().getFirst().toString();
                         }
                     }
                     if (newstep) {
-                        clearpercepts();                        
-                        for (Percept pe:lp) {                           
-                            this.lastRoundPropeties.add( defineObsProperty( pe.getName(),
-                                                Translator.parametersToTerms(pe.getClonedParameters())));
+                        clearpercepts();
+                        Percept step = null;
+                        for (Percept pe : lp) {
+                            // add step as the last perception
+                            if (pe.getName().equals("step")) {
+                                step = pe;
+                            } else {
+                                this.lastRoundPropeties.add(defineObsProperty(pe.getName(),
+                                    Translator.parametersToTerms(pe.getClonedParameters())));
                             }
+                        }
+                        if (step != null)
+                            this.lastRoundPropeties.add(defineObsProperty(step.getName(),
+                                Translator.parametersToTerms(step.getClonedParameters())));
+                        
                     }
-                } catch (Exception e) {     
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
             await_time(this.awaitTime);
         }
-        
+
     }
-    private void clearpercepts () {
-        for (ObsProperty obs:this.lastRoundPropeties) 
+
+    private void clearpercepts() {
+        for (ObsProperty obs : this.lastRoundPropeties)
             removeObsProperty(obs.getName());
         this.lastRoundPropeties.clear();
     }
-    
+
     @OPERATION
     void action(String action) {
         Literal literal = Literal.parseLiteral(action);
-        //System.out.println("***************"+action);
+        // System.out.println("***************"+action);
         Action a = null;
         try {
             if (ei != null) {
@@ -111,8 +126,7 @@ public class EISAccess extends Artifact implements AgentListener {
             e.printStackTrace();
         }
     }
-    
-    public void handlePercept(String arg0, Percept arg1) {}
-//  
-    
+
+    public void handlePercept(String arg0, Percept arg1) {
+    }
 }
