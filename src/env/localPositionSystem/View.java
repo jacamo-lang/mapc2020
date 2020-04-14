@@ -27,7 +27,7 @@ public class View extends JFrame
         public View() {
                         
             setTitle("viewer");
-            setPreferredSize(new Dimension(800,800));                   
+            setPreferredSize(new Dimension(700,700));                   
             setLayout(new BorderLayout());
                 
             add(this.table, BorderLayout.CENTER);
@@ -68,7 +68,25 @@ public class View extends JFrame
             case "self":
                 c = Color.GREEN;
                 break;
+	        case "agent":
+	            c = Color.RED;
+	            break;
+	        }
+            //* ajuste do toroide
+            if (i>39) {
+            	i=i-80;
+            	
+            } 
+            else if (i<-40) {
+            	i=i+80;	
+            } 
+            if (j>39) {
+            	j=j-80;
             }
+            else if (j<-40) {
+            	j=j+80;
+            }
+            //---------------
             this.map[40+i][40+j].setBackground(c);
             this.map[40+i][40+j].setToolTipText( "("+String.valueOf(i)+
                                                  ","+String.valueOf(j)+") - "+
@@ -99,7 +117,7 @@ public class View extends JFrame
             }
         }
         private BufferedImage emptyImage() {
-            BufferedImage bi = new BufferedImage( 7, 7, 
+            BufferedImage bi = new BufferedImage( 6, 6, 
                                             BufferedImage.TYPE_INT_ARGB);
             Graphics g = bi.getGraphics();          
             g.dispose();
