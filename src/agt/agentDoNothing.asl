@@ -6,3 +6,5 @@
     <-
         action(skip);
     .   
+
++!areyou(_,_,_,_,_,_) <- true.

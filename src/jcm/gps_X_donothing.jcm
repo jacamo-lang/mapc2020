@@ -1,64 +1,63 @@
 mas env.connection {
-
-agent agenta0: agentLPS.asl{
+agent agenta0: agentGPS.asl{
  join: enva
-focus: enva.arta0, artLPS
+focus: enva.arta0, artGPS
 }
-agent agenta1: agentLPS.asl{
+agent agenta1: agentGPS.asl{
  join: envb
-focus: enva.arta1, artLPS
+focus: enva.arta1, artGPS
 }
-agent agenta2: agentLPS.asl{
+agent agenta2: agentGPS.asl{
  join: enva
-focus: enva.arta2, artLPS
+focus: enva.arta2, artGPS
 }
-agent agenta3: agentLPS.asl{
+agent agenta3: agentGPS.asl{
  join: enva
-focus: enva.arta3, artLPS
+focus: enva.arta3, artGPS
 }
-agent agenta4: agentLPS.asl{
+agent agenta4: agentGPS.asl{
  join: enva
-focus: enva.arta4, artLPS
+focus: enva.arta4, artGPS
 }
-agent agenta5: agentLPS.asl{
+agent agenta5: agentGPS.asl{
  join: enva
-focus: enva.arta5, artLPS
+focus: enva.arta5, artGPS
 }
-agent agenta6: agentLPS.asl{
+agent agenta6: agentGPS.asl{
  join: enva
-focus: enva.arta6, artLPS
+focus: enva.arta6, artGPS
 }
-agent agenta7: agentLPS.asl{
+agent agenta7: agentGPS.asl{
  join: enva
-focus: enva.arta7, artLPS
+focus: enva.arta7, artGPS
 }
-agent agenta8: agentLPS.asl{
+agent agenta8: agentGPS.asl{
  join: enva
-focus: enva.arta8, artLPS
+focus: enva.arta8, artGPS
 }
-agent agenta9: agentLPS.asl{
+agent agenta9: agentGPS.asl{
  join: enva
-focus: enva.arta9, artLPS
+focus: enva.arta9, artGPS
 }
-agent agenta10: agentLPS.asl{
+agent agenta10: agentGPS.asl{
  join: enva
-focus: enva.arta10, artLPS
+focus: enva.arta10, artGPS
 }
-agent agenta11: agentLPS.asl{
+agent agenta11: agentGPS.asl{
  join: enva
-focus: enva.arta11, artLPS
+focus: enva.arta11, artGPS
 }
-agent agenta12: agentLPS.asl{
+agent agenta12: agentGPS.asl{
  join: enva
-focus: enva.arta12, artLPS
+focus: enva.arta12, artGPS
 }
-agent agenta13: agentLPS.asl{
+agent agenta13: agentGPS.asl{
  join: enva
-focus: enva.arta13, artLPS
+focus: enva.arta13, artGPS
 }
-agent agenta14: agentLPS.asl{
+agent agenta14: agentGPS.asl{
  join: enva
-focus: enva.arta14, artLPS
+focus: enva.arta14, artGPS
 }
 
 
@@ -140,7 +139,7 @@ artifact  arta11: connection.EISAccess("clientconf/eisa11.json")
 artifact  arta12: connection.EISAccess("clientconf/eisa12.json")
 artifact  arta13: connection.EISAccess("clientconf/eisa13.json")
 artifact  arta14: connection.EISAccess("clientconf/eisa14.json")
-artifact  artLPS: localPositionSystem.lps
+artifact  artGPS: localPositionSystem.lps
 }
 
 workspace envb {
