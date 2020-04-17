@@ -54,7 +54,7 @@ public class Translator {
             if((d == Math.floor(d)) && !Double.isInfinite(d)) return new Numeral((int)d);
             return new Numeral(d);
         } else if (t.isList()) {
-        	ListTerm lt=(ListTerm) t;
+            ListTerm lt=(ListTerm) t;
             Parameter[] terms = new Parameter[lt.size()];
             for (int i=0;i<lt.size();i++)
                 terms[i]=termToParameter(lt.get(i));

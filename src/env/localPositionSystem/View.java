@@ -68,23 +68,23 @@ public class View extends JFrame
             case "self":
                 c = Color.GREEN;
                 break;
-	        case "agent":
-	            c = Color.RED;
-	            break;
-	        }
+            case "agent":
+                c = Color.RED;
+                break;
+            }
             //* ajuste do toroide
             if (i>39) {
-            	i=i-80;
-            	
+                i=i-80;
+                
             } 
             else if (i<-40) {
-            	i=i+80;	
+                i=i+80; 
             } 
             if (j>39) {
-            	j=j-80;
+                j=j-80;
             }
             else if (j<-40) {
-            	j=j+80;
+                j=j+80;
             }
             //---------------
             this.map[40+i][40+j].setBackground(c);
