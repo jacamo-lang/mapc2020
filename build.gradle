@@ -57,7 +57,7 @@ task run (type: JavaExec, dependsOn: 'classes') {
     }
     standardInput = System.in
     main 'runMAPC2020.RunTeam'
-    args = ['src/jcm/randomwalk_X_donothing.jcm','browser']
+    args = ['src/jcm/gps_X_donothing.jcm','browser']
     classpath sourceSets.main.runtimeClasspath
 }
 
