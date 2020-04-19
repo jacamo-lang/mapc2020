@@ -97,6 +97,21 @@ public class View extends JFrame
         }
         
         public void unmark(int i, int j) {
+            //* ajuste do toroide
+            if (i>39) {
+                i=i-80;
+                
+            } 
+            else if (i<-40) {
+                i=i+80; 
+            } 
+            if (j>39) {
+                j=j-80;
+            }
+            else if (j<-40) {
+                j=j+80;
+            }
+            //--------------- 
             this.map[40+i][40+j].setBackground(Color.LIGHT_GRAY);
             this.map[40+i][40+j].repaint();
         }
