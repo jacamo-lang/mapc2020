@@ -25,10 +25,8 @@ classifyintention(X[critical_section(CS), priority(P)],
 				classifyintention(X[critical_section(CS), priority(P)],T,R).
 
 highpriority(INTENTIONS,INTENTION[critical_section(CS), priority(P)]):-
-			.member(INTENTION[critical_section(CS), priority(P)],INTENTIONS). 
-//			&
-//			not (.member(IT[critical_section(CS), priority(PIT)],INTENTIONS) & 
-//				  PIT>P).	
+			.member(INTENTION[priority(P)],INTENTIONS) &
+			not (.member(IT[priority(PIT)],INTENTIONS) & PIT>P).	
 
 /* Initial goals */
 
@@ -45,8 +43,8 @@ highpriority(INTENTIONS,INTENTION[critical_section(CS), priority(P)]):-
 		//priority(2) -> prioridade quanto maior mais prioritario
 		!!intention(1)[critical_section(1), priority(2)];
 		!!intention(2)[critical_section(1), priority(10)];
-		!!intention(3)[critical_section(2), priority(1)];
-		!!intention(4)[critical_section(2), priority(5)];
+		!!intention(3)[critical_section(2), priority(5)];
+		!!intention(4)[critical_section(2), priority(2)];
 	.
 
 +!intention(X)[critical_section(CS), priority(P)] :
