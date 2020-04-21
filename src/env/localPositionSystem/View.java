@@ -23,6 +23,7 @@ public class View extends JFrame
         
         private JPanel table = new JPanel(new GridBagLayout());         
         private JLabel [][] map = new JLabel [81][81];
+    private Color DEFAULT_COLOR;
             
         public View() {
                         
@@ -71,6 +72,9 @@ public class View extends JFrame
             case "agent":
                 c = Color.RED;
                 break;
+            case "vision":
+                c = Color.GRAY;    
+                break;
             }
             //* ajuste do toroide
             if (i>39) {
@@ -87,7 +91,8 @@ public class View extends JFrame
                 j=j+80;
             }
             //---------------
-            this.map[40+i][40+j].setBackground(c);
+            if(c!=Color.GRAY|this.map[40+i][40+j].getBackground()==DEFAULT_COLOR) //do not overwrite with the vision mark
+               this.map[40+i][40+j].setBackground(c);
             this.map[40+i][40+j].setToolTipText( "("+String.valueOf(i)+
                                                  ","+String.valueOf(j)+") - "+
                                                  info);
@@ -130,6 +135,7 @@ public class View extends JFrame
                     this.map[i][j]=tmp;
                 }
             }
+            DEFAULT_COLOR = map[0][0].getBackground();
         }
         private BufferedImage emptyImage() {
             BufferedImage bi = new BufferedImage( 6, 6, 
