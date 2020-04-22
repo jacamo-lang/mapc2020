@@ -1,6 +1,7 @@
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
 { include("action.asl") }
+{ include("taskmanager.asl") }
 
 buildscene(SIZE, SIZE, _, _,[]).
 
@@ -52,18 +53,33 @@ myposition(0,0).
 
 !start.
 
-+!start: true
++!start: 
+	true
     <-
         .wait(step(_));
-        ?name(NAME);
+        ?name(NAME);        
         +origin(NAME);
-        !!move (w,0,1);
+        !!move (w,0,1)[critical_section(action), priority(1)];
     .
 
-+!move(D,S,LENTGH): 
+
++disabled(true):
 	true
 	<-
-      if (S=LENGTH) {
+		.print("recharging...");
+		!!recharge[critical_section(action), priority(2)];
+	.
+
++!recharge:
+	true
+	<-
+		!do(skip,R);
+	.
+	
++!move(D,S,LENGTH): 
+	true
+	<-
+	  if (S=LENGTH) {
       	?nextDirection(D,ND);
         NS=0;
         NL=LENGTH+1;
@@ -73,23 +89,15 @@ myposition(0,0).
       	NS=S+1;
       	NL=LENGTH;
       }
-      
       !do(move(ND),R);
       
       if (R=failed_path) {
     	?nextDirection(ND,NND);   
-        if(name(agenta0)) {
-      		.print("fpath ---> ",move(NND,0,NL));
-      	}
-        !!move(NND,0,NL);
+        !!move(NND,0,NL)[critical_section(action), priority(1)];
       }
       if (R=success) {
       	!mapping(ND);
-      	
-      	if(name(agenta0)) {
-      		.print("success ---> ",move(ND,NS,NL));
-      	}
-      	!!move(ND,NS,NL);
+      	!!move(ND,NS,NL)[critical_section(action), priority(1)];
       }     
 	.
 
@@ -121,7 +129,7 @@ myposition(0,0).
 .
 
 +!sincMap(XR,YR): origin(OL) & originlead(OL) &
-                  (math.abs(XR+1) * math.abs(YR+1)>3) & //TAMANHO DA JANELA 
+                  (math.abs(XR+1) * math.abs(YR+1)>2) & //TAMANHO DA JANELA 
                   myposition(AX,AY)
     <-  
         .findall(m(I,J,goal),goal(I,J) & pertinence(XR,YR,I,J) ,G);
