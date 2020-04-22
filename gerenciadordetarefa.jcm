@@ -14,7 +14,7 @@
 
 mas gerenciadordetarefa {
 
-    agent task_manager
+    agent exampletaskmanager
 
     
 

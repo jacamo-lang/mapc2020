@@ -1,0 +1,20 @@
+Error that can not be printed in the MAS Console!
+java.lang.InterruptedException
+java.lang.InterruptedException
+	at java.base/java.lang.Object.wait(Native Method)
+	at java.base/java.lang.Object.wait(Object.java:326)
+	at java.desktop/java.awt.EventQueue.invokeAndWait(EventQueue.java:1361)
+	at java.desktop/java.awt.EventQueue.invokeAndWait(EventQueue.java:1342)
+	at java.desktop/javax.swing.SwingUtilities.invokeAndWait(SwingUtilities.java:1480)
+	at jason.runtime.MASConsoleGUI.append(MASConsoleGUI.java:174)
+	at jason.runtime.MASConsoleLogHandler.publish(MASConsoleLogHandler.java:48)
+	at java.logging/java.util.logging.Logger.log(Logger.java:979)
+	at java.logging/java.util.logging.Logger.doLog(Logger.java:1006)
+	at java.logging/java.util.logging.Logger.log(Logger.java:1029)
+	at java.logging/java.util.logging.Logger.warning(Logger.java:1789)
+	at jaca.CAgentArch.act(CAgentArch.java:233)
+	at jason.asSemantics.TransitionSystem.act(TransitionSystem.java:1537)
+	at jason.infra.centralised.CentralisedAgArch.act(CentralisedAgArch.java:206)
+	at jason.infra.centralised.CentralisedAgArch.reasoningCycle(CentralisedAgArch.java:215)
+	at jason.infra.centralised.CentralisedAgArch.run(CentralisedAgArch.java:234)
+	at java.base/java.lang.Thread.run(Thread.java:830)
