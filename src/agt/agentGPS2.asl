@@ -112,6 +112,7 @@ myposition(0,0).
         if(origin(OL) & originlead(OL)) {
             unmark(X,Y); 
             mark(NX, NY, self, step);
+            !mark_vision(NX, NY, 1);
         }   
         for (goal(I,J)) {
             !addMap(I,J,NX,NY,goal);
@@ -188,3 +189,25 @@ myposition(0,0).
         }   
         +map(O,X+I,Y+J,TYPE);
     .
+
+    
+    
+ 
++!mark_vision(X,Y,Count) : vision(S) & Count <= S & Count>0
+   <-  
+       mark(X-Count,Y,vision,self);      
+       !mark_vision_around(X-Count,Y,1,1,Count);
+       mark(X+Count, Y,vision,self);
+       !mark_vision_around(X+Count,Y,-1,1,Count);
+       mark(X, Y-Count,vision,self);
+       mark(X, Y+Count,vision,self);       
+       !mark_vision(X,Y,Count+1).
+                  
++!mark_vision(X,Y,Count).
+
++!mark_vision_around(X,Y,Xfactor,Yfactor,Count) : vision(S) & Count > 0
+   <- mark(X+Count*Xfactor,Y+Count*Yfactor,vision,self);       
+      mark(X+Count*Xfactor,Y-Count*Yfactor,vision,self);
+      !mark_vision_around(X,Y,Xfactor,Yfactor,Count-1).            
++!mark_vision_around(X,Y,Xfactor,Yfactor,0).
+    
