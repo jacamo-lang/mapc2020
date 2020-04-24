@@ -21,14 +21,16 @@ import javax.swing.border.LineBorder;
 public class View extends JFrame 
 {
         
+        private static final int SIZE = 81;
         private JPanel table = new JPanel(new GridBagLayout());         
-        private JLabel [][] map = new JLabel [81][81];
-    private Color DEFAULT_COLOR;
+        private JLabel [][] map = new JLabel [SIZE][SIZE];
+        private Color DEFAULT_COLOR;
+        
             
         public View() {
                         
             setTitle("viewer");
-            setPreferredSize(new Dimension(700,700));                   
+            setPreferredSize(new Dimension(SIZE*8+50,SIZE*8+50));                   
             setLayout(new BorderLayout());
                 
             add(this.table, BorderLayout.CENTER);
@@ -48,8 +50,8 @@ public class View extends JFrame
                 for (int offsetJ=0; offsetJ<range-offsetI;offsetJ++) 
                     for (int di:directions) 
                         for (int dj:directions) {
-                            this.map[40+i+di*offsetI][40+j+dj*offsetJ].setBackground(Color.LIGHT_GRAY);
-                            this.map[40+i+di*offsetI][40+j+dj*offsetJ].repaint();                   
+                            this.map[center()+i+di*offsetI][center()+j+dj*offsetJ].setBackground(Color.LIGHT_GRAY);
+                            this.map[center()+i+di*offsetI][center()+j+dj*offsetJ].repaint();                   
                         }
         }
         
@@ -77,55 +79,54 @@ public class View extends JFrame
                 break;
             }
             //* ajuste do toroide
-            if (i>39) {
-                i=i-80;
-                
+            if (center()+i+1>this.SIZE) {
+                i=i-this.SIZE;                
             } 
-            else if (i<-40) {
-                i=i+80; 
+            else if (i<center()*-1) {
+                i=i+this.SIZE; 
+            }
+            if (center()+j+1>this.SIZE) {
+                j=j-this.SIZE;
+            }
+            else if (j<center()*-1) {
+                j=j+this.SIZE;
             } 
-            if (j>39) {
-                j=j-80;
-            }
-            else if (j<-40) {
-                j=j+80;
-            }
             //---------------
-            if(c!=Color.GRAY|this.map[40+i][40+j].getBackground()==DEFAULT_COLOR) //do not overwrite with the vision mark
-               this.map[40+i][40+j].setBackground(c);
-            this.map[40+i][40+j].setToolTipText( "("+String.valueOf(i)+
+            if(c!=Color.GRAY|this.map[center()+i][center()+j].getBackground()==DEFAULT_COLOR) //do not overwrite with the vision mark
+               this.map[center()+i][center()+j].setBackground(c);
+            this.map[center()+i][center()+j].setToolTipText( "("+String.valueOf(i)+
                                                  ","+String.valueOf(j)+") - "+
                                                  info);
-            this.map[40+i][40+j].setIcon(new ImageIcon(emptyImage()));          
-            this.map[40+i][40+j].setOpaque(true);
-            this.map[40+i][40+j].repaint();
+            this.map[center()+i][center()+j].setIcon(new ImageIcon(emptyImage()));          
+            this.map[center()+i][center()+j].setOpaque(true);
+            this.map[center()+i][center()+j].repaint();
         }
         
         public void unmark(int i, int j) {
-            //* ajuste do toroide
-            if (i>39) {
-                i=i-80;
+            //* ajuste do toroide            
+            if (center()+i+1>this.SIZE) {
+                i=i-this.SIZE;
                 
             } 
-            else if (i<-40) {
-                i=i+80; 
+            else if (i<center()*-1) {
+                i=i+this.SIZE; 
             } 
-            if (j>39) {
-                j=j-80;
+            if (center()+j+1>this.SIZE) {
+                j=j-this.SIZE;
             }
-            else if (j<-40) {
-                j=j+80;
+            else if (j<center()*-1) {
+                j=j+this.SIZE;
             }
             //--------------- 
-            this.map[40+i][40+j].setBackground(Color.LIGHT_GRAY);
-            this.map[40+i][40+j].repaint();
+            this.map[center()+i][center()+j].setBackground(Color.LIGHT_GRAY);
+            this.map[center()+i][center()+j].repaint();
         }
         
         private void build(){                   
             GridBagConstraints c = new GridBagConstraints();
 
-            for (int i=0;i<80;i++) {
-                for (int j=0;j<80;j++) {
+            for (int i=0;i<this.SIZE;i++) {
+                for (int j=0;j<this.SIZE;j++) {
                     JLabel tmp = new JLabel("");    
                     tmp.setBorder (new LineBorder(Color.LIGHT_GRAY, 1));
                     tmp.setIcon(new ImageIcon(emptyImage()));
@@ -143,5 +144,10 @@ public class View extends JFrame
             Graphics g = bi.getGraphics();          
             g.dispose();
             return bi;
+        }
+        
+        /* Returns the central position considering the size of the terrain */
+        private int center() {
+            return (int) Math.floor(this.SIZE/2);
         }
 }
