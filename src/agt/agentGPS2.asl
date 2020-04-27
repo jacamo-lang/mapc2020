@@ -111,8 +111,9 @@ myposition(0,0).
         -+myposition(NX,NY);
         if(origin(OL) & originlead(OL)) {
             unmark(X,Y); 
-            mark(NX, NY, self, step);
-            !mark_vision(NX, NY, 1);
+            ?vision(S)
+            mark(NX, NY, self, step,S);
+           // !mark_vision(NX, NY, 1);
         }   
         for (goal(I,J)) {
             !addMap(I,J,NX,NY,goal);
@@ -162,7 +163,7 @@ myposition(0,0).
         for (map(O,X,Y,TYPE) & O\==ORIGIN){
             -map(O,X,Y,TYPE);       
             +map(ORIGIN,OLDORIGINX+X,OLDORIGINY+Y,TYPE);
-            mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG);
+            mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG,0);
         }
         .send( AG,achieve, isme(PID) );
     .
@@ -185,7 +186,7 @@ myposition(0,0).
     .my_name(AG) & origin(O)  
     <-
         if(origin(OL) & originlead(OL)) {
-            mark(X+I, Y+J, TYPE, AG);               
+            mark(X+I, Y+J, TYPE, AG,0);               
         }   
         +map(O,X+I,Y+J,TYPE);
     .

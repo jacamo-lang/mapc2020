@@ -6,8 +6,8 @@ public class lps extends Artifact {
     View view;
 
     @OPERATION 
-    void init (){
-        view = new View();
+    void init (int size){
+        view = new View(size);
     }
     
     @OPERATION
@@ -17,8 +17,8 @@ public class lps extends Artifact {
     
     
     @OPERATION
-    void mark(int i, int j, String type, String info) {     
-        this.view.mark(i, j, type, info);
+    void mark(int i, int j, String type, String info, int vision) {     
+        this.view.mark(i, j, type, info, vision);
     }
     
     @OPERATION
