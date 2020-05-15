@@ -29,7 +29,8 @@ public class View extends JFrame
         public static final Color [] colors = {Color.MAGENTA.darker(), Color.BLACK.darker(),
         									  Color.BLUE.darker(), Color.YELLOW.darker(),
         									  Color.GREEN.darker(),Color.RED.darker(),
-        									  Color.GRAY.darker(),Color.ORANGE.darker()};
+        									  Color.GRAY.darker(),Color.ORANGE.darker(),
+                                                                                  Color.CYAN.darker()};
             
         public View(int size) {
             
@@ -83,6 +84,9 @@ public class View extends JFrame
             case "vision": //legacy
                 c = Color.GRAY.darker();    
                 break;
+            case "path":
+                c = Color.CYAN.darker();    
+                break; 
 	        case "other":
 	            c = Color.ORANGE.darker();    
 	            break;
