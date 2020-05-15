@@ -1,15 +1,18 @@
 
-field_size(70).
+field_size(70). //size of the field
 vision(5). //size of the cell = sensors' range
 current_moving_step(99). //current step to the next cell ([0...vision]) - starts with 99 to force finding an initial direction
-forward. //moving to forward
-last_node(-1,-1). //last node 
+forward. //moving to forward (becomes false when moving backwards)
+last_node(-1,-1). //last visited node 
+
 directions([n,w,s,e]).//letter corresponding to the directions
 current_direction_stc(0).
 counter_direction(0,2). //counter direction of north is south
 counter_direction(1,3).
 counter_direction(2,0).
 counter_direction(3,1).
+
+approach_factor(5).//highest -> closer
 
 //direction goes from East (directions[3])] to North (directions[0]) 
 +current_direction_stc(CD) : CD > 3 
@@ -24,19 +27,22 @@ counter_direction(3,1).
 
 
 //a movement is not taken into account when it fails
-+lastAction(move) : not(lastActionResult(success))  & current_moving_step(C)
-   <-  .print("Move not succeeded").
++lastAction(move) : not(lastActionResult(success))  & current_moving_step(C) & vision(V)
+   <-  .print("Move not succeeded");
+       //-+current_moving_step(V+1). // current cell exploration is finished
+       .
 
-/* If the agent arrives to the initial X or Y, sets to zero */
-+myposition(X,Y): field_size(S) & X >= S <- -+myposition(X-S,Y).
-+myposition(X,Y): field_size(S) & X <= S*-1 <- -+myposition(X+S,Y).
-+myposition(X,Y): field_size(S) & Y >= S <- -+myposition(X,Y-S).
-+myposition(X,Y): field_size(S) & Y <= S*-1 <- -+myposition(X,Y+S).
 
-/* Mark the covered area of the current position */ 
-+myposition(X,Y): origin(OL) & originlead(OL) <- 
-   //.print("position (", X, ",", Y, ")"); 
-   !mark_vision(X,Y,1).
+field_center(C) :- field_size(S) & C=S div 2. 
+//adapt a coordinate A to to a new value B that fits with the field size
+adapt_coordinate(A,B) :- field_size(S) & field_center(C) & (A>=C) & B=A-S.
+adapt_coordinate(A,B) :- field_size(S) & field_center(C) & (A<C*-1) & B=A+S.
+adapt_coordinate(A,B) :- B=A.
+
+
++myposition(X,Y): adapt_coordinate(X,XX) & adapt_coordinate(Y,YY) & (X\==XX | Y\==YY)  
+   <- -+myposition(XX,YY).
+
 
 //obstacle_direction(D) : check for obstacles in the direction D    
 obstacle_direction(0) :- (obstacle(0,Y)|thing(0,Y,entity,A)) & Y<0 & vision(CZ) & Y>= CZ*-1. //north
@@ -62,13 +68,16 @@ free_direction(X,Y,3) :- vision(CS)&not(obstacle_direction(3))&not(parent(_,_,1,
 
 
 //teammate_agent(D): there is an agent of the same team in the direction D (s.t. D={0,1,2,3} and 0=north, 1=west, 2=south, 3=east)
-teammate_agent(0) :- vision(CS)&team(T)&thing(_,W,entity,Team)&W<0&W>=CS*-1.
-teammate_agent(1) :- vision(CS)&team(T)&thing(W,_,entity,Team)&W<0&W>=CS*-1.
-teammate_agent(2) :- vision(CS)&team(T)&thing(_,Y+W,entity,Team)&W>0&W<=CS.
-teammate_agent(3) :- vision(CS)&team(T)&thing(W,entity,Team)&W>0&W<=CS.
+teammate_agent(0) :- approach_factor(A)&vision(CS)&team(T)&thing(_,W,entity,Team)&W<0&W>=(CS-A)*-1.
+teammate_agent(1) :- approach_factor(A)&vision(CS)&team(T)&thing(W,_,entity,Team)&W<0&W>=(CS-A)*-1.
+teammate_agent(2) :- approach_factor(A)&vision(CS)&team(T)&thing(_,W,entity,Team)&W>0&W<=(CS-A).
+teammate_agent(3) :- approach_factor(A)&vision(CS)&team(T)&thing(W,_,entity,Team)&W>0&W<=(CS-A).
 
 //next direction to go from the coordinates (X,Y)
-next_direction(X,Y,ND) :- (free_direction(X,Y,ND)).
+next_direction(X,Y,ND) :- step(S) & S <= 5 & (free_direction(X,Y,ND)).
+next_direction(X,Y,ND) :- step(S) & S > 5 & 
+                          (D = math.floor(math.random(4)) & (free_direction(X,Y,D)) & D>=0 & D<=4 & ND=D) |
+                          ((free_direction(X,Y,DD)) & ND=DD) .
 next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).                          
 
 
@@ -77,11 +86,36 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
 +!update_direction: myposition(0,0) & next_direction(X,Y,D) & not(parent(_,_,_,_,_))
    <- -+current_moving_step(0); 
       -+current_direction_stc(D).
+   
+
+//if the agent is out of the vision range, try to move to it (useful when an agent enters in the map).
+//if the X axis is not in the vision range, try to left
++!update_direction: myposition(X,Y) & 
+                    current_moving_step(MS) & vision(CS) & 
+                    MS>=CS & ((X mod CS)\==0) & //free_direction(X,Y,ND) & (ND==1|ND==3)                       
+                    free_direction(X,Y,ND) & ND=1
+   <- .print("01. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);
+      -+last_adapting_direction(ND);       
+      -+current_direction_stc(ND).
+            
++!update_direction: myposition(X,Y) & 
+                    current_moving_step(MS) & vision(CS) & 
+                    MS>=CS & ((Y mod CS)\==0) //& free_direction(X,Y,ND) & (ND==0|ND==2)                       
+                    & free_direction(X,Y,ND) & ND=0
+   <- .print("02. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
+      -+current_direction_stc(ND).
+      
++!update_direction: myposition(X,Y) & 
+                    current_moving_step(MS) & vision(CS) & 
+                    MS>=CS & ((X mod CS)\==0|(Y mod CS)\==0) //& free_direction(X,Y,ND) & (ND==0|ND==2)                       
+                    & free_direction(X,Y,ND)
+   <- .print("03. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
+      -+current_direction_stc(ND). 
+
 
 //the agent has reached the next node and there is a free path from there in the direction (ND)     
 +!update_direction: myposition(X,Y) & 
-                    current_moving_step(MS) & vision(CS) & (MS >= CS| ((X mod CS)==0 & (Y mod CS)==0))  & //the agent has reached the border of the cell 
-                    //direction(CD,_) & 
+                    current_moving_step(MS) & vision(CS) & (MS >= CS | ((X mod CS)==0 & (Y mod CS)==0))  & //the agent has reached the border of the cell 
                     current_direction_stc(CD) &
                     next_direction(X,Y,ND) & ND>-1 & forward & //the agent has a free-obstacle direction ahead
                     last_node(LX,LY) 
@@ -89,10 +123,8 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
       +parent(LX,LY,CD,X,Y); //the last visited node becomes is the predecessor of the current node
       !update_origin_tree(LX,LY,CD,X,Y); //update the spanning tree in the origin agent
       -+last_node(X,Y); //the current position becomes the last visited node            
-      -+current_moving_step(0);
+      -+current_moving_step(0); 
       -+current_direction_stc(ND);
-      //mark(X, Y,node,self);
-      //!print_root(0,0,1,"+").
       .
    
 
@@ -108,7 +140,8 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
    <- .nth(D,DIRECTIONS,Dir);  //check the counter-diretion     
       .print("2. No direction from,  (",X,",",Y,"). Back to the predecessor (", LX,",",LY,"). Direction: ", D);
       +parent(LX,LY,CD,X,Y); //the last visited node becomes is the predecessor of the current node
-      +parent(X,Y,-1,-1,-1); //the current node is a leaf      
+      !update_origin_tree(LX,LY,CD,X,Y); //update the spanning tree in the origin agent    
+      +parent(X,Y,-1,X,Y); //the current node is a leaf
       -forward;      
       -+current_moving_step(0);    
       -+current_direction_stc(D). 
@@ -139,31 +172,12 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
  
 +!update_direction.  
  
- +!mark_vision(X,Y,Count) : vision(S) & Count <= S & Count>0
-   <-  
-       mark(X-Count,Y,vision,self);      
-       !mark_vision_around(X-Count,Y,1,1,Count);
-       mark(X+Count, Y,vision,self);
-       !mark_vision_around(X+Count,Y,-1,1,Count);
-       mark(X, Y-Count,vision,self);
-       mark(X, Y+Count,vision,self);       
-       !mark_vision(X,Y,Count+1).
-                  
-+!mark_vision(X,Y,Count).
-
-+!mark_vision_around(X,Y,Xfactor,Yfactor,Count) : vision(S) & Count > 0
-   <- mark(X+Count*Xfactor,Y+Count*Yfactor,vision,self);       
-      mark(X+Count*Xfactor,Y-Count*Yfactor,vision,self);
-      !mark_vision_around(X,Y,Xfactor,Yfactor,Count-1).            
-+!mark_vision_around(X,Y,Xfactor,Yfactor,0).
-
-
 
 //update the spanning tree in the origin agent
 +!update_origin_tree(LX,LY,CD,X,Y): .my_name(Me) & origin(Origin) & Me\==Origin
    <- .send( Origin,tell, parent(LX,LY,CD,X,Y)).
        
-//update the spanning tree in the origin agent
+//update the spanning tree in the non origin agent
 +!update_origin_tree(LX,LY,CD,X,Y): .my_name(Me) & origin(Origin) & Me==Origin
    <- !update_notorigin_teammates(LX,LY,CD,X,Y).
 
@@ -171,7 +185,9 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
 
 +!update_notorigin_tree(LX,LY,CD,X,Y,[]).   
 +!update_notorigin_tree(LX,LY,CD,X,Y,[H|T])
-   <- .send( H,tell, parent(LX,LY,CD,X,Y)).
+   <- .send(H,tell, parent(LX,LY,CD,X,Y)).
+   
+    
    
              
 
