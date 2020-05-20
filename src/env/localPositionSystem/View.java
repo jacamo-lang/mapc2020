@@ -91,6 +91,8 @@ public class View extends JFrame
 	            c = Color.ORANGE.darker();    
 	            break;
 	        }
+            i = i%this.size;
+            j = j%this.size;
             //* ajuste do toroide
             if (center()+i+1>this.size) {
                 i=i-this.size;                
@@ -125,6 +127,8 @@ public class View extends JFrame
         }
         
         public void unmark(int i, int j) {
+            i = i%this.size;
+            j = j%this.size;
             //* ajuste do toroide            
             if (center()+i+1>this.size) {
                 i=i-this.size;
