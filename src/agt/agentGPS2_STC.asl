@@ -3,6 +3,7 @@
 { include("action.asl") }
 { include("taskmanager.asl") }
 { include("src/agt/STC_Strategy.asl")} //exploration strategy
+{ include("src/agt/meeting.asl")} //exploration strategy
 
 buildscene(SIZE, SIZE, _, _,[]).
 
@@ -54,6 +55,8 @@ myposition(0,0).
 
 teammates([]). //for STC
 
+run_after_sync. //for STC
+
 !start.
 
 +!start: 
@@ -63,6 +66,7 @@ teammates([]). //for STC
         ?name(NAME);        
         +origin(NAME);
         !!move (w,0,1)[critical_section(action), priority(1)];
+        //+path_direction(math.floor(math.random(2)))//STC - choose a starting path direction
     .
 
 
@@ -82,7 +86,7 @@ teammates([]). //for STC
 +!move(D,S,LENGTH): 
     true
     <-
-      !update_direction; ?current_direction_stc(Dir); ?directions(DIRECTIONS); .nth(Dir,DIRECTIONS,ND); //STC: update to the next direction
+      !update_direction; ?current_direction_stc(Dir); ?path_direction(PD) ?directions(PD,DIRECTIONS); .nth(Dir,DIRECTIONS,ND); //STC: update to the next direction
       if (S=LENGTH) {
         //?nextDirection(D,ND);  //Disabled for STC       
         NS=0;
@@ -136,88 +140,7 @@ teammates([]). //for STC
         }       
 .
 
-+!sincMap(XR,YR): origin(OL) & originlead(OL) &
-                  (math.abs(XR+1) * math.abs(YR+1)>2) & //TAMANHO DA JANELA 
-                  myposition(AX,AY)
-                  &step(S) & S>2 //STC - do not sincronize in the first two steps
-                  //& ( (goal(I,J) | obstacle(I,J) & pertinence(XR,YR,I,J)  ) | 
-                  //  (thing(PosI,PosJ,_,TYPE) & PosI\==XR & PosJ\==YR  & PosI\==0 & PosJ\==0 & pertinence(XR,YR,PosI,PosJ))
-                  //) //STC: do not sincronize when there is only empty space
-                  & (team(TEAM) &
-                     ((goal(I,J)|obstacle(I,J)|(thing(I,J,TYPE,_)&TYPE\==entity)|(thing(I,J,entity,OP)&OP\==TEAM)) & pertinence(XR,YR,I,J)) | //STC - sinc only if there is a goal, an obstacle, a non-agent entity, or an opponent agent ...
-                     (thing(PosI,PosJ,entity,TEAM)& (PosI\==0 | PosJ\==0)&(PosI\==XR|PosJ\==YR)& pertinence(XR,YR,PosI,PosJ)) //...or another teammate
-                    ) 
-                    
-    <-  
-        .findall(m(I,J,goal),goal(I,J) & pertinence(XR,YR,I,J) ,G);
-        .findall(m(I,J,obst),obstacle(I,J) & pertinence(XR,YR,I,J),O);
-        .findall(m(I,J,TYPE),thing(I,J,_,TYPE) & pertinence(XR,YR,I,J),T);  
-        .concat(G,O,T,BRUTSCENE);
-        .sort(BRUTSCENE,SCENE);
-        ?buildscene(0,.length(SCENE), math.abs(XR)+1, SCENE,FINALSCENE);
-        ?newpid(PID);
-        +pid(PID);  
-        .broadcast (achieve,areyou(XR,YR,AX,AY,FINALSCENE,PID));
-    .
-+!sincMap(_,_) <- true.
 
-
-+!areyou(RX,RY,AX,AY,SCENE,PID)[source(AG)]: 
-        thing(-RX,-RY,entity,TEAM) & team(TEAM)  & 
-        not(checkscene(SCENE)) & myposition(MX,MY) & 
-        not (origin(OL) & originlead(OL))
-<-  .print("NOT Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,")").
-
-+!areyou(RX,RY,AX,AY,SCENE,PID)[source(AG)]: 
-        thing(-RX,-RY,entity,TEAM) & team(TEAM)  & 
-        checkscene(SCENE) & myposition(MX,MY) & 
-        not (origin(OL) & originlead(OL))
-        & step(Step)
-    <-  .print("Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")   Step: ", Step);        
-        OMX=AX+RX;
-        OMY=AY+RY;  
-        -+myposition(OMX,OMY);
-        -+last_node(OMX,OMY); //STC - update the coordinates of the last visited node
-        ?originlead(ORIGIN);
-        -+origin(ORIGIN);   
-    
-        OLDORIGINX=OMX-MX;
-        OLDORIGINY=OMY-MY;
-        .my_name(NAG);   
-        for (map(O,X,Y,TYPE) & O\==ORIGIN){
-            -map(O,X,Y,TYPE);       
-            +map(ORIGIN,OLDORIGINX+X,OLDORIGINY+Y,TYPE);
-            mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG,0);
-             .print("...ARE YOU - mark(", OLDORIGINX+X,",",OLDORIGINY+Y,",",TYPE,",", NAG,") OldOrigin: (",OLDORIGINX,",",OLDORIGINY,")  ");
-        }
-        .print("Vai fazer rebase  de (",MX,",",MY, ") para (",OMX,",",OMY,")");
-        !rebase_tree(OLDORIGINX,OLDORIGINY); //stc: modify the beliefs about the three to comply with the new location   //ToDo: share the covered area with the orign agent   
-        .print("... IsMe ", PID, " ---- ", SCENE);
-        .send( AG,achieve, isme(PID) );
-        
-        //stc - send to the origin agent the informations about the explored tree 
-        .findall(new_parent(PX,PY,D,PXX,PYY),new_parent(PX,PY,D,PXX,PYY),NewTree);
-        .send(AG,achieve,update_external_tree(NewTree));
-        !remove_old_parent; //STC: remove the outdated informations about the explored tree
-        !update_approach_factor; //STC        
-.     
-
-+!areyou(_,_,_,_,_,_) <- true. 
-
-+!isme(PID)[source(AG)]: not returnedpid(PID)
-    <-
-        .print("######### encontrei o agente: ",AG, " ######### ", PID);
-        +returnedpid(PID);
-        !update_teammates([AG]) //STC: add the found agent to the list of teammates
-        .findall(new_parent(X,Y,D,XX,YY),parent(X,Y,D,XX,YY),L);
-        .send(AG,achieve,update_tree(L));
-        !update_approach_factor //STC: increment the limit of approaching to other agents
-    .
-
-+!isme(PID)[source(AG)]: returnedpid(PID)
-    <-
-        .print(AG," ----------- HOUVE FALSO POSITIVO -----------");
-    .
 
 
 +!addMap(I,J,X,Y,TYPE) :  
@@ -236,13 +159,15 @@ teammates([]). //for STC
     
 //*************** STC specific code ************************    
 
-//stc: modify the beliefs about the three to comply with the new location    
+//stc: modify the beliefs about the three to comply with the new location
+
+//case 1: the new coordinates do not belong to the vision range: the tree vertice can be discharged                                                        
 +!rebase_tree(OldX,OldY) : parent(X,Y,D,SX,SY) & //not(new_parent(OldX+X,OldY+Y,D,OldX+SX,OldY+SY))
                            adapt_coordinate(OldX+X,NX) & adapt_coordinate(OldY+Y,NY) & adapt_coordinate(OldX+SX,NSX) & adapt_coordinate(OldY+SY,NSY)          
    <- 
-      +new_parent(NX,NY,D,NSX,NSY);
+      +new_parent(c);
       -parent(X,Y,D,SX,SY);
-      .print("fez rebase de (",X,",",Y,",",D,",",SX,",",SY,") para (",NX,",",NY,",",D,",",NSX,",",NSY,") Old: (", OldX,",",OldY,")");
+      //.print("fez rebase de (",X,",",Y,",",D,",",SX,",",SY,") para (",NX,",",NY,",",D,",",NSX,",",NSY,") Old: (", OldX,",",OldY,")");
       !mark_new_path(NX,NY,NSX,NSY);
       !rebase_tree(OldX,OldY)
       .
@@ -287,25 +212,28 @@ teammates([]). //for STC
 
 
 +!update_external_tree(L)[source(Ag)]
-   <- .print(">>>>>> Going to update external_tree ", Ag, " - ", L);
+   <- //.print(">>>>>> Going to update external_tree ", Ag, " - ", L);
       !update_tree(L);
-      .print("<<<<<< Updated external_tree ", Ag, " - ", L).
+      //.print("<<<<<< Updated external_tree ", Ag, " - ", L).
+      .
 
 +!update_tree([new_parent(X,Y,D,XX,YY)|T]) : X\==XX & Y\==YY
-   <- .print(".... 0 updating tree parent(",X,",",Y,",",D,",",XX,",",YY,")  ignored");
+   <- //.print(".... 0 updating tree parent(",X,",",Y,",",D,",",XX,",",YY,")  ignored");
       !update_tree(T).   
 
-+!update_tree([new_parent(X,Y,D,XX,YY)|T]) : not(parent(X,Y,D,XX,YY)) 
++!update_tree([new_parent(X,Y,D,XX,YY)|T]) : not(parent(X,Y,D,XX,YY)) &
+                                             vision(V) & (X mod V==0 & Y mod V==0 & XX mod V==0 & YY mod V==0) //update only the edges that fit in the view 
    <- +parent(X,Y,D,XX,YY);             
-      .print(".... 1 updating tree parent(",X,",",Y,",",D,",",XX,",",YY,")");
+      //.print(".... 1 updating tree parent(",X,",",Y,",",D,",",XX,",",YY,")");
+      !!update_notorigin_teammates(X,Y,D,XX,YY);
       !update_tree(T).     
       
            
 +!update_tree([new_parent(X,Y,D,XX,YY)|T]) : parent(X,Y,D,XX,YY)
-   <- .print(".... 2 updating tree parent(",X,",",Y,",",D,",",XX,",",YY,")");
+   <- //.print(".... 2 updating tree parent(",X,",",Y,",",D,",",XX,",",YY,")");
       !update_tree(T).   
       
-+!update_tree([]) <- .print(".... 3 updating tree parent(",X,",",Y,",",D,",",XX,",",YY,")").      
++!update_tree([]).      
 
 
 //update the list of known teammates    
@@ -316,4 +244,39 @@ teammates([]). //for STC
 +!update_approach_factor : approach_factor(F) & F > 0
    <- -+approach_factor(F-1).
 
-+!update_approach_factor.    
++!update_approach_factor.  
+
+   
++!after_sync(PID) : run_after_sync & not(pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)).
+   
+      
++!after_sync(PID): run_after_sync & pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)
+   <-   
+        OMX=AX+RX;
+        OMY=AY+RY;  
+        OLDORIGINX=OMX-MX;
+        OLDORIGINY=OMY-MY;
+        //.print("Vai fazer rebase  de (",MX,",",MY, ") para (",OMX,",",OMY,")");
+        !rebase_tree(OLDORIGINX,OLDORIGINY); //stc: modify the beliefs about the three to comply with the new location   //ToDo: share the covered area with the orign agent   
+        //.print("... IsMe ", PID, " ---- ", SCENE);
+        .send( AG,achieve, isme(PID) );
+        
+        //stc - send to the origin agent the informations about the explored tree 
+        .findall(new_parent(PX,PY,D,PXX,PYY),new_parent(PX,PY,D,PXX,PYY),NewTree);
+        .send(AG,achieve,update_external_tree(NewTree));
+        !remove_old_parent; //STC: remove the outdated informations about the explored tree
+        !update_approach_factor; //STC    
+        !update_teammates([AG]); //STC: add the found agent to the list of teammates    
+        !require_tree(AG); //require the tree from the sender
+  
+.
+
+
+//TODO: mark the parent(_,_,_,_,_) with the origin agent to check the beliefs comming from other agents
++!require_tree(Ag) //require the tree from the sender
+   <- .send(Ag, achieve, inform_tree).
+   
++!inform_tree[source(Source)]:.my_name(Me) //processing a request for the agent tree path
+   <-  
+       .findall(new_parent(X,Y,D,XX,YY)[origin(Me)],parent(X,Y,D,XX,YY)[source(self)],L);
+       .send(Source, achieve, update_external_tree(L)).    
