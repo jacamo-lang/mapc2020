@@ -2,6 +2,7 @@
 { include("$jacamoJar/templates/common-moise.asl") }
 { include("action.asl") }
 { include("taskmanager.asl") }
+{ include("src/agt/meeting.asl")} //exploration strategy
 
 buildscene(SIZE, SIZE, _, _,[]).
 
@@ -113,7 +114,6 @@ myposition(0,0).
             unmark(X,Y); 
             ?vision(S)
             mark(NX, NY, self, step,S);
-           // !mark_vision(NX, NY, 1);
         }   
         for (goal(I,J)) {
             !addMap(I,J,NX,NY,goal);
@@ -130,56 +130,6 @@ myposition(0,0).
         }       
 .
 
-+!sincMap(XR,YR): origin(OL) & originlead(OL) &
-                  (math.abs(XR+1) * math.abs(YR+1)>2) & //TAMANHO DA JANELA 
-                  myposition(AX,AY)
-    <-  
-        .findall(m(I,J,goal),goal(I,J) & pertinence(XR,YR,I,J) ,G);
-        .findall(m(I,J,obst),obstacle(I,J) & pertinence(XR,YR,I,J),O);
-        .findall(m(I,J,TYPE),thing(I,J,_,TYPE) & pertinence(XR,YR,I,J),T);  
-        .concat(G,O,T,BRUTSCENE);
-        .sort(BRUTSCENE,SCENE);
-        ?buildscene(0,.length(SCENE), math.abs(XR)+1, SCENE,FINALSCENE);
-        ?newpid(PID);
-        +pid(PID);  
-        .broadcast (achieve,areyou(XR,YR,AX,AY,FINALSCENE,PID));
-    .
-+!sincMap(_,_) <- true.
-
-+!areyou(RX,RY,AX,AY,SCENE,PID)[source(AG)]: 
-        thing(-RX,-RY,entity,TEAM) & team(TEAM)  & 
-        checkscene(SCENE) & myposition(MX,MY) & 
-        not (origin(OL) & originlead(OL))
-    <-          
-        OMX=AX+RX;
-        OMY=AY+RY;  
-        -+myposition(OMX,OMY);
-        ?originlead(ORIGIN);
-        -+origin(ORIGIN);   
-    
-        OLDORIGINX=OMX-MX;
-        OLDORIGINY=OMY-MY;
-        .my_name(NAG);   
-        for (map(O,X,Y,TYPE) & O\==ORIGIN){
-            -map(O,X,Y,TYPE);       
-            +map(ORIGIN,OLDORIGINX+X,OLDORIGINY+Y,TYPE);
-            mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG,0);
-        }
-        .send( AG,achieve, isme(PID) );
-    .
-
-+!areyou(_,_,_,_,_,_) <- true. 
-
-+!isme(PID)[source(AG)]: not returnedpid(PID)
-    <-
-        .print("encontrei o agente: ",AG);
-        +returnedpid(PID);
-    .
-
-+!isme(PID)[source(AG)]: returnedpid(PID)
-    <-
-        .print(AG," ----------- HOUVE FALSO POSITIVO -----------");
-    .
 
 
 +!addMap(I,J,X,Y,TYPE) :  
@@ -190,25 +140,3 @@ myposition(0,0).
         }   
         +map(O,X+I,Y+J,TYPE);
     .
-
-    
-    
- 
-+!mark_vision(X,Y,Count) : vision(S) & Count <= S & Count>0
-   <-  
-       mark(X-Count,Y,vision,self);      
-       !mark_vision_around(X-Count,Y,1,1,Count);
-       mark(X+Count, Y,vision,self);
-       !mark_vision_around(X+Count,Y,-1,1,Count);
-       mark(X, Y-Count,vision,self);
-       mark(X, Y+Count,vision,self);       
-       !mark_vision(X,Y,Count+1).
-                  
-+!mark_vision(X,Y,Count).
-
-+!mark_vision_around(X,Y,Xfactor,Yfactor,Count) : vision(S) & Count > 0
-   <- mark(X+Count*Xfactor,Y+Count*Yfactor,vision,self);       
-      mark(X+Count*Xfactor,Y-Count*Yfactor,vision,self);
-      !mark_vision_around(X,Y,Xfactor,Yfactor,Count-1).            
-+!mark_vision_around(X,Y,Xfactor,Yfactor,0).
-    

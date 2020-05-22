@@ -7,4 +7,5 @@
         action(skip);
     .   
 
-+!areyou(_,_,_,_,_,_) <- true.
+
++!areyou(_,_,_,_,_,_,_) <- true.
