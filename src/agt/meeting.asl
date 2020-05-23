@@ -139,7 +139,7 @@ steps_for_sync(4). /* Number of steps to wait for answers of possible neighbours
            //.print("...ARE YOU - mark(", OLDORIGINX+X,",",OLDORIGINY+Y,",",TYPE,",", NAG,") OldOrigin: (",OLDORIGINX,",",OLDORIGINY,")  Original Pos:(",X,",",Y,")  Current Pos: (",OMX + (Xnow-MX),",",OMY + (Ynow-MY),")  My Pos: (",MX,",",MY,")- PID: ", PID);
        }
        -+origin(ORIGIN);      
-       .
+       !after_sync(PID).    
 
 +!sync_isme(PID).
 
