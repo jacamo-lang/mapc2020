@@ -14,6 +14,31 @@
 steps_for_sync(4). /* Number of steps to wait for answers of possible neighbours */
 
 
+coord(X,Y,XR,YR,L,R) :- coordXpositive(X,Y,XR,YR,L,XP) & coordXnegative(X-1,Y,XR,YR,L,XN) & .concat(XP,XN,R).  
+coordXpositive(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=5 & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,[],N) & coordYnegative(X,Y-1,XR,YR,[],NN) & coordXpositive(X+1,Y,XR,YR,L,M) & .concat([p(X,Y)],M,N,NN,R).
+coordXpositive(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>5  & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,[],N) & coordYnegative(X,Y-1,XR,YR,[],NN) & coordXpositive(X+1,Y,XR,YR,L,M) & .concat(M,N,NN,R).
+coordXpositive(X,Y,XR,YR,L,R) :- .concat(L,[],R).
+
+coordXnegative(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=5 & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,[],N) & coordYnegative(X,Y-1,XR,YR,[],NN) & coordXnegative(X-1,Y,XR,YR,L,M) & .concat([p(X,Y)],M,N,NN,R).
+coordXnegative(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>5  & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,[],N) & coordYnegative(X,Y-1,XR,YR,[],NN) & coordXnegative(X-1,Y,XR,YR,L,M) & .concat(M,N,NN,R).                            
+coordXnegative(X,Y,XR,YR,L,R) :- .concat(L,[],R).
+
+
+coordYpositive(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=5 & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,L,M) & .concat([p(X,Y)],M,R) .
+coordYpositive(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>5  & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,L,M) & .concat(M,R).
+coordYpositive(X,Y,XR,YR,L,R) :- .concat(L,[],R).
+
+coordYnegative(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=5 & (math.abs(X)+ math.abs(Y))<= 5 & coordYnegative(X,Y-1,XR,YR,L,M) & .concat([p(X,Y)],M,R) .
+coordYnegative(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>5  & (math.abs(X)+ math.abs(Y))<= 5 & coordYnegative(X,Y-1,XR,YR,L,M) & .concat(M,R).
+coordYnegative(X,Y,XR,YR,L,R) :- .concat(L,[],R).
+
+
+buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .member(m(X,Y,goal),Goals) & .concat([m(X,Y,goal)],L,RR) & buildscene(Goals,Obstacles,Things,T,RR,R).
+buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .member(m(X,Y,obst),Obstacles) & .concat([m(X,Y,obst)],L,RR) & buildscene(Goals,Obstacles,Things,T,RR,R).
+buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .member(m(X,Y,W),Things) & .concat([m(X,Y,W)],L,RR) & buildscene(Goals,Obstacles,Things,T,RR,R).
+buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .concat(L,[m(X,Y,empty)],RR) & buildscene(Goals,Obstacles,Things,T,RR,R).                                                  
+buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.                                                  
+
 //sincMap: the sync process
 +!sincMap(XR,YR): origin(OL) & originlead(OL) &
                   (math.abs(XR+1) * math.abs(YR+1)>3) & //TAMANHO DA JANELA 
@@ -23,7 +48,7 @@ steps_for_sync(4). /* Number of steps to wait for answers of possible neighbours
         ?newpid(PID);
         +pending_areyou(PID,S,[]);        
         
-        .findall(m(I,J,goal),goal(I,J) & pertinence(XR,YR,I,J) ,G);
+        /*.findall(m(I,J,goal),goal(I,J) & pertinence(XR,YR,I,J) ,G);
         .findall(m(I,J,obst),obstacle(I,J) & pertinence(XR,YR,I,J),O);
         .findall(m(I,J,TYPE),thing(I,J,_,TYPE) & pertinence(XR,YR,I,J),T);  
         .concat(G,O,T,BRUTSCENE);
@@ -31,16 +56,16 @@ steps_for_sync(4). /* Number of steps to wait for answers of possible neighbours
         ?buildscene(0,.length(SCENE), math.abs(XR)+1, SCENE,FINALSCENE);     
          //.print("... areyou SCENE: ", SCENE, "FINAL: ", FINALSCENE);   
         .broadcast (achieve,areyou(XR,YR,AX,AY,FINALSCENE,PID,S));
-                
+         */        
         
-         /*A possible new code. ToDo: evaluate if there is some advantage to use it.  
+   
         .findall(m(I,J,goal),goal(I,J) & math.abs(-XR+I)+math.abs(-YR+J)<=5 ,G);
         .findall(m(I,J,obst),obstacle(I,J) & math.abs(-XR+I)+math.abs(-YR+J)<=5 ,O);
-        .findall(m(I,J,TYPE),thing(I,J,_,TYPE) & math.abs(-XR+I)+math.abs(-YR+J)<=5,T);
-        .concat(G,O,T,BRUTSCENE);
-        .sort(BRUTSCENE,SCENE);
-        .broadcast (achieve,areyou(XR,YR,AX,AY,SCENE,PID,S)[critical_section(action), priority(3)]). //priority higher than recharge to avoid false positive (might not reply while recharging)
-        */
+        .findall(m(I,J,TYPE),thing(I,J,_,TYPE) & math.abs(-XR+I)+math.abs(-YR+J)<=5,T);             
+        ?coord(0,0,XR,YR,[],Coord); //Coord is a list of all coordinates visible to both the agents involved in the interaction
+        ?buildscene(G,O,T,Coord,[],FinalScene); //Build a final list with goals, obstacles, entities, and empty coordinates        
+        .broadcast (achieve,areyou(XR,YR,AX,AY,FinalScene,PID,S)); 
+        
         .
     
 +!sincMap(_,_) <- true.
@@ -145,5 +170,6 @@ steps_for_sync(4). /* Number of steps to wait for answers of possible neighbours
 
 
 //after_sync: if necessary to run something else after sync, add the belief run_after_sinc and implement a plan in the agent
-+!after_sync(PID) :  pending_isme(PID,_,_,_,_,_,_,_) & not(runAfterSync) 
-   <- -pending_isme(PID,_,_,_,_,_,_,_).
++!after_sync(PID) :  pending_isme(PID,_,_,_,_,_,_,_) & not(run_after_sync) 
+   <- 
+      -pending_isme(PID,_,_,_,_,_,_,_).
