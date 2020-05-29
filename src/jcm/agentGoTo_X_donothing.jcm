@@ -1,61 +1,61 @@
 mas env.connection {
-agent agenta0: agentGPS2.asl{
+agent agenta0: agentGoTo.asl{
  join: enva
 focus: enva.arta0, artGPS
 }
-agent agenta1: agentGPS2.asl{
+agent agenta1: agentDoNothing.asl{
  join: envb
 focus: enva.arta1, artGPS
 }
-agent agenta2: agentGPS2.asl{
+agent agenta2: agentDoNothing.asl{
  join: enva
 focus: enva.arta2, artGPS
 }
-agent agenta3: agentGPS2.asl{
+agent agenta3: agentDoNothing.asl{
  join: enva
 focus: enva.arta3, artGPS
 }
-agent agenta4: agentGPS2.asl{
+agent agenta4: agentDoNothing.asl{
  join: enva
 focus: enva.arta4, artGPS
 }
-agent agenta5: agentGPS2.asl{
+agent agenta5: agentDoNothing.asl{
  join: enva
 focus: enva.arta5, artGPS
 }
-agent agenta6: agentGPS2.asl{
+agent agenta6: agentDoNothing.asl{
  join: enva
 focus: enva.arta6, artGPS
 }
-agent agenta7: agentGPS2.asl{
+agent agenta7: agentDoNothing.asl{
  join: enva
 focus: enva.arta7, artGPS
 }
-agent agenta8: agentGPS2.asl{
+agent agenta8: agentDoNothing.asl{
  join: enva
 focus: enva.arta8, artGPS
 }
-agent agenta9: agentGPS2.asl{
+agent agenta9: agentDoNothing.asl{
  join: enva
 focus: enva.arta9, artGPS
 }
-agent agenta10: agentGPS2.asl{
+agent agenta10: agentDoNothing.asl{
  join: enva
 focus: enva.arta10, artGPS
 }
-agent agenta11: agentGPS2.asl{
+agent agenta11: agentDoNothing.asl{
  join: enva
 focus: enva.arta11, artGPS
 }
-agent agenta12: agentGPS2.asl{
+agent agenta12: agentDoNothing.asl{
  join: enva
 focus: enva.arta12, artGPS
 }
-agent agenta13: agentGPS2.asl{
+agent agenta13: agentDoNothing.asl{
  join: enva
 focus: enva.arta13, artGPS
 }
-agent agenta14: agentGPS2.asl{
+agent agenta14: agentDoNothing.asl{
  join: enva
 focus: enva.arta14, artGPS
 }
@@ -139,7 +139,7 @@ artifact  arta11: connection.EISAccess("clientconf/eisa11.json")
 artifact  arta12: connection.EISAccess("clientconf/eisa12.json")
 artifact  arta13: connection.EISAccess("clientconf/eisa13.json")
 artifact  arta14: connection.EISAccess("clientconf/eisa14.json")
-artifact  artGPS: localPositionSystem.lps(90)
+artifact  artGPS: localPositionSystem.lps(70)
 }
 
 workspace envb {

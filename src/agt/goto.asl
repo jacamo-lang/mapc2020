@@ -41,7 +41,7 @@ myposition(0,0).
         ?nextDirection(BLOCKEDDIRECTION,DIRECTION);
         !workaround(DIRECTION); 
       }
-      !!goto(X,Y);
+      !goto(X,Y);
     .
     
 +!workaround(DIRECTION):
@@ -50,13 +50,13 @@ myposition(0,0).
       if (directionIncrement(DIRECTION, X, Y) &
           obstacle(X,Y)) {
           ?nextDirection(DIRECTION,NEXTDIRECTION);   
-          !!workaround(NEXTDIRECTION);    
+          !workaround(NEXTDIRECTION);    
       }
       else {
           !do(move(DIRECTION),R);
           if (R=failed_path) {
             ?nextDirection(DIRECTION,NEXTDIRECTION);   
-            !!workaround(NEXTDIRECTION,DIRECTIONX,DIRECTIONY);        
+            !workaround(NEXTDIRECTION,DIRECTIONX,DIRECTIONY);        
           }
           if (R=success) {
             !mapping(DIRECTION);    

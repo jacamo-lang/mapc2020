@@ -9,11 +9,8 @@
   true
   <-
     !goto(0,20);
-    .wait(myposition(0,20));
     !goto(2,2);
-    .wait(myposition(2,2));
     !goto(-22,-45);
-    .wait(myposition(-22,-45));
     !goto(22,45);
  .
 
