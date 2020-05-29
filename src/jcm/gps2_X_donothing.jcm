@@ -1,5 +1,5 @@
 mas env.connection {
-agent agenta0: agentGPS2.asl{
+agent agenta0: agentGoTo.asl{
  join: enva
 focus: enva.arta0, artGPS
 }
