@@ -19,20 +19,21 @@ public class lps extends Artifact {
     @OPERATION
     void mark(int i, int j, String type, String info, int vision) {     
         this.view.mark(i, j, type, info, vision);
+
+        if(!type.equals("self")) {
+            ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null);
+            if(prop==null) 
+                defineObsProperty("gps_map", i,j,type);
+            else 
+                prop.updateValues(i,j,type);
+        }
     }
     
     @OPERATION
     void unmark(int i, int j) {     
         this.view.unmark(i, j);
     }
-    
-//      this.players[this.handlerPlayers]=getCurrentOpAgentId();
-//      this.dhw.setPlayer(getCurrentOpAgentId().getAgentName(), this.handlerPlayers); 
-//      this.handlerPlayers=(this.handlerPlayers+1)%2;      
-//      if (this.handlerPlayers==0) {
-//          execInternalOp("start");
-//      }
-//  }
-    
-    
+
+
+
 }

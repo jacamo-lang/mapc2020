@@ -125,8 +125,9 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
 
 //the agent has reached the next node and there is a free path from there in the direction (ND)     
 +!update_direction: myposition(X,Y) & 
-                    current_moving_step(MS) & vision(CS) & (MS >= CS | ((X mod CS)==0 & (Y mod CS)==0))  & //the agent has reached the border of the cell 
                     current_direction_stc(CD) &
+                    current_moving_step(MS) & vision(CS) & (MS >= CS | ((X mod CS)==0 & (Y mod CS)==0))  & //the agent has reached the border of the cell 
+                    
                     next_direction(X,Y,ND) & ND>-1 & forward & //the agent has a free-obstacle direction ahead
                     last_node(LX,LY) 
    <- .print("1. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
@@ -139,11 +140,13 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
       .
    
 
- 
-//the agent has reached the next cell and there is no place to go from there - back to the predecessor node 
-+!update_direction: myposition(X,Y) & 
-                    current_moving_step(MS) & vision(CS) & (MS >= CS| ((X mod CS)==0 & (Y mod CS)==0)) & //the agent has reached the border of the cell 
-                    current_direction_stc(CD) & next_direction(X,Y,ND)&ND==-1 & //there is not free-obstacle direction ahead
+//the agent has (i) reached the next cell and there is no place to go or (ii) is blocked: back to the predecessor node 
++!update_direction: myposition(X,Y) &
+                    current_direction_stc(CD) & 
+                    ( (current_moving_step(MS) & vision(CS) & (MS >= CS| ((X mod CS)==0 & (Y mod CS)==0)) & //the agent has reached the border of the cell 
+                       next_direction(X,Y,ND)&ND==-1)| //there is not free-obstacle direction ahead
+                      (lastActionResult(failed_path)) //the agent is blocked by an obstacle o 
+                    ) & 
                     path_direction(PD)&directions(PD,DIRECTIONS) & 
                     counter_direction(CD,D) &
                     last_node(LX,LY) & 
