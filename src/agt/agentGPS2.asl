@@ -136,7 +136,7 @@ myposition(0,0).
     .my_name(AG) & origin(O)  
     <-
         if(origin(OL) & originlead(OL)) {
-            mark(X+I, Y+J, TYPE, AG,0);               
+            mark(X+I, Y+J, TYPE, AG,0, O); //The last parameter is the map identifier              
         }   
         +map(O,X+I,Y+J,TYPE);
     .
