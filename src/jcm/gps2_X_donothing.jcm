@@ -123,6 +123,13 @@ agent agent1b4: agentDoNothing.asl{
 focus: envb.artb14
 }
 
+/* Uncomment to monitor the exploration strategy */
+/*agent explorationMonitor: explorationMonitor.asl{
+ join: enva
+ focus: enva.arta0, artGPS
+}*/
+
+
 workspace enva {
 artifact  arta0: connection.EISAccess("clientconf/eisa0.json")
 artifact  arta1: connection.EISAccess("clientconf/eisa1.json")
