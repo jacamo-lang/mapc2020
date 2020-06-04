@@ -1,6 +1,3 @@
-//TODO: handle circumstance of 2 agents blocking each other
-
-
 field_size(70). //size of the field
 vision(5). //size of the cell = sensors' range
 current_moving_step(99). //current step to the next cell ([0...vision]) - starts with 99 to force finding an initial direction
@@ -85,7 +82,13 @@ next_direction(X,Y,ND) :- step(S) & S > 5 &
 next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).                          
 
 
+parent(X,Y,D,XX,YY) :- edge(X,Y,D,XX,YY,Map) & origin(O) & .substring(O,Map). //using substring as a workaround since Map is a string (e.g. "agenta0") while Me is a term (e.g. agentaO) 
 
+
+ancestor(X,Y,XX,YY):- parent(X,Y,_,XX,YY).
+ancestor(X,Y,XX,YY):- parent(X,Y,_,V,W)& ancestor(V,W,XX,YY).
+
+cycle(X,Y,XX,YY) :- false.
 
 +lastActionResult(failed_path) : lastAction(move) & lastActionParams([D]) & (failed_move_count(D,Count)|not(failed_move_count(D,Count))&Count=0)
    <- -+failed_move_count(D,Count+1).
@@ -104,6 +107,7 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
                     current_moving_step(MS) & vision(CS) & 
                     MS>=CS & ((X mod CS)\==0) & //free_direction(X,Y,ND) & (ND==1|ND==3)                       
                     free_direction(X,Y,ND) & ND=1
+                    & last_node(LX,LY) 
    <- //.print("01. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);
       -+last_adapting_direction(ND);       
       -+current_direction_stc(ND).
@@ -112,6 +116,7 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
                     current_moving_step(MS) & vision(CS) & 
                     MS>=CS & ((Y mod CS)\==0) //& free_direction(X,Y,ND) & (ND==0|ND==2)                       
                     & free_direction(X,Y,ND) & ND=0
+                    & last_node(LX,LY)
    <- //.print("02. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
       -+current_direction_stc(ND).
       
@@ -119,6 +124,7 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
                     current_moving_step(MS) & vision(CS) & 
                     MS>=CS & ((X mod CS)\==0|(Y mod CS)\==0) //& free_direction(X,Y,ND) & (ND==0|ND==2)                       
                     & not((obstacle_direction(ND)))
+                    & last_node(LX,LY)
    <- //.print("03. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
       -+current_direction_stc(ND). 
 
@@ -126,14 +132,12 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
 //the agent has reached the next node and there is a free path from there in the direction (ND)     
 +!update_direction: myposition(X,Y) & 
                     current_direction_stc(CD) &
-                    current_moving_step(MS) & vision(CS) & (MS >= CS | ((X mod CS)==0 & (Y mod CS)==0))  & //the agent has reached the border of the cell 
-                    
+                    current_moving_step(MS) & vision(CS) & (MS >= CS & ((X mod CS)==0 & (Y mod CS)==0))  & //the agent has reached the border of the cell                     
                     next_direction(X,Y,ND) & ND>-1 & forward & //the agent has a free-obstacle direction ahead
                     last_node(LX,LY) 
    <- .print("1. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
-      +parent(LX,LY,CD,X,Y); //the last visited node becomes is the predecessor of the current node
-      //!update_origin_tree(LX,LY,CD,X,Y); //update the spanning tree in the origin agent
-      !update_notorigin_teammates(LX,LY,CD,X,Y);  //update the spanning tree in the origin agent
+      !do_set_edge(LX,LY,CD,X,Y);
+      //!update_notorigin_teammates(LX,LY,CD,X,Y);  //update the spanning tree in the origin agent
       -+last_node(X,Y); //the current position becomes the last visited node            
       -+current_moving_step(0); 
       -+current_direction_stc(ND);
@@ -143,24 +147,34 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
 //the agent has (i) reached the next cell and there is no place to go or (ii) is blocked: back to the predecessor node 
 +!update_direction: myposition(X,Y) &
                     current_direction_stc(CD) & 
-                    ( (current_moving_step(MS) & vision(CS) & (MS >= CS| ((X mod CS)==0 & (Y mod CS)==0)) & //the agent has reached the border of the cell 
-                       next_direction(X,Y,ND)&ND==-1)| //there is not free-obstacle direction ahead
-                      (lastActionResult(failed_path)) //the agent is blocked by an obstacle o 
-                    ) & 
+                    current_moving_step(MS) & vision(CS) & (MS >= CS & ((X mod CS)==0 & (Y mod CS)==0) & //the agent has reached the border of the cell 
+                    next_direction(X,Y,ND)&ND==-1) &//| //there is not free-obstacle direction ahead
                     path_direction(PD)&directions(PD,DIRECTIONS) & 
                     counter_direction(CD,D) &
                     last_node(LX,LY) & 
                     (X\==LX | Y\==LY) //not arrived to the predecessor
    <- .nth(D,DIRECTIONS,Dir);  //check the counter-diretion     
       .print("2. No direction from,  (",X,",",Y,"). Back to the predecessor (", LX,",",LY,"). Direction: ", D);
-      +parent(LX,LY,CD,X,Y); //the last visited node becomes is the predecessor of the current node
-      //!update_origin_tree(LX,LY,CD,X,Y); //update the spanning tree in the origin agent
-      !update_notorigin_teammates(LX,LY,CD,X,Y);  //update the spanning tree in the origin agent    
-      +parent(X,Y,-1,X,Y); //the current node is a leaf
+      !do_set_edge(LX,LY,CD,X,Y);
+      !do_set_edge(X,Y,-1,X,Y);
       -forward;      
       -+current_moving_step(0);    
       -+current_direction_stc(D). 
       
+      
+//the agent has (i) reached the next cell and there is no place to go or (ii) is blocked: back to the predecessor node 
++!update_direction: myposition(X,Y) &
+                    current_direction_stc(CD) & 
+                    lastActionResult(failed_path) & //the agent is blocked by an obstacle o                     
+                    path_direction(PD)&directions(PD,DIRECTIONS) & 
+                    counter_direction(CD,D) &
+                    last_node(LX,LY) & 
+                    (X\==LX | Y\==LY) //not arrived to the predecessor
+   <- .nth(D,DIRECTIONS,Dir);  //check the counter-diretion     
+      .print("2b. No direction from,  (",X,",",Y,"). Back to the predecessor (", LX,",",LY,"). Direction: ", D);
+      -forward;      
+      -+current_moving_step(0);    
+      -+current_direction_stc(D).       
   
 //the agent has reached the predecessor node and goes to the next unvisited node
 +!update_direction: myposition(X,Y) & path_direction(PD) & directions(PD,DIRECTIONS) & //counter_directions(COUNTER_DIRECTIONS) &
@@ -173,10 +187,10 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
       -+current_direction_stc(ND).
     
 //arrived to the previous node and there is not another unvisited node
-+!update_direction: myposition(X,Y) & path_direction(PD) & directions(PD,DIRECTIONS) & //counter_directions(COUNTER_DIRECTIONS) &
++!update_direction: myposition(X,Y) & path_direction(PathDir) & directions(PathDir,DIRECTIONS) & //counter_directions(COUNTER_DIRECTIONS) &
                     last_node(LX,LY) & X==LX & Y==LY & //the last visited node is the current node (i.e. the agent has reached the predecessor) 
                     parent(PX,PY,PD,X,Y) & counter_direction(PD,ND) //nowhere to go - back to the predecessor
-   <- .print("4. Arrived to the predecessor (",X,",",Y,"). Nowhere to go." );
+   <- .print("4. Arrived to the predecessor (",X,",",Y,"). Nowhere to go. Back to predecessor (",PX,",",PY,"). Direction: ", ND );
       -+last_node(PX,PY); //the current position becomes the last visited node        
       -+current_moving_step(0);
       -+current_direction_stc(ND).      
@@ -188,19 +202,10 @@ next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).
 +!update_direction.  
  
 
-//update the spanning tree in the origin agent
-+!update_origin_tree(LX,LY,CD,X,Y): .my_name(Me) & origin(Origin) & Me\==Origin
-   <- .send( Origin,tell, parent(LX,LY,CD,X,Y)).
++!do_set_edge(LX,LY,CD,X,Y): (cycle(LX,LY,X,Y)).      
        
-//update the spanning tree in the non origin agent
-+!update_origin_tree(LX,LY,CD,X,Y): .my_name(Me) & origin(Origin) & Me==Origin
-   <- !update_notorigin_teammates(LX,LY,CD,X,Y).
++!do_set_edge(LX,LY,CD,X,Y):  origin(OL) & not(parent(X,Y,_,LX,LY)) & vision(V) &  (LX mod V==0) & (LY mod V==0) & (X mod V==0) & (Y mod V==0) & LX\==-1 & LY\==-1 & not(cycle(LX,LY,X,Y))  
+   <- setEdge(LX,LY,CD,X,Y,OL).  
+     
++!do_set_edge(LX,LY,CD,X,Y).
 
-+!update_notorigin_teammates(LX,LY,CD,X,Y): teammates(L) <- !update_notorigin_tree(LX,LY,CD,X,Y,L).
-
-+!update_notorigin_tree(LX,LY,CD,X,Y,[]).   
-+!update_notorigin_tree(LX,LY,CD,X,Y,[H|T]) : .my_name(Me)
-   <- .send(H,tell, parent(LX,LY,CD,X,Y)[origin(Me)]);
-      !update_notorigin_tree(LX,LY,CD,X,Y,T).
-   
-    

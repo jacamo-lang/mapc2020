@@ -10,7 +10,7 @@ import cartago.*;
 
 
 public class lps extends Artifact {
-    View view;
+    protected View view;
 
     @OPERATION 
     void init (int size){

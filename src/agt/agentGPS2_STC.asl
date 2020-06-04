@@ -149,7 +149,7 @@ run_after_sync. //for STC
     <-
         if(origin(OL) & originlead(OL)) {
             //mark(X+I, Y+J, TYPE, AG,0);                
-            mark(XX, YY, TYPE, AG,0);
+            mark(XX, YY, TYPE, AG,0,O);
         }   
         //+map(O,X+I,Y+J,TYPE);
         +map(O,XX,YY,TYPE);
@@ -161,26 +161,24 @@ run_after_sync. //for STC
 
 //stc: modify the beliefs about the three to comply with the new location
 
-//case 1: the new coordinates do not belong to the vision range: the tree vertice can be discharged                                                        
-+!rebase_tree(OldX,OldY) : parent(X,Y,D,SX,SY) & //not(new_parent(OldX+X,OldY+Y,D,OldX+SX,OldY+SY))
-                           adapt_coordinate(OldX+X,NX) & adapt_coordinate(OldY+Y,NY) & adapt_coordinate(OldX+SX,NSX) & adapt_coordinate(OldY+SY,NSY)          
-   <- 
-      +new_parent(c);
-      -parent(X,Y,D,SX,SY);
-      //.print("fez rebase de (",X,",",Y,",",D,",",SX,",",SY,") para (",NX,",",NY,",",D,",",NSX,",",NSY,") Old: (", OldX,",",OldY,")");
++!rebase_tree(OldX,OldY) 
+   <- .findall(new_parent(X,Y,D,SX,SY),edge(X,Y,D,SX,SY,Map) & .my_name(Me) & .substring(Me,Map), L);   
+      !!rebase_tree_list(OldX,OldY,L).
+             
++!rebase_tree_list(OldX,OldY,[]).                                       
++!rebase_tree_list(OldX,OldY,[new_parent(X,Y,D,SX,SY)|T]): adapt_coordinate(OldX+X,NX) & adapt_coordinate(OldY+Y,NY) & adapt_coordinate(OldX+SX,NSX) & adapt_coordinate(OldY+SY,NSY) &
+                                                           (NX==NSX|NY==NSY) & //rebase only straight lines
+                                                           vision(V) & (NX mod V==0) & (NY mod V==0) & (NSX mod V==0) & (NSY mod V==0)  //rebase only edges that fit in the vision range
+   <- //.print("fez rebase de (",X,",",Y,",",D,",",SX,",",SY,") para (",NX,",",NY,",",D,",",NSX,",",NSY,") Old: (", OldX,",",OldY,")");
+      !do_set_edge(NX,NY,D,NSX,NSY);
       !mark_new_path(NX,NY,NSX,NSY);
-      !rebase_tree(OldX,OldY)
-      .
+      !rebase_tree_list(OldX,OldY,T). 
+           
++!rebase_tree_list(OldX,OldY,[new_parent(X,Y,D,SX,SY)|T]): adapt_coordinate(OldX+X,NX) & adapt_coordinate(OldY+Y,NY) & adapt_coordinate(OldX+SX,NSX) & adapt_coordinate(OldY+SY,NSY)
+   <- //.print("ignored rebase de (",X,",",Y,",",D,",",SX,",",SY,") para (",NX,",",NY,",",D,",",NSX,",",NSY,") Old: (", OldX,",",OldY,")");
+      !mark_new_path_vision(NX,NY,NSX,NSY);
+      !rebase_tree_list(OldX,OldY,T).      
       
-+!rebase_tree(OldX,OldY).
-
-
-
-
-+!remove_old_parent: new_parent(X,Y,D,SX,SY) & not(parent(X,Y,D,SX,SY))
-   <- +parent(X,Y,D,SX,SY);      
-      !remove_old_parent.             
-+!remove_old_parent <- .abolish(new_parent(_,_,_,_,_)).
 
 
 //STC: mark the path between the coordinates (X,Y) and (SX,SY)
@@ -206,40 +204,42 @@ run_after_sync. //for STC
    <- .concat(Me,"(",X,",",Y,")",Hint);               
       mark(X, Y, self, Me,S);
       mark(X, Y, path, Hint,1);
-      !mark_new_path(X,Y-1,SX,SY).         
+      !mark_new_path(X,Y-1,SX,SY).
+        
++!mark_new_path(X,Y,SX,SY).       
+                  
       
-+!mark_new_path(X,Y,SX,SY).      
-
-
-+!update_external_tree(L)[source(Ag)]
-   <- //.print(">>>>>> Going to update external_tree ", Ag, " - ", L);
-      !update_tree(L);
-      //.print("<<<<<< Updated external_tree ", Ag, " - ", L).
-      .
-
-+!update_tree([new_parent(X,Y,D,XX,YY)|T]) : X\==XX & Y\==YY
-   <- //.print(".... 0 updating tree parent(",X,",",Y,",",D,",",XX,",",YY,")  ignored");
-      !update_tree(T).   
-
-+!update_tree([new_parent(X,Y,D,XX,YY)|T]) : not(parent(X,Y,D,XX,YY)) &
-                                             vision(V) & (X mod V==0 & Y mod V==0 & XX mod V==0 & YY mod V==0) //update only the edges that fit in the view 
-   <- +parent(X,Y,D,XX,YY);             
-      //.print(".... 1 updating tree parent(",X,",",Y,",",D,",",XX,",",YY,")");
-      !!update_notorigin_teammates(X,Y,D,XX,YY);
-      !update_tree(T).     
+//STC: mark the path between the coordinates (X,Y) and (SX,SY)
++!mark_new_path_vision(X,Y,SX,SY) : X<SX & X*SX>=0 & vision(S) & .my_name(Me) 
+   <- !do_mark_new_path_vision(X,Y,SX,SY); 
+      !mark_new_path_vision(X+1,Y,SX,SY).
       
-           
-+!update_tree([new_parent(X,Y,D,XX,YY)|T]) : parent(X,Y,D,XX,YY)
-   <- //.print(".... 2 updating tree parent(",X,",",Y,",",D,",",XX,",",YY,")");
-      !update_tree(T).   
++!mark_new_path_vision(X,Y,SX,SY) : X>SX & X*SX>0 & vision(S) & .my_name(Me)
+   <- !do_mark_new_path_vision(X,Y,SX,SY); 
+      !mark_new_path_vision(X-1,Y,SX,SY).      
       
-+!update_tree([]).      
++!mark_new_path_vision(X,Y,SX,SY) : Y<SY & Y*SY>=0 & vision(S) & .my_name(Me)
+   <- !do_mark_new_path_vision(X,Y,SX,SY); 
+      !mark_new_path_vision(X,Y+1,SX,SY).
+      
++!mark_new_path_vision(X,Y,SX,SY) : Y>SY & Y*SY>0 & vision(S) & .my_name(Me)
+   <- !do_mark_new_path_vision(X,Y,SX,SY); 
+      !mark_new_path_vision(X,Y-1,SX,SY).              
+      
++!mark_new_path_vision(X,Y,SX,SY).
+
++!do_mark_new_path_vision(X,Y,SX,SY) : origin(O) & gps_map(X,Y,_,MapId) & .substring(O,MapId). //do not overwrite a marked point
++!do_mark_new_path_vision(X,Y,SX,SY) : vision(S) & .my_name(Me) 
+   <- markVision(X,Y,S).      
+
+
 
 
 //update the list of known teammates    
-+!update_teammates(Agents) : teammates(Teammates)
-   <- .concat(Agents,Teammates,L);
-       -+teammates(L).    
++!update_teammates(Agent) : teammates(Teammates) & not(.member(Agent,Teammates))
+   <- .concat([Agent],Teammates,L);
+       -+teammates(L).               
++!update_teammates(Agent).       
        
 +!update_approach_factor : approach_factor(F) & F > 0
    <- -+approach_factor(F-1).
@@ -250,33 +250,37 @@ run_after_sync. //for STC
 +!after_sync(PID) : run_after_sync & not(pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)).
    
       
-+!after_sync(PID): run_after_sync & pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)
++!after_sync(PID): run_after_sync & pending_isme(PID,MX,MY,AG,RX,RY,AX,AY) & .my_name(Me)
    <-   
         OMX=AX+RX;
         OMY=AY+RY;  
         OLDORIGINX=OMX-MX;
         OLDORIGINY=OMY-MY;
+        //?last_node(LX,LY);
+        //-+last_node(OLDORIGINX+LX,OLDORIGINY+LY);
+        ?myposition(X,Y);
+        -+last_node(X,Y);
+        -+current_moving_step(0); 
         //.print("Vai fazer rebase  de (",MX,",",MY, ") para (",OMX,",",OMY,")");
-        !rebase_tree(OLDORIGINX,OLDORIGINY); //stc: modify the beliefs about the three to comply with the new location   //ToDo: share the covered area with the orign agent   
+        !rebase_tree(OLDORIGINX,OLDORIGINY); //stc: modify the beliefs about the three to comply with the new location   //ToDo: share the covered area with the orign agent
+        removeTree(Me); //remove the tree build by this agent   
         //.print("... IsMe ", PID, " ---- ", SCENE);
-        .send( AG,achieve, isme(PID) );
+        //.send( AG,achieve, isme(PID) );
         
         //stc - send to the origin agent the informations about the explored tree 
-        .findall(new_parent(PX,PY,D,PXX,PYY),new_parent(PX,PY,D,PXX,PYY),NewTree);
-        .send(AG,achieve,update_external_tree(NewTree));
-        !remove_old_parent; //STC: remove the outdated informations about the explored tree
-        !update_approach_factor; //STC    
-        !update_teammates([AG]); //STC: add the found agent to the list of teammates    
-        !require_tree(AG); //require the tree from the sender
+        //.findall(new_parent(PX,PY,D,PXX,PYY),new_parent(PX,PY,D,PXX,PYY)&(PX==PXX | PY\==PYY)&(vision(V) & (PX mod V==0 & PY mod V==0 & PXX mod V==0 & PYY mod V==0)),NewTree);
+        //.send(AG,achieve,update_external_tree(NewTree));
+        //!remove_old_parent; //STC: remove the outdated informations about the explored tree
+        //!update_approach_factor; //STC    
+        //!update_teammates(AG); //STC: add the found agent to the list of teammates    
+        //!require_tree(AG); //require the tree from the sender
   
 .
 
 
-//TODO: mark the parent(_,_,_,_,_) with the origin agent to check the beliefs comming from other agents
-+!require_tree(Ag) //require the tree from the sender
-   <- .send(Ag, achieve, inform_tree).
-   
-+!inform_tree[source(Source)]:.my_name(Me) //processing a request for the agent tree path
-   <-  
-       .findall(new_parent(X,Y,D,XX,YY)[origin(Me)],parent(X,Y,D,XX,YY)[source(self)],L);
-       .send(Source, achieve, update_external_tree(L)).    
+//TODO: - check the efficiency of reducing the approach factor       
+//the agent has found a neighbour       
+-pending_areyou(PID,S,L) : .length(L,Size) & Size==1 & .nth(0,L,Ag)
+   //<- !update_approach_factor;
+      //!update_teammates(Ag).          
+.

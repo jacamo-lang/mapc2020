@@ -123,6 +123,13 @@ agent agent1b4: agentDoNothing.asl{
 focus: envb.artb14
 }
 
+/* Uncomment to monitor the exploration strategy */
+agent explorationMonitor: explorationMonitor.asl{
+ join: enva
+ focus: enva.arta0, artGPS
+}
+
+
 workspace enva {
 artifact  arta0: connection.EISAccess("clientconf/eisa0.json")
 artifact  arta1: connection.EISAccess("clientconf/eisa1.json")
@@ -139,7 +146,7 @@ artifact  arta11: connection.EISAccess("clientconf/eisa11.json")
 artifact  arta12: connection.EISAccess("clientconf/eisa12.json")
 artifact  arta13: connection.EISAccess("clientconf/eisa13.json")
 artifact  arta14: connection.EISAccess("clientconf/eisa14.json")
-artifact  artGPS: localPositionSystem.lps(70)
+artifact  artGPS: localPositionSystem.stc.lpsSTC(70)
 }
 
 workspace envb {

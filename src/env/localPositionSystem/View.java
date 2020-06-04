@@ -22,14 +22,14 @@ import javax.swing.border.LineBorder;
 public class View extends JFrame 
 {
         
-        private int size;
-        private JPanel table = new JPanel(new GridBagLayout());         
-        private JLabel [][] map;
-        private Color DEFAULT_COLOR;
-        public static final Color [] colors = {Color.MAGENTA.darker(), Color.BLACK.darker(),
-        									  Color.BLUE.darker(), Color.YELLOW.darker(),
-        									  Color.GREEN.darker(),Color.RED.darker(),
-        									  Color.GRAY.darker(),Color.ORANGE.darker(),
+        protected int size;
+        protected JPanel table = new JPanel(new GridBagLayout());         
+        protected JLabel [][] map;
+        protected Color DEFAULT_COLOR;
+        protected static final Color [] colors = {Color.MAGENTA.darker(), Color.BLACK.darker(),
+                                              Color.BLUE.darker(), Color.YELLOW.darker(),
+                                              Color.GREEN.darker(),Color.RED.darker(),
+                                              Color.GRAY.darker(),Color.ORANGE.darker(),
                                                                                   Color.CYAN.darker()};
             
         public View(int size) {
@@ -203,7 +203,7 @@ public class View extends JFrame
             }
             DEFAULT_COLOR = map[0][0].getBackground();
         }
-        private BufferedImage emptyImage() {
+        protected BufferedImage emptyImage() {
             BufferedImage bi = new BufferedImage( 6, 6, 
                                             BufferedImage.TYPE_INT_ARGB);
             Graphics g = bi.getGraphics();          
@@ -212,7 +212,7 @@ public class View extends JFrame
         }
         
         /* Returns the central position considering the size of the terrain */
-        private int center() {
+        protected int center() {
             return (int) Math.floor(this.size/2);
         }
 }
