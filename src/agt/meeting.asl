@@ -160,7 +160,7 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
        for (map(O,X,Y,TYPE) & O\==ORIGIN){
            -map(O,X,Y,TYPE);       
            +map(ORIGIN,OLDORIGINX+X,OLDORIGINY+Y,TYPE);
-           mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG,0);
+           mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG,0,ORIGIN);
            //.print("...ARE YOU - mark(", OLDORIGINX+X,",",OLDORIGINY+Y,",",TYPE,",", NAG,") OldOrigin: (",OLDORIGINX,",",OLDORIGINY,")  Original Pos:(",X,",",Y,")  Current Pos: (",OMX + (Xnow-MX),",",OMY + (Ynow-MY),")  My Pos: (",MX,",",MY,")- PID: ", PID);
        }
        -+origin(ORIGIN);      

@@ -2,6 +2,10 @@ mapId(agenta0).
 
 inMap(Map) :- mapId(M) & .substring(M,Map). 
 
++step(0)
+   <- .abolish(mapping(_,_)); //remove informations of previous simulations
+      +mapping(0,0).
+
 +step(S): S mod 5==0 & S <= 700
    <- .findall(p(X,Y,Z,Map),gps_map(X,Y,Z,MapId)&inMap(MapId),L);
       .length(L,M);
