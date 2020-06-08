@@ -37,8 +37,9 @@ Run the team (sudo - root privileges can be necessary):
 docker run -ti --rm -u gradle -v gradle-cache:/home/gradle/.gradle -v "$PWD":/home/gradle/project -w /home/gradle/project -p 8000:8000 gradle:6.3.0-jdk13 ./gradlew run
 ```
 
-Running an specific JCM file (replare FILENAME by the name of the jcm):
+To run a specific JCM file, just add after `./gradlew run` arguments, for instance, `./gradlew run --args="src/jcm/spiralwalk_X_randomwalk.jcm` (replace FILENAME by the name of the jcm):
 
-```
-docker run -ti --rm -u gradle -v gradle-cache:/home/gradle/.gradle -v "$PWD":/ho/gradle/project -w /home/gradle/project -p 8000:8000 gradle:6.3.0-jdk13 ./gradlew run --args="src/jcm/FILENAME.jcm browser"
-```
+## Troubleshoot when using docker
+
+* No X11 DISPLAY variable was set
+ * Solution: change `./logging.properties` file to use `handlers= java.util.logging.ConsoleHandler` and make sure no debug windows are activated in the JCM file
