@@ -25,6 +25,7 @@ repositories {
 dependencies {
 	implementation 'org.jacamo:jacamo:0.8'
 	implementation 'org.jason-lang:jason:2.4'
+    implementation name: 'search'
     implementation name: 'eismassim-4.2-jar-with-dependencies'
     implementation name: 'server-2020-1.0-jar-with-dependencies'
 
@@ -57,7 +58,7 @@ task run (type: JavaExec, dependsOn: 'classes') {
     }
     standardInput = System.in
     main 'runMAPC2020.RunTeam'
-    args = ['src/jcm/gps_X_donothing.jcm','browser']
+    args = ['src/jcm/agentPathFinder_X_donothing.jcm','browser']
     classpath sourceSets.main.runtimeClasspath
 }
 

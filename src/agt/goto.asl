@@ -12,7 +12,22 @@ myposition(0,0).
 +!goto(X,Y): 
     myposition(X,Y)
     <- .print("-------> " ,cheguei(X,Y)).
-        
+    
++!goto(X,Y): 
+    use_routePlanner &
+    not myposition(X,Y)
+    <-
+      ?myposition(OX,OY);
+      getDirection(OX,OY,X,Y,DIRECTION);
+      .print("Going to x: ",X," y: ",Y," act: ",move(DIRECTION));
+      !do(move(DIRECTION),R);   
+      if (R=success) {
+          !mapping(DIRECTION);
+          !goto(X,Y);
+      } else {
+        .print("Fail on going to x: ",X," y: ",Y," act: ",move(DIRECTION));
+      }
+    .    
 
 +!goto(X,Y): 
     not myposition(X,Y)
