@@ -41,5 +41,6 @@ To run a specific JCM file, just add after `./gradlew run` arguments, for instan
 
 ## Troubleshoot when using docker
 
-* No X11 DISPLAY variable was set
- * Solution: change `./logging.properties` file to use `handlers= java.util.logging.ConsoleHandler` and make sure no debug windows are activated in the JCM file
+* No X11 DISPLAY variable was set. Solution:
+ * change `./logging.properties` file to use `handlers= java.util.logging.ConsoleHandler` and make sure no debug windows are activated in the `.jcm` file.
+ * make sure in the `.jcm` the visual interface for local position system is off (`0`), which is the second parameter of `localPositionSystem.lps(_,0)`.

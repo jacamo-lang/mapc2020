@@ -146,7 +146,7 @@ artifact  arta11: connection.EISAccess("clientconf/eisa11.json")
 artifact  arta12: connection.EISAccess("clientconf/eisa12.json")
 artifact  arta13: connection.EISAccess("clientconf/eisa13.json")
 artifact  arta14: connection.EISAccess("clientconf/eisa14.json")
-artifact  artGPS: localPositionSystem.lps(90)
+artifact  artGPS: localPositionSystem.lps(90,1)
 }
 
 workspace envb {

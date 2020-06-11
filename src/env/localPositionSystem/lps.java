@@ -11,21 +11,24 @@ import cartago.*;
 
 public class lps extends Artifact {
     protected View view;
+    protected int viewOn;
 
     @OPERATION 
-    void init (int size){
-        view = new View(size);
+    void init (int size, int viewOn){
+        this.viewOn = viewOn;
+        if (viewOn != 0)
+            view = new View(size);
     }
     
     @OPERATION
     void clear(int i, int j, int range) {       
-        this.view.clear(i, j,range);
+        if (viewOn != 0) this.view.clear(i, j,range);
     }
     
     
     @OPERATION
     void mark(int i, int j, String type, String info, int vision) {     
-        this.view.mark(i, j, type, info, vision);
+        if (viewOn != 0) this.view.mark(i, j, type, info, vision);
     }
     
     
@@ -34,7 +37,7 @@ public class lps extends Artifact {
      */
     @OPERATION
     void mark(int i, int j, String type, String info, int vision, String mapId) {     
-        this.view.mark(i, j, type, info, vision);
+        if (viewOn != 0) this.view.mark(i, j, type, info, vision);
 
         if(!type.equals("self")) {
             ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,mapId);
@@ -49,7 +52,7 @@ public class lps extends Artifact {
     
     @OPERATION
     void unmark(int i, int j) {     
-        this.view.unmark(i, j);
+        if (viewOn != 0) this.view.unmark(i, j);
     }
 
 
