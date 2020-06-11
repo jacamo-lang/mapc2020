@@ -9,15 +9,22 @@ import jason.environment.grid.Location;
 
 public class GridState implements Estado, Heuristica {
     // State information
-    Location pos; // current location
-    Location from,to;
-    String op;
+    private Location pos; // current location
+    private Location from,to;
+    private String direction; //can be one of the following: [n,s,e,w]
 
-    public GridState(Location l, Location from, Location to, String op) {
+    /**
+     * 
+     * @param l
+     * @param from
+     * @param to
+     * @param direction can be one of the following: [n,s,e,w]
+     */
+    public GridState(Location l, Location from, Location to, String direction) {
         this.pos = l;
         this.from = from;
         this.to = to;
-        this.op = op;
+        this.direction = direction;
     }
 
     public int custo() {
@@ -39,17 +46,16 @@ public class GridState implements Estado, Heuristica {
     public List<Estado> sucessores() {
         List<Estado> s = new ArrayList<Estado>(4);
         // four directions
-        suc(s,new Location(pos.x-1,pos.y),"left");
-        suc(s,new Location(pos.x+1,pos.y),"right");
-        suc(s,new Location(pos.x,pos.y-1),"up");
-        suc(s,new Location(pos.x,pos.y+1),"down");
+        suc(s,new Location(pos.x-1,pos.y),"w");
+        suc(s,new Location(pos.x+1,pos.y),"e");
+        suc(s,new Location(pos.x,pos.y-1),"n");
+        suc(s,new Location(pos.x,pos.y+1),"s");
         return s;
     }
 
-    private void suc(List<Estado> s, Location newl, String op) {
-        //if (model.isFree(newl) || (from.distance(newl) > 3 && model.isFreeOfObstacle(newl))) {
-            s.add(new GridState(newl,from,to,op));
-        //}
+    private void suc(List<Estado> s, Location newl, String direction) {
+        // Dummy implementation: It is not pruning any possibility, just creating all of them
+        s.add(new GridState(newl,from,to,direction));
     }
 
     public boolean equals(Object o) {
@@ -65,6 +71,10 @@ public class GridState implements Estado, Heuristica {
     }
 
     public String toString() {
-        return "(" + pos + "-" + op + ")";
+        return "(" + pos + "-" + direction + ")";
+    }
+    
+    public String getDirection() {
+        return direction;
     }
 }
