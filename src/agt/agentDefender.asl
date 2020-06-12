@@ -12,9 +12,11 @@ targetPoint(_,_).
   true
   <-
     // First going to fixed points, doing almost a square
-    !goto(0,-10);
-    // !goto(-25,0);
-    !!goSquare;
+    !goto(0,-9);
+    ?myposition(OX,OY);
+    !goObstacle(OX,OY);
+    ?myposition(X,Y);
+    !!makeSquare(X,Y);
  .
 
 +!goRandomly:
@@ -28,14 +30,24 @@ targetPoint(_,_).
     !goRandomly;
     .
 
-+!goSquare:
++!goObstacle(OX,OY): goal(OX,OY).
+
++!goObstacle(OX,OY):
+  not goal(OX,OY)
+  <-
+    !goto(OX-1,OY);
+    ?myposition(X,Y);
+    !goObstacle(X,Y)
+    .
+
++!makeSquare(X,Y):
   true
   <-
-    !do(move(n),R);
-    !do(move(o),R);
-    !do(move(s),R);
-    !do(move(l),R);
-    !!goSquare;
+    !goto(X+3,Y);
+    !goto(X+3,Y+3);
+    !goto(X,Y+3);
+    !goto(X,Y);
+    !!makeSquare(X,Y);
     .
 
 +!areyou(_,_,_,_,_,_,_) <- true.
