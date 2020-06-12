@@ -55,7 +55,7 @@ myposition(0,0).
 !start.
 
 +!start: 
-	true
+    true
     <-
         .wait(step(_));
         ?name(NAME);        
@@ -65,42 +65,42 @@ myposition(0,0).
 
 
 +disabled(true):
-	true
-	<-
-		.print("recharging...");
-		!!recharge[critical_section(action), priority(2)];
-	.
+    true
+    <-
+        .print("recharging...");
+        !!recharge[critical_section(action), priority(2)];
+    .
 
 +!recharge:
-	true
-	<-
-		!do(skip,R);
-	.
-	
+    true
+    <-
+        !do(skip,R);
+    .
+    
 +!move(D,S,LENGTH): 
-	true
-	<-
-	  if (S=LENGTH) {
-      	?nextDirection(D,ND);
+    true
+    <-
+      if (S=LENGTH) {
+        ?nextDirection(D,ND);
         NS=0;
         NL=LENGTH+1;
       } 
       else {
-      	ND=D;
-      	NS=S+1;
-      	NL=LENGTH;
+        ND=D;
+        NS=S+1;
+        NL=LENGTH;
       }
       !do(move(ND),R);
       
       if (R=failed_path) {
-    	?nextDirection(ND,NND);   
+        ?nextDirection(ND,NND);   
         !!move(NND,0,NL)[critical_section(action), priority(1)];
       }
       if (R=success) {
-      	!mapping(ND);
-      	!!move(ND,NS,NL)[critical_section(action), priority(1)];
+        !mapping(ND);
+        !!move(ND,NS,NL)[critical_section(action), priority(1)];
       }     
-	.
+    .
 
 +!mapping(DIRECTION) :  
     directionIncrement(DIRECTION, INCX,  INCY) & 
