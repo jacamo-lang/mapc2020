@@ -41,9 +41,7 @@ public class lps extends Artifact {
             this.view.mark(i, j, type, info, vision);
         }
         
-        if (!this.map.contains(i, j)) {
-            this.map.put(i, j, type);
-        }
+        this.map.put(i, j, type);
     }
     
     /**
@@ -51,14 +49,7 @@ public class lps extends Artifact {
      */
     @OPERATION
     void mark(int i, int j, String type, String info, int vision, String mapId) {     
-        //this.execInternalOp("mark",i, j, type, info, vision);
-        if (viewOn != 0) {
-            this.view.mark(i, j, type, info, vision);
-        }
-        
-        if (!this.map.contains(i, j)) {
-            this.map.put(i, j, type);
-        }
+        this.execInternalOp("mark",i, j, type, info, vision);
         
         if(!type.equals("self")) {
             ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,mapId);
