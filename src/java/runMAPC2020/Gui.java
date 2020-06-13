@@ -1,6 +1,5 @@
 package runMAPC2020;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -16,10 +15,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class Gui extends JFrame
 {
+    private static final long serialVersionUID = 1L;
+
         public Gui(Control control) {       
             JFrame frame = this;
             setTitle("Start configuration");
@@ -28,14 +28,14 @@ public class Gui extends JFrame
             GridBagConstraints c = new GridBagConstraints();
             
             JLabel rSimulations = new JLabel("Selecione a simulação");
-            JComboBox simulations = new JComboBox(listFiles().stream().toArray());
+            JComboBox simulations = new JComboBox<>(listFiles().stream().toArray());
             JCheckBox browser = new JCheckBox("Abrir um navegador");
             JButton start = new JButton("Iniciar simulação");
             start.addActionListener((new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {                    
                     frame.dispose();
-                    control.start(simulations.getSelectedItem().toString(), browser.isSelected());
+                    control.start(simulations.getSelectedItem().toString(), browser.isSelected(), false);
                 }
             }));
 
@@ -56,12 +56,11 @@ public class Gui extends JFrame
         }
         
         public List<String> listFiles() {
-            LinkedList<String> listFiles = new LinkedList();
+            LinkedList<String> listFiles = new LinkedList<>();
             File folder=null;
             try {
                 folder = new File( new File( "." ).getCanonicalPath());
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             for (File fileEntry : folder.listFiles()) {
