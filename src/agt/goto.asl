@@ -99,6 +99,10 @@ myposition(0,0).
         for (thing(I,J,dispenser,TYPE)) {
             !addMap(I,J,NX,NY,TYPE);
         }    
+        for (thing(I,J,entity,TYPE)) {
+        	// Entities of types "a" and "b" are of the corresponding teams
+            !addMap(I,J,NX,NY,TYPE);
+        }    
 .
 
 

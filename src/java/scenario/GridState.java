@@ -3,7 +3,6 @@ package scenario;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 import busca.Estado;
@@ -59,8 +58,12 @@ public class GridState implements Estado, Heuristica {
     }
 
     private void suc(List<Estado> s, Location newl, String direction) {
-        // Avoiding obstacles
-        if ((!map.contains(newl.x, newl.y)) || (!map.get(newl.x, newl.y).equals("obstacle"))) {
+        // Avoiding obstacles and agents of both teams
+        if (    (!map.contains(newl.x, newl.y)) || (
+                (!map.get(newl.x, newl.y).equals("a")) && // an agent of team a
+                (!map.get(newl.x, newl.y).equals("b")) && // an agent of team b
+                (!map.get(newl.x, newl.y).equals("obstacle"))
+                )) {
             s.add(new GridState(newl, from, to, direction, map));
         }
     }
