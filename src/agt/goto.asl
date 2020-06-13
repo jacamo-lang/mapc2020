@@ -100,7 +100,7 @@ myposition(0,0).
             !addMap(I,J,NX,NY,TYPE);
         }    
         for (thing(I,J,entity,TYPE)) {
-        	// Entities of types "a" and "b" are of the corresponding teams
+            // Entities of types "a" and "b" are of the corresponding teams
             !addMap(I,J,NX,NY,TYPE);
         }    
 .

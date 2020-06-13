@@ -2,6 +2,7 @@
 { include("$jacamoJar/templates/common-moise.asl") }
 { include("goto.asl") }
 { include("action.asl") }
+{ include("taskperformer.asl") }
 
 use_routePlanner.
 targetPoint(_,_).
