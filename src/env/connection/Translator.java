@@ -93,12 +93,12 @@ public class Translator {
             for (Parameter p : (ParameterList) par)
                 tail = tail.append(parameterToTerm(p));
             return list;
-        } 
+        }
         throw new JasonException("The type of parameter " + par + " is unknown!");
     }
-    
-    
-    
+
+
+
     public static Term[] parametersToTerms(List<Parameter> list) {
         Term [] ret = new Term[list.size()];
         Term aux=null;
@@ -115,7 +115,7 @@ public class Translator {
 //              } catch (Exception e) {
 //              }
             else {
-                try {                   
+                try {
                     if (list.get(i).toProlog().equals("")) {
                         aux = ASSyntax.createLiteral("null");
                     }

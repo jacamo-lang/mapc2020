@@ -9,33 +9,33 @@ directionIncrement(w,-1,  0).
 directionIncrement(e, 1,  0).
 myposition(0,0).
 
-+!goto(X,Y): 
++!goto(X,Y):
     myposition(X,Y)
     <- .print("-------> " ,cheguei(X,Y)).
-    
-+!goto(X,Y): 
+
++!goto(X,Y):
     use_routePlanner &
     not myposition(X,Y)
     <-
       ?myposition(OX,OY);
       getDirection(OX,OY,X,Y,DIRECTION);
-      .print("Going to x: ",X," y: ",Y," act: ",move(DIRECTION));
-      !do(move(DIRECTION),R);   
+      // .print("Going to x: ",X," y: ",Y," act: ",move(DIRECTION));
+      !do(move(DIRECTION),R);
       if (R=success) {
           !mapping(DIRECTION);
           !goto(X,Y);
       } else {
         .print("Fail on going to x: ",X," y: ",Y," act: ",move(DIRECTION));
       }
-    .    
+    .
 
-+!goto(X,Y): 
++!goto(X,Y):
     not myposition(X,Y)
     <-
       ?myposition(OX,OY);
       DISTANCEX=math.abs(X-OX);
       DISTANCEY=math.abs(Y-OY);
-      
+
       if (DISTANCEX>DISTANCEY) {
         DESIRABLEX = (X-OX)/DISTANCEX;
         DESIRABLEY = 0;
@@ -43,47 +43,47 @@ myposition(0,0).
       else {
         DESIRABLEX = 0;
         DESIRABLEY = (Y-OY)/DISTANCEY;
-      } 
+      }
       if (not obstacle(DESIRABLEX,DESIRABLEY)) {
         ?directionIncrement(DIRECTION,DESIRABLEX,DESIRABLEY);
-        !do(move(DIRECTION),R);   
+        !do(move(DIRECTION),R);
         if (R=success) {
-            !mapping(DIRECTION);    
-        }       
+            !mapping(DIRECTION);
+        }
       }
       else {
         ?directionIncrement(BLOCKEDDIRECTION,DESIRABLEX,DESIRABLEY);
         ?nextDirection(BLOCKEDDIRECTION,DIRECTION);
-        !workaround(DIRECTION); 
+        !workaround(DIRECTION);
       }
       !goto(X,Y);
     .
-    
+
 +!workaround(DIRECTION):
     true
-    <-  
+    <-
       if (directionIncrement(DIRECTION, X, Y) &
           obstacle(X,Y)) {
-          ?nextDirection(DIRECTION,NEXTDIRECTION);   
-          !workaround(NEXTDIRECTION);    
+          ?nextDirection(DIRECTION,NEXTDIRECTION);
+          !workaround(NEXTDIRECTION);
       }
       else {
           !do(move(DIRECTION),R);
           if (R=failed_path) {
-            ?nextDirection(DIRECTION,NEXTDIRECTION);   
-            !workaround(NEXTDIRECTION,DIRECTIONX,DIRECTIONY);        
+            ?nextDirection(DIRECTION,NEXTDIRECTION);
+            !workaround(NEXTDIRECTION,DIRECTIONX,DIRECTIONY);
           }
           if (R=success) {
-            !mapping(DIRECTION);    
+            !mapping(DIRECTION);
           }
-      }     
+      }
     .
 
-+!mapping(DIRECTION) :  
-    directionIncrement(DIRECTION, INCX,  INCY) & 
-    step(STEP) & 
++!mapping(DIRECTION) :
+    directionIncrement(DIRECTION, INCX,  INCY) &
+    step(STEP) &
     myposition(X,Y)
-    <-  
+    <-
         NX= X+INCX;
         NY= Y+INCY;
         -+myposition(NX,NY);
@@ -98,13 +98,13 @@ myposition(0,0).
         }
         for (thing(I,J,dispenser,TYPE)) {
             !addMap(I,J,NX,NY,TYPE);
-        }    
+        }
 .
 
 
-+!addMap(I,J,X,Y,TYPE) :  
++!addMap(I,J,X,Y,TYPE) :
     true
     <-
-    .my_name(AG);  
-     mark(X+I, Y+J, TYPE, AG,0);               
+    .my_name(AG);
+     mark(X+I, Y+J, TYPE, AG,0);
     .
