@@ -22,11 +22,11 @@ myposition(0,0).
       .print("Going to x: ",X," y: ",Y," act: ",move(DIRECTION));
       !do(move(DIRECTION),R);   
       if (R=success) {
-          !mapping(DIRECTION);
-          !goto(X,Y);
+          !mapping(DIRECTION);          
       } else {
         .print("Fail on going to x: ",X," y: ",Y," act: ",move(DIRECTION));
       }
+      !goto(X,Y);
     .    
 
 +!goto(X,Y): 

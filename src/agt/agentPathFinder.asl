@@ -11,11 +11,11 @@ targetPoint(_,_).
 +!start: 
   true
   <-
-    // First going to fixed points, doing almost a square
-    !goto(0,-20);
-    !goto(-20,-20);
-    !goto(-20,10);
-    !goto(-2,0);
+    // First going to fixed points, the agent is starting at the absolute_position(45,3)
+    !goto(-33,9); // Go to the depot in the absolute_position(12,12)
+    !goto(10,-6); // Go to the depot in the absolute_position(55,67)
+    !goto(-39,6); // Go to the depot in the absolute_position(6,9)
+    
     // Later go randomly elsewhere
     !!goRandomly;
  .

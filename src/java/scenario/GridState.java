@@ -3,6 +3,9 @@ package scenario;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
 import busca.Estado;
 import busca.Heuristica;
 import jason.environment.grid.Location;
@@ -12,6 +15,7 @@ public class GridState implements Estado, Heuristica {
     private Location pos; // current location
     private Location from,to;
     private String direction; //can be one of the following: [n,s,e,w]
+    private Table<Integer, Integer, String> map;
 
     /**
      * 
@@ -20,11 +24,12 @@ public class GridState implements Estado, Heuristica {
      * @param to
      * @param direction can be one of the following: [n,s,e,w]
      */
-    public GridState(Location l, Location from, Location to, String direction) {
+    public GridState(Location l, Location from, Location to, String direction, Table<Integer, Integer, String> map) {
         this.pos = l;
         this.from = from;
         this.to = to;
         this.direction = direction;
+        this.map = map;
     }
 
     public int custo() {
@@ -54,8 +59,10 @@ public class GridState implements Estado, Heuristica {
     }
 
     private void suc(List<Estado> s, Location newl, String direction) {
-        // Dummy implementation: It is not pruning any possibility, just creating all of them
-        s.add(new GridState(newl,from,to,direction));
+        // Avoiding obstacles
+        if ((!map.contains(newl.x, newl.y)) || (!map.get(newl.x, newl.y).equals("obstacle"))) {
+            s.add(new GridState(newl, from, to, direction, map));
+        }
     }
 
     public boolean equals(Object o) {

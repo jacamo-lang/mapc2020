@@ -1,4 +1,7 @@
-package routePlanner;
+package localPositionSystem.rp;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 
 import busca.AEstrela;
 import busca.Busca;
@@ -7,12 +10,19 @@ import busca.Nodo;
 
 import jason.asSyntax.Atom;
 import jason.environment.grid.Location;
-
+import localPositionSystem.lps;
 import scenario.GridState;
 
 import cartago.*;
 
-public class rp extends Artifact {
+/**
+ * RoutePlanner (rp) class uses search algorithm to find the best path from
+ * point A to B
+ * 
+ * @author cleber
+ *
+ */
+public class rp extends lps {
 
     /**
      * getDirection for MAPC 2020. It uses A* to generate the path to driven an
@@ -32,7 +42,7 @@ public class rp extends Artifact {
             Busca search = new AEstrela();
             Location lini = new Location(iagx, iagy);
 
-            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), ""));
+            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", this.map));
 
             // The solution "solution.montaCaminho()" can be a long path, we need the next direction
             if (solution != null) {
