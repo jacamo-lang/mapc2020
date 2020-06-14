@@ -17,6 +17,19 @@ center_goal_big(X,Y) :-
     (goal(X+1,Y-1)) & (goal(X+1,Y+1))
     .
 
+position_defenser(X,Y,XM,YM) :- position_n(X,Y,XM,YM)  | position_nw(X,Y,XM,YM) |
+                                position_sw(X,Y,XM,YM) | position_w(X,Y,XM,YM)  |
+                                position_s(X,Y,XM,YM)  | position_ne(X,Y,XM,YM) |
+                                position_se(X,Y,XM,YM) | position_e(X,Y,XM,YM).
+position_n(X,Y,0,-1)   :- (X>=-1 & X<=1 & Y<=-1) | Y<=-2.
+position_w(X,Y,-1,0)   :- (X<=-1 & Y>=-1 & Y<=1) | X<=-2.
+position_nw(X,Y,-1,-1) :- (X>=-3 & X<=-1 & Y>=-2 & Y<=-1).
+position_sw(X,Y,-1,1)  :- (X<=3 & X>=1 & Y>=-2 & Y<=-1).
+position_s(X,Y,0,1)    :- (X>=-1 & X<=1 & Y>=1)  | Y>=2.
+position_e(X,Y,1,0)    :- (X>=1 & Y>=-1 & Y<=1)  | X>=2.
+position_ne(X,Y,1,-1)  :- (X>=-3 & X<=-1 & Y<=2 & Y>=1).
+position_se(X,Y,1,1)   :- (X<=3 & X>=1 & Y<=2 & Y>=1).
+
 center_goal(X,Y) :- center_goal_small(X,Y) | center_goal_big(X,Y).
 
 !start.
@@ -73,10 +86,12 @@ center_goal(X,Y) :- center_goal_small(X,Y) | center_goal_big(X,Y).
 +!goGoal(X,Y):
   goal(0,0)
   <-
+    // Find Center
     for (goal(I,J)) {
       if (center_goal(I,J)) {
         !goto(X+I,Y+J);
-        !!makeSquare(X+I,Y+J);
+        !!defenderSimple(X+I,Y+J);
+        //!!makeSquare(X+I,Y+J);
       }
     }
     .
@@ -86,6 +101,39 @@ center_goal(X,Y) :- center_goal_small(X,Y) | center_goal_big(X,Y).
   <-
     !goto(OX-1,OY);
     !!goGoal(OX-1,OY);
+    .
+
++!defenderSimple(X,Y):
+  thing(I,J,entity,TEAM) &
+  not team(TEAM) &
+  position_defenser(I,J,XM,YM) &
+  myposition(X+XM,Y+YM)
+  <-
+    !do(skip,_);
+    !!defenderSimple(X,Y);
+    .
+
++!defenderSimple(X,Y):
+  thing(I,J,entity,TEAM) &
+  not team(TEAM)
+  <-
+    ?position_defenser(I,J,XM,YM);
+    !goto(X+XM,Y+YM);
+    !!defenderSimple(X,Y);
+    .
+
++!defenderSimple(X,Y):
+  myposition(X,Y)
+  <-
+    !do(skip,_);
+    !!defenderSimple(X,Y);
+    .
+
++!defenderSimple(X,Y):
+  not myposition(X,Y)
+  <-
+    !goto(X,Y);
+    !!defenderSimple(X,Y);
     .
 
 +!makeSquare(X,Y):

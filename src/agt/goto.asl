@@ -19,7 +19,7 @@ myposition(0,0).
     <-
       ?myposition(OX,OY);
       getDirection(OX,OY,X,Y,DIRECTION);
-      // .print("Going to x: ",X," y: ",Y," act: ",move(DIRECTION));
+      .print("Going to x: ",X," y: ",Y," act: ",move(DIRECTION));
       !do(move(DIRECTION),R);
       if (R=success) {
           !mapping(DIRECTION);

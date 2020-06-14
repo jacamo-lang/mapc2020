@@ -58,7 +58,7 @@ task run (type: JavaExec, dependsOn: 'classes') {
     }
     standardInput = System.in
     main 'runMAPC2020.RunTeam'
-    args = ['src/jcm/agentDefender_X_donothing.jcm','browser']
+    args = ['src/jcm/agentDefender_X_agentGoGoal.jcm','browser']
     classpath sourceSets.main.runtimeClasspath
 }
 
