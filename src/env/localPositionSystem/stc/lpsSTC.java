@@ -8,9 +8,10 @@ import localPositionSystem.lps;
 public class lpsSTC extends lps {
 
     @OPERATION 
-    void init (int size){
-        view = new ViewSTC(size);
-        //view = new View(size);
+    void init (int size, int viewOn){
+        this.viewOn = viewOn;
+        if (viewOn != 0)
+           view = new ViewSTC(size);
     }
 
     @OPERATION

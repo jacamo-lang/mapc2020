@@ -36,13 +36,15 @@ approach_factor(4).//highest -> closer
 
 field_center(C) :- field_size(S) & C=S div 2. 
 //adapt a coordinate A to to a new value B that fits with the field size
-adapt_coordinate(A,B) :- field_size(S) & field_center(C) & (A>=C) & B=A-S.
-adapt_coordinate(A,B) :- field_size(S) & field_center(C) & (A<C*-1) & B=A+S.
+//adapt_coordinate(A,B) :- field_size(S) & field_center(C) & (A>=C) & B=A-S.
+//adapt_coordinate(A,B) :- field_size(S) & field_center(C) & (A<C*-1) & B=A+S.
 adapt_coordinate(A,B) :- B=A.
 
 
 +myposition(X,Y): adapt_coordinate(X,XX) & adapt_coordinate(Y,YY) & (X\==XX | Y\==YY)  
    <- -+myposition(XX,YY).
+   
+//+myposition(X,Y) :  last_node(LX,LY) <- .print("... position (", X, ",", Y,") Last Node: (", LX, ",", LY,")").
 
 
 //obstacle_direction(D) : check for obstacles in the direction D    

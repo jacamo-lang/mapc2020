@@ -13,6 +13,11 @@
 
 steps_for_sync(4). /* Number of steps to wait for answers of possible neighbours */
 
+/* Useful to compare atoms (e.g. agent name) with String arguments from artifacts */
+compare_bels(Bel1,Bel2):- .concat("-",Bel1,NewBel1) & .concat("-",Bel2,NewBel2) & 
+                          .length(NewBel1, LNewBel1) & .length(NewBel2, LNewBel2) & LNewBel1==LNewBel2 & 
+                          .substring(NewBel1,NewBel2).
+
 
 coord(X,Y,XR,YR,L,R) :- coordXpositive(X,Y,XR,YR,L,XP) & coordXnegative(X-1,Y,XR,YR,L,XN) & .concat(XP,XN,R).  
 coordXpositive(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=5 & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,[],N) & coordYnegative(X,Y-1,XR,YR,[],NN) & coordXpositive(X+1,Y,XR,YR,L,M) & .concat([p(X,Y)],M,N,NN,R).
@@ -38,6 +43,8 @@ buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .member(m(X,Y,obst),Obstacl
 buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .member(m(X,Y,W),Things) & .concat([m(X,Y,W)],L,RR) & buildscene(Goals,Obstacles,Things,T,RR,R).
 buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .concat(L,[m(X,Y,empty)],RR) & buildscene(Goals,Obstacles,Things,T,RR,R).                                                  
 buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.                                                  
+
+//+replace_map(OldMapId, NewMapId) <- .print(">>>> I should replaceMap from ", OldMapId, " to ", NewMapId).
 
 //sincMap: the sync process
 +!sincMap(XR,YR): origin(OL) & originlead(OL) &
@@ -109,7 +116,7 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
 +!isme(PID)[source(AG)]: pending_areyou(PID,Step,L)
     <- .concat([AG],L,NewL);
        -+pending_areyou(PID,Step,NewL);
-       //.print("### Received isme PID: ", PID, " - L", L, "  NewL: ",  NewL, " Step: ", Step , "###").
+       //.print("### Received isme PID: ", PID, " - L", L, "  NewL: ",  NewL, " Step: ", Step , "###");
        .
  
 +!isme(PID).    
@@ -145,7 +152,7 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
 //(RX,RY): relative position of the agent with respect to AG
 //(AX,AY): position of AG when meets with the agent   
 @sync_isme[atomic]   //atomic to avoid update the coordinates before (i) finishing the plan and (ii) start a parallel update          
-+!sync_isme(PID)[source(AG)] : pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)  & not (origin(OL) & originlead(OL)) & myposition(Xnow,Ynow)            
++!sync_isme(PID)[source(AG)] : pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)  & origin(OL) & not (originlead(OL)) & myposition(Xnow,Ynow)            
    <-  
        .perceive;
        ?myposition(Xnow_2,Ynow_2);
@@ -157,13 +164,14 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
        OLDORIGINX=OMX-MX; //origin of the agent with respect to the origin of AG
        OLDORIGINY=OMY-MY;                     
        .my_name(NAG);   
-       for (map(O,X,Y,TYPE) & O\==ORIGIN){
-           -map(O,X,Y,TYPE);       
-           +map(ORIGIN,OLDORIGINX+X,OLDORIGINY+Y,TYPE);
+       for (gps_map(X,Y,TYPE,MapId) & compare_bels(MapId,OL) & OL\==ORIGIN){
            mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG,0,ORIGIN);
-           //.print("...ARE YOU - mark(", OLDORIGINX+X,",",OLDORIGINY+Y,",",TYPE,",", NAG,") OldOrigin: (",OLDORIGINX,",",OLDORIGINY,")  Original Pos:(",X,",",Y,")  Current Pos: (",OMX + (Xnow-MX),",",OMY + (Ynow-MY),")  My Pos: (",MX,",",MY,")- PID: ", PID);
-       }
-       -+origin(ORIGIN);      
+           //.print("...ARE YOU - mark(", OLDORIGINX+X,",",OLDORIGINY+Y,",",TYPE,",", MapId,") OldMap: ", OL, " OldOrigin: (",OLDORIGINX,",",OLDORIGINY,")  Original Pos:(",X,",",Y,")  Current Pos: (",OMX + (Xnow-MX),",",OMY + (Ynow-MY),")  My Pos: (",MX,",",MY,")- PID: ", PID);
+       }       
+       -+origin(ORIGIN);
+       replaceMap(OL,ORIGIN); //remove the old map from the shared representation
+       .abolish(map(OL,_,_,_));      
+       //?step(S); .print("... SYNC areyou origin: ", ORIGIN, " Agent: ", AG, " Step ", S, "");
        !after_sync(PID).    
 
 +!sync_isme(PID).

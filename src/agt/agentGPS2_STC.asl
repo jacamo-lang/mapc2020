@@ -143,17 +143,24 @@ run_after_sync. //for STC
 
 
 
+
+
+//The origin is the originLead (the one that draws in the viewer)
 +!addMap(I,J,X,Y,TYPE) :  
-    .my_name(AG) & origin(O)  
-    &adapt_coordinate(X+I,XX)&adapt_coordinate(Y+J,YY)
+    .my_name(AG) & origin(O) & originlead(O)  
     <-
         if(origin(OL) & originlead(OL)) {
-            //mark(X+I, Y+J, TYPE, AG,0);                
-            mark(XX, YY, TYPE, AG,0,O);
+            mark(X+I, Y+J, TYPE, AG,0, O); //The last parameter is the map identifier              
         }   
         //+map(O,X+I,Y+J,TYPE);
-        +map(O,XX,YY,TYPE);
     .
+    
++!addMap(I,J,X,Y,self). //do not mark the agent position if it is not in the originlead map    
+    
++!addMap(I,J,X,Y,TYPE) : origin(O)
+   <- mark(X+I, Y+J, TYPE,  O); //The last parameter is the map identifier                
+     //+map(O,X+I,Y+J,TYPE).
+     .
 
     
     
@@ -182,7 +189,7 @@ run_after_sync. //for STC
 
 
 //STC: mark the path between the coordinates (X,Y) and (SX,SY)
-+!mark_new_path(X,Y,SX,SY) : X<SX & X*SX>=0 & vision(S) & .my_name(Me)
++!mark_new_path(X,Y,SX,SY) : X<SX & X*SX>=0 & vision(S) & .my_name(Me)  
    <- .concat(Me,"(",X,",",Y,")",Hint);               
       mark(X, Y, self, Me,S);
       mark(X, Y, path, Hint,1);
@@ -248,7 +255,7 @@ run_after_sync. //for STC
 
    
 +!after_sync(PID) : run_after_sync & not(pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)).
-   
+     
       
 +!after_sync(PID): run_after_sync & pending_isme(PID,MX,MY,AG,RX,RY,AX,AY) & .my_name(Me)
    <-   

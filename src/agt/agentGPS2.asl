@@ -131,12 +131,19 @@ myposition(0,0).
 .
 
 
-
+//The origin is the originLead (the one that draws in the viewer)
 +!addMap(I,J,X,Y,TYPE) :  
-    .my_name(AG) & origin(O)  
+    .my_name(AG) & origin(O) & originlead(O)  
     <-
         if(origin(OL) & originlead(OL)) {
             mark(X+I, Y+J, TYPE, AG,0, O); //The last parameter is the map identifier              
         }   
-        +map(O,X+I,Y+J,TYPE);
+       // +map(O,X+I,Y+J,TYPE);
     .
+    
++!addMap(I,J,X,Y,self). //do not mark the agent position if it is not in the originlead map    
+    
++!addMap(I,J,X,Y,TYPE) : origin(O)
+   <- mark(X+I, Y+J, TYPE,  O); //The last parameter is the map identifier                
+     //+map(O,X+I,Y+J,TYPE).
+     .
