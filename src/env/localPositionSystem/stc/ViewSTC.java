@@ -29,6 +29,20 @@ public class ViewSTC extends View
         
         
         public void markVision(int i, int j, Color c, int vision) {
+            //* ajuste do toroide
+            if (center()+i+1>this.size) {
+                i=i-this.size;                
+            } 
+            else if (i<center()*-1) {
+                i=i+this.size; 
+            }
+            if (center()+j+1>this.size) {
+                j=j-this.size;
+            }
+            else if (j<center()*-1) {
+                j=j+this.size;
+            } 
+
             int [] directions = {-1,1};
             for (int di:directions)
                 for (int offseti=0;offseti<=vision;offseti++) {

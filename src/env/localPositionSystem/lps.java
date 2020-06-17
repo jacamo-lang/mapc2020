@@ -60,6 +60,33 @@ public class lps extends Artifact {
         }
     }
     
+    /**
+     * Add as observable property to the shared map identified by mapId without mark in the viewer
+     */
+    @OPERATION
+    void mark(int i, int j, String type, String mapId) {     
+        if(!type.equals("self")) {
+            ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,mapId);
+            if(prop==null) 
+                defineObsProperty("gps_map",i,j,type,mapId);
+            else 
+                prop.updateValues(i,j,type,mapId);
+        }
+    }
+    
+    /**
+     * Remove all the objects of the mapId
+     */
+    @OPERATION
+    void replaceMap(String oldMapId, String newMapId) {
+         ObsProperty prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
+        while(prop!=null) {
+            this.removeObsPropertyByTemplate("gps_map", null, null, null, oldMapId);            
+            prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
+        }
+        //signal("replace_map",oldMapId,newMapId);     
+    }
+    
     @OPERATION
     void unmark(int i, int j) {     
         if (viewOn != 0) {
