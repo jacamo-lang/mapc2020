@@ -101,6 +101,9 @@ myposition(0,0).
         for (thing(I,J,dispenser,TYPE)) {
             !addMap(I,J,NX,NY,TYPE);
         }    
+        for (thing(I,J,taskboard,TYPE)) {
+            !addMap(I,J,NX,NY,taskboard);
+        }
         for (thing(I,J,entity,TYPE)) {
             // Entities of types "a" and "b" are of the corresponding teams
             !addMap(I,J,NX,NY,TYPE);
@@ -112,5 +115,6 @@ myposition(0,0).
     true
     <-
     .my_name(AG);  
-     mark(X+I, Y+J, TYPE, AG,0);               
+     mark(X+I, Y+J, TYPE, AG,0);
+     +map(O,X+I,Y+J,TYPE);
     .
