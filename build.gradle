@@ -25,9 +25,11 @@ repositories {
 dependencies {
 	implementation 'org.jacamo:jacamo:0.8'
 	implementation 'org.jason-lang:jason:2.4'
+	implementation 'org.jacamo:jacamo-web:0.5-SNAPSHOT'
     implementation name: 'search'
     implementation name: 'eismassim-4.2-jar-with-dependencies'
     implementation name: 'server-2020-1.0-jar-with-dependencies'
+	implementation 'com.google.guava:guava:29.0-jre'
 
 	testCompile group: 'junit', name: 'junit', version: '4.12'
 }

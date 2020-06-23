@@ -1,7 +1,7 @@
 mas env.connection {
 agent agenta0: agentPathFinder.asl{
  join: enva
-focus: enva.arta0, artGPS, artPP
+focus: enva.arta0, artGPS
 }
 agent agenta1: agentDoNothing.asl{
  join: envb
@@ -139,8 +139,7 @@ artifact  arta11: connection.EISAccess("clientconf/eisa11.json")
 artifact  arta12: connection.EISAccess("clientconf/eisa12.json")
 artifact  arta13: connection.EISAccess("clientconf/eisa13.json")
 artifact  arta14: connection.EISAccess("clientconf/eisa14.json")
-artifact  artGPS: localPositionSystem.lps(70,0)
-artifact  artPP: routePlanner.rp()
+artifact  artGPS: localPositionSystem.rp.rp(70,0)
 }
 
 workspace envb {
@@ -160,5 +159,7 @@ artifact  artb12: connection.EISAccess("clientconf/eisb12.json")
 artifact  artb13: connection.EISAccess("clientconf/eisb13.json")
 artifact  artb14: connection.EISAccess("clientconf/eisb14.json")
 }
+
+//platform: jacamo.web.JCMWeb("--main 2181 --restPort 8080") // connects to platform at 2181
 
 }

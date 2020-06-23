@@ -12,22 +12,24 @@ myposition(0,0).
 +!goto(X,Y): 
     myposition(X,Y)
     <- .print("-------> " ,cheguei(X,Y)).
-    
-+!goto(X,Y): 
-    use_routePlanner &
-    not myposition(X,Y)
+
+// Use route planer if distance (steps) is greater than D
++!goto(X,Y):
+    (routeplan_mindist(D)) &
+    (not myposition(X,Y)) &
+    (myposition(I,J) & (math.abs(X-I)+math.abs(Y-J) >= D))
     <-
+      .print(I," ",J);
       ?myposition(OX,OY);
       getDirection(OX,OY,X,Y,DIRECTION);
-      .print("Going to x: ",X," y: ",Y," act: ",move(DIRECTION));
-      !do(move(DIRECTION),R);   
+      !do(move(DIRECTION),R);
       if (R=success) {
           !mapping(DIRECTION);
-          !goto(X,Y);
       } else {
         .print("Fail on going to x: ",X," y: ",Y," act: ",move(DIRECTION));
       }
-    .    
+      !goto(X,Y);
+    .
 
 +!goto(X,Y): 
     not myposition(X,Y)
@@ -97,6 +99,10 @@ myposition(0,0).
             !addMap(I,J,NX,NY,obstacle);
         }
         for (thing(I,J,dispenser,TYPE)) {
+            !addMap(I,J,NX,NY,TYPE);
+        }    
+        for (thing(I,J,entity,TYPE)) {
+            // Entities of types "a" and "b" are of the corresponding teams
             !addMap(I,J,NX,NY,TYPE);
         }    
 .
