@@ -10,9 +10,9 @@ directionIncrement(w,-1,  0).
 directionIncrement(e, 1,  0).
 myposition(0,0).
 
-+!goto(X,Y): 
++!goto(X,Y):
     myposition(X,Y)
-    <- .print("-------> " ,cheguei(X,Y)).
+    <- .print("-------> " ,arrived_at(X,Y)).
 
 // Use route planer if distance (steps) is greater than D
 +!goto(X,Y):
@@ -24,15 +24,20 @@ myposition(0,0).
       getDirection(OX,OY,X,Y,DIRECTION);
       if (DIRECTION == error) {
         ?directions(LDIRECTIONS);
-        .nth(math.floor(math.random(4)),LDIRECTIONS,D);
-        !do(move(D),R);
+        .nth(math.floor(math.random(4)),LDIRECTIONS,DR);
+        !do(move(DR),R);
+        if (R=success) {
+            !mapping(DR);
+        } else {
+          .print("Fail on random to x: ",X," y: ",Y," act: ",move(DR));
+        }
       } else {
         !do(move(DIRECTION),R);
-      }
-      if (R=success) {
-          !mapping(DIRECTION);
-      } else {
-        .print("Fail on going to x: ",X," y: ",Y," act: ",move(DIRECTION));
+        if (R=success) {
+            !mapping(DIRECTION);
+        } else {
+          .print("Fail on going to x: ",X," y: ",Y," act: ",move(DIRECTION));
+        }
       }
       !goto(X,Y);
     .

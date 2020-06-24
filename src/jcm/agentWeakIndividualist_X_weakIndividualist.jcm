@@ -1,0 +1,166 @@
+mas env.connection {
+
+agent agenta0: agentWeakIndividualist.asl{
+ join: enva
+focus: enva.arta0, artGPSa
+}
+agent agenta1: agentDoNothing.asl{
+ join: envb
+focus: enva.arta1, artGPSa
+}
+agent agenta2: agentDoNothing.asl{
+ join: enva
+focus: enva.arta2, artGPSa
+}
+agent agenta3: agentDoNothing.asl{
+ join: enva
+focus: enva.arta3, artGPSa
+}
+agent agenta4: agentDoNothing.asl{
+ join: enva
+focus: enva.arta4, artGPSa
+}
+agent agenta5: agentDoNothing.asl{
+ join: enva
+focus: enva.arta5, artGPSa
+}
+agent agenta6: agentDoNothing.asl{
+ join: enva
+focus: enva.arta6, artGPSa
+}
+agent agenta7: agentDoNothing.asl{
+ join: enva
+focus: enva.arta7, artGPSa
+}
+agent agenta8: agentDoNothing.asl{
+ join: enva
+focus: enva.arta8, artGPSa
+}
+agent agenta9: agentDoNothing.asl{
+ join: enva
+focus: enva.arta9, artGPSa
+}
+agent agenta10: agentDoNothing.asl{
+ join: enva
+focus: enva.arta10, artGPSa
+}
+agent agenta11: agentDoNothing.asl{
+ join: enva
+focus: enva.arta11, artGPSa
+}
+agent agenta12: agentDoNothing.asl{
+ join: enva
+focus: enva.arta12, artGPSa
+}
+agent agenta13: agentDoNothing.asl{
+ join: enva
+focus: enva.arta13, artGPSa
+}
+agent agenta14: agentDoNothing.asl{
+ join: enva
+focus: enva.arta14, artGPSa
+}
+
+
+agent agentb0: agentDoNothing.asl{
+ join: envb
+focus: envb.artb0, artGPSb
+}
+agent agentb1: agentDoNothing.asl{
+ join: envb
+focus: envb.artb1, artGPSb
+}
+agent agentb2: agentDoNothing.asl{
+ join: envb
+focus: envb.artb2, artGPSb
+}
+agent agentb3: agentDoNothing.asl{
+ join: envb
+focus: envb.artb3, artGPSb
+}
+agent agentb4: agentDoNothing.asl{
+ join: envb
+focus: envb.artb4, artGPSb
+}
+agent agentb5: agentDoNothing.asl{
+ join: envb
+focus: envb.artb5, artGPSb
+}
+agent agentb6: agentDoNothing.asl{
+ join: envb
+focus: envb.artb6, artGPSb
+}
+agent agentb7: agentDoNothing.asl{
+ join: envb
+focus: envb.artb7, artGPSb
+}
+agent agentb8: agentDoNothing.asl{
+ join: envb
+focus: envb.artb8, artGPSb
+}
+agent agentb9: agentDoNothing.asl{
+ join: envb
+focus: envb.artb9, artGPSb
+}
+agent agentb10: agentDoNothing.asl{
+ join: envb
+focus: envb.artb10, artGPSb
+}
+agent agentb11: agentDoNothing.asl{
+ join: envb
+focus: envb.artb11, artGPSb
+}
+agent agentb12: agentDoNothing.asl{
+ join: envb
+focus: envb.artb12, artGPSb
+}
+agent agentb13: agentDoNothing.asl{
+ join: envb
+focus: envb.artb13, artGPSb
+}
+agent agent14: agentDoNothing.asl{
+ join: envb
+focus: envb.artb14, artGPSb
+}
+
+workspace enva {
+artifact  arta0: connection.EISAccess("clientconf/eisa0.json")
+artifact  arta1: connection.EISAccess("clientconf/eisa1.json")
+artifact  arta2: connection.EISAccess("clientconf/eisa2.json")
+artifact  arta3: connection.EISAccess("clientconf/eisa3.json")
+artifact  arta4: connection.EISAccess("clientconf/eisa4.json")
+artifact  arta5: connection.EISAccess("clientconf/eisa5.json")
+artifact  arta6: connection.EISAccess("clientconf/eisa6.json")
+artifact  arta7: connection.EISAccess("clientconf/eisa7.json")
+artifact  arta8: connection.EISAccess("clientconf/eisa8.json")
+artifact  arta9: connection.EISAccess("clientconf/eisa9.json")
+artifact  arta10: connection.EISAccess("clientconf/eisa10.json")
+artifact  arta11: connection.EISAccess("clientconf/eisa11.json")
+artifact  arta12: connection.EISAccess("clientconf/eisa12.json")
+artifact  arta13: connection.EISAccess("clientconf/eisa13.json")
+artifact  arta14: connection.EISAccess("clientconf/eisa14.json")
+artifact  artGPSa: localPositionSystem.rp.rp(90,0)
+}
+
+workspace envb {
+artifact  artb0: connection.EISAccess("clientconf/eisb0.json")
+artifact  artb1: connection.EISAccess("clientconf/eisb1.json")
+artifact  artb2: connection.EISAccess("clientconf/eisb2.json")
+artifact  artb3: connection.EISAccess("clientconf/eisb3.json")
+artifact  artb4: connection.EISAccess("clientconf/eisb4.json")
+artifact  artb5: connection.EISAccess("clientconf/eisb5.json")
+artifact  artb6: connection.EISAccess("clientconf/eisb6.json")
+artifact  artb7: connection.EISAccess("clientconf/eisb7.json")
+artifact  artb8: connection.EISAccess("clientconf/eisb8.json")
+artifact  artb9: connection.EISAccess("clientconf/eisb9.json")
+artifact  artb10: connection.EISAccess("clientconf/eisb10.json")
+artifact  artb11: connection.EISAccess("clientconf/eisb11.json")
+artifact  artb12: connection.EISAccess("clientconf/eisb12.json")
+artifact  artb13: connection.EISAccess("clientconf/eisb13.json")
+artifact  artb14: connection.EISAccess("clientconf/eisb14.json")
+artifact  artGPSb: localPositionSystem.rp.rp(90,0)
+}
+
+platform: jacamo.web.JCMWeb("--main 2181 --restPort 8080") // zookeeper at 2181, rest/web at 8080
+
+}
