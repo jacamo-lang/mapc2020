@@ -3,6 +3,7 @@ nextDirection(n,e).
 nextDirection(e,s).
 nextDirection(s,w).
 
+directions([n,s,w,e]).
 directionIncrement(n, 0, -1).
 directionIncrement(s, 0,  1).
 directionIncrement(w,-1,  0).
@@ -19,10 +20,15 @@ myposition(0,0).
     (not myposition(X,Y)) &
     (myposition(I,J) & (math.abs(X-I)+math.abs(Y-J) >= D))
     <-
-      .print(I," ",J);
       ?myposition(OX,OY);
       getDirection(OX,OY,X,Y,DIRECTION);
-      !do(move(DIRECTION),R);
+      if (DIRECTION == error) {
+        ?directions(LDIRECTIONS);
+        .nth(math.floor(math.random(4)),LDIRECTIONS,D);
+        !do(move(D),R);
+      } else {
+        !do(move(DIRECTION),R);
+      }
       if (R=success) {
           !mapping(DIRECTION);
       } else {

@@ -18,7 +18,7 @@ import cartago.*;
 /**
  * RoutePlanner (rp) class uses search algorithm to find the best path from
  * point A to B
- * 
+ *
  * @author cleber
  *
  */
@@ -29,7 +29,7 @@ public class rp extends lps {
      * agent 'from' iagx/y 'to' itox/y. The solution should be the next step of the
      * path. Unless some caching apparatus is developed, the search should be
      * performed on each step.
-     * 
+     *
      * @param iagx      Agent's X
 	 * @param iagy      Agent's Y
      * @param itox      Target's X
@@ -58,7 +58,8 @@ public class rp extends lps {
                     direction.set(new Atom(((GridState)prev2).getDirection()));
                 }
             } else {
-                System.out.println("No route from "+iagx+"x"+iagy+" to "+itox+"x"+itoy+"!");
+                System.out.println("No route from "+iagx+","+iagy+" to "+itox+","+itoy+"!");
+                direction.set(new Atom("error"));
             }
         } catch (Throwable e) {
             e.printStackTrace();
