@@ -99,14 +99,13 @@ run_after_sync. //for STC
       }
       !do(move(ND),R);
       
-      if (R=failed_path) {
-        ?nextDirection(ND,NND);   
-        !!move(NND,0,NL)[critical_section(action), priority(1)];
-      }
       if (R=success) {
         !mapping(ND);
         !!move(ND,NS,NL)[critical_section(action), priority(1)];
-      }     
+      }else{
+        ?nextDirection(ND,NND);   
+        !!move(NND,0,NL)[critical_section(action), priority(1)];
+      };    
     .
 
 +!mapping(DIRECTION) :  
