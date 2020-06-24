@@ -29,14 +29,14 @@ myposition(0,0).
         if (R=success) {
             !mapping(DR);
         } else {
-          .print("Fail on random to x: ",X," y: ",Y," act: ",move(DR));
+            .print("Fail on random to x: ",X," y: ",Y," act: ",DR);
         }
       } else {
         !do(move(DIRECTION),R);
         if (R=success) {
             !mapping(DIRECTION);
         } else {
-          .print("Fail on going to x: ",X," y: ",Y," act: ",move(DIRECTION));
+            .print("Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);
         }
       }
       !goto(X,Y);
@@ -62,7 +62,9 @@ myposition(0,0).
         !do(move(DIRECTION),R);   
         if (R=success) {
             !mapping(DIRECTION);    
-        }       
+        } else {
+            .print("Simply fail: ",X," y: ",Y," act: ",DIRECTION);
+        }
       }
       else {
         ?directionIncrement(BLOCKEDDIRECTION,DESIRABLEX,DESIRABLEY);
@@ -82,12 +84,15 @@ myposition(0,0).
       }
       else {
           !do(move(DIRECTION),R);
-          if (R=failed_path) {
-            ?nextDirection(DIRECTION,NEXTDIRECTION);   
-            !workaround(NEXTDIRECTION,DIRECTIONX,DIRECTIONY);        
-          }
           if (R=success) {
             !mapping(DIRECTION);    
+          } 
+          else 
+          //if (R=failed_path) 
+          {
+            .print("Workaround fail: ",X," y: ",Y," act: ",DIRECTION);
+            ?nextDirection(DIRECTION,NEXTDIRECTION);   
+            !workaround(NEXTDIRECTION,DIRECTIONX,DIRECTIONY);        
           }
       }     
     .
@@ -121,11 +126,10 @@ myposition(0,0).
         }    
 .
 
-
 +!addMap(I,J,X,Y,TYPE) :  
     true
     <-
     .my_name(AG);  
-     mark(X+I, Y+J, TYPE, AG,0);
-     +map(O,X+I,Y+J,TYPE);
+    mark(X+I, Y+J, TYPE, AG, 0);
+    +map(0,X+I,Y+J,TYPE);
     .

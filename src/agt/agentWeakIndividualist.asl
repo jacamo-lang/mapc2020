@@ -9,31 +9,48 @@ tasks.
 { include("goto.asl") }
 { include("action.asl") }
 
-//goal_pos(I,J): I know where is a goal area
-//disp_pos(I,J,B): There is a disposer of block B at I,J
-//board_pos(I,J): There is a taskboard I,J
-//active_task(T,X,Y,B): I am doing a task T, should deliver block B on X,Y
-//looking_for(B): I am looking for block B
+//map(_,I,J,goal): The terrain I,J is a goal spot
+//map(_,I,J,B): There is a disposer of block B at I,J in which (.nth(P,[b0,b1,b2,b3],B) & P >= 0)
+//map(_,I,J,taskboard): There is a taskboard I,J
+//accepted(T): I am doing a task T
 //carrying(D): I am carrying a block in direction D
-//know_goal_loc: I know where I should take the blocks
+
+distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
+
+goalShape(0, -4).
+goalShape(0,  4).
+goalShape(-4,  0).
+goalShape(4,  0).
 
 routeplan_mindist(5).
-
-directionIncrement(n, 0, -1).
-directionIncrement(s, 0,  1).
-directionIncrement(w,-1,  0).
-directionIncrement(e, 1,  0).
-
-goal_pos(21,-4).
-
-//!doDummyExploration.
-!startFakeExploration.
 
 // Just to avoid plan not found
 +!areyou.
 
-// It is a fake exploration to pass near important things
-+!startFakeExploration:
+// If something disturbs me but I am performing a task, let's go back to this
++lastAction(no_action):
+    accepted(T) &
+    task(T,DL,Y,RR) &
+    not .intend(_) &
+    not skipSteps
+    <-
+    .print("back to fulfil the task");
+    -+RR;
+    ?req(_,_,RQ);
+    !performTask(T,DL,Y,RQ);
+.
+
+// If somehow I don't know what to do, just explore
++lastAction(no_action):
+    not .intend(_) &
+    not skipSteps
+    <-
+    .print("Let's explore the area");
+    !!doDummyExploration;
+.
+
+// Go to some random point and go back to the task board
++!doDummyExploration:
     true
     <-
     // During this path I will see 3 taskboards, 1 goal and depots for b1 and b2
@@ -42,93 +59,51 @@ goal_pos(21,-4).
     !goto(20,-4); // Go to the goal in the absolute_position(65,65)
     !goto(32,-4); // An arbitrary point near other boards
     !goto(35,8); // An arbitrary point near other boards
-    +exploring;
-.
-
-+lastAction(no_action):
-    active_task(T,DL,Y,B)
-    <-
-    .drop_all_intentions;
-    .print("back to fulfil the task");
-    !!performTask(T,DL,Y,B);
-.
-
-+lastAction(no_action):
-    exploring
-    <-
-    .print("Let's explore the area");
-    !!doDummyExploration;
-.
-
-// Go to some random point and go back to the task board
-+!doDummyExploration:
-    exploring
-    <-
-    !goRandomly(6);
-    !gotoNearestBoard;
+    //!goRandomly;
+    !gotoNearest(takboard);
     !doDummyExploration;
 .
 
  // Go to some random point and go back to the task board
  +!performTask(T,DL,Y,B):
-     true
+     not desire(performTask(_,_,_,_))
      <-
-     -+active_task(T,DL,Y,B);
-     !gotoNearestBoard;
+     !gotoNearest(taskboard);
      !acceptTask(T);
-     !gotoNearestDispenser(B);
+     !gotoNearest(B);
      !getBlock(B);
      !gotoNearestGoal;
      !submitTask(T);
 .
 
 // Go to some random point around D far away from here (D should be even)
-+!goRandomly(D):
-  myposition(X,Y)
++!goRandomly:
+  directions(LDIRECTIONS)
   <-
-    TX = X + math.floor(math.random(D))-(D/2);
-    TY = Y + math.floor(math.random(D))-(D/2);
-    .print("Target: ",TX," ",TY);
-    !goto(TX,TY);
+    .nth(math.floor(math.random(4)),LDIRECTIONS,DR);
+    directionIncrement(DR,XINC,YINC);
+    .print("Randomly going do ",DR," (",X+XINC,",",Y+YINC,")");
+    !goto(X+XINC,Y+YINC)
     .
 
 // I've found a single block task
 +task(T,DL,Y,REQ) :
-    not active_task(_,_,_,_) &      // I am not committed
-    board_pos(_,_) &                // I know a taskboard position
-    goal_pos(_,_) &                   // I know a goal area position
+    not accepted(_) &               // I am not committed
+    map(_,_,_,taskboard) &            // I know a taskboard position
+    goalCenter(_,_) &                 // I know a goal area position
     (.length(REQ,LR) & LR == 1) &     // The task is a single block task
     (.nth(0,REQ,RR) & .literal(RR))   // The requirement is a valid literal
     <-
-    .drop_all_intentions;
+    .succeed_goal(doDummyExploration);
     -+RR;
     ?req(_,_,RQ);
     !performTask(T,DL,Y,RQ);
 .
 
-// If it knows at least one board, find the nearest and go there!
-+!gotoNearestBoard :
-    myposition(X,Y) & board_pos(_,_)
-    <-
-    -+nearestBoard(_,_,9999);
-    for (board_pos(XP,YP)) {
-      ?nearestBoard(_,_,ND);
-      D = math.abs(XP-X) + math.abs(YP-Y);
-      if (D < ND) {
-        -+nearestBoard(XP,YP,D);
-      }
-    }
-    ?nearestBoard(I,J,D0);
-    if (D0 < 9999) {
-      .print("Going to taskboard in ",I,",",J);
-      !goto(I,J);
-    } else {
-      .print("No taskboard found!");
-    }
-.
+// If this task was already accepted, just skip.
++!acceptTask(T) : accepted(T).
 
-+!gotoNearestBoard.
-
+// Accept a task (need to be close to a taskboard)
 +!acceptTask(T) :
     true
     <-
@@ -140,42 +115,65 @@ goal_pos(21,-4).
     }
 .
 
-// If it knows at least one dispenser of block B, find the nearest and go there!
-+!gotoNearestDispenser(B) :
-    myposition(X,Y) & disp_pos(_,_,B)
+// If I know the position of at least B, find the nearest and go there!
++!gotoNearest(B) :
+    myposition(X,Y) & map(_,_,_,B)
     <-
-    -+nearestDispenser(_,_,9999);
-    for (disp_pos(XP,YP,B)) {
-      ?nearestDispenser(_,_,ND);
-      D = math.abs(XP-X) + math.abs(YP-Y);
+    -+nearest(_,_,9999);
+    for (map(_,XP,YP,B)) {
+      ?nearest(_,_,ND);
+      .print("?Going from (",X,",",Y,") to (",XP,",",YP,")? :",ND);
+      ?distance(XP,YP,X,Y,D);
       if (D < ND) {
-        -+nearestDispenser(XP,YP,D);
+      .print("?Going from (",X,",",Y,") to in (",XP,",",YP,") :",D);
+        -+nearest(XP,YP,D);
       }
     }
-    ?nearestDispenser(I,J,D0);
+    ?nearest(I,J,D0);
     if (D0 < 9999) {
-      .print("Going to dispenser in ",I,",",J," for block ",B);
-      !goto(I,J);
+    .print("Going from (",X,",",Y,") to in (",I,",",J,") :",D0);
+      !goByBestApproach(I,J);
     } else {
-      .print("No dispenser found!");
+      .print("Error on searching for nearest ",B," :",D0);
+      +skipSteps;
+      .drop_all_intentions;
     }
 .
 
++!goByBestApproach(I,J) :
+    myposition(X,Y)
+    <-
+    ?distance(I,J,X,Y,D);
+    -+bestApproach(I,J,D);
+    for (directionIncrement(_,II,JJ)) {
+      ?bestApproach(_,_,D0);
+      ?distance(I-II,J-JJ,X,Y,D1);
+      if (D1 < D0) {
+        -+bestApproach(I-II,J-JJ,D1);
+      }
+    }
+    ?bestApproach(BI,BJ,D1);
+    !goto(BI,BJ);
+.
+
+// It is supposed to keep exploring if I don't know where is a B
++!gotoNearest(B).
+
 // If it knows at least one board, find the nearest and go there!
 +!gotoNearestGoal :
-    myposition(X,Y) & goal_pos(_,_)
+    myposition(X,Y) & goalCenter(_,_)
     <-
     -+nearestGoal(_,_,9999);
-    for (goal_pos(XP,YP)) {
+    for (goalCenter(XP,YP)) {
       ?nearestGoal(_,_,ND);
-      D = math.abs(XP-X) + math.abs(YP-Y);
+      ?distance(XP,YP,X,Y,D);
       if (D < ND) {
         -+nearestGoal(XP,YP,D);
       }
     }
     ?nearestGoal(I,J,D0);
     if (D0 < 9999) {
-      .print("Going to goal in ",I,",",J);
+      .print("Going to goal in ",I-1,",",J);
       !goto(I,J);
     } else {
       .print("No goal found!");
@@ -183,19 +181,20 @@ goal_pos(21,-4).
 .
 
 +!getBlock(B) :
-    disp_pos(_,_,B) & myposition(X,Y) & thing(I,J,dispenser,B)
+    myposition(X,Y) &
+    thing(XT,YT,dispenser,B) &
+    directionIncrement(D,I,J) &
+    (XT == X + I & YT == Y + J)
     <-
-    if (directionIncrement(D,I,J)) {
-      !do(request(D),R0);
-      !do(attach(D),R1);
-      if ((R0 == success) & (R1 == success)) {
-        .print("I have attached a block ",B);
-        +carrying(D);
-      } else {
-        .print("Could not request/attach block ",B, "::",R0,"/",R1);
-        }
+    !do(request(D),R0);
+    !do(attach(D),R1);
+    if ((R0 == success) & (R1 == success)) {
+      .print("I have attached a block ",B);
+      +carrying(D);
     } else {
-      .print("Dispenser is too far!");
+      .print("Could not request/attach block ",B, "::",R0,"/",R1);
+      !goRandomly;
+      !getBlock(B);
     }
 .
 
@@ -206,7 +205,7 @@ goal_pos(21,-4).
     !do(submit(T),R0);
     if (R0 == success) {
       .print("I've submitted task ",T);
-      -active_task(_,_,_,_);
+      .abolish(accepted(_));
       -carrying(_);
     } else {
       .print("Fail on submitting task ",T);
@@ -215,22 +214,8 @@ goal_pos(21,-4).
 .
 
 // Mapping goal positions
-+map(A,X,Y,goal) :
-    false
++map(_,X,Y,goal) :
+    goalShape(I,J) & map(_,X+I,Y+J,goal)
     <-
-    +goal_pos(X,Y);
-.
-
-// Mapping dispenser positions
-+map(A,X,Y,T) :
-    (.nth(P,[b0,b1,b2,b3],T) & P >= 0)
-    <-
-    +disp_pos(X,Y,T);
-.
-
-// Mapping taskboard positions
-+map(A,X,Y,taskboard) :
-    true
-    <-
-    +board_pos(X,Y);
+    -+goalCenter(X+(I/2),Y+(J/2));
 .
