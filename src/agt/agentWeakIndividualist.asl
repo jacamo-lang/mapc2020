@@ -15,7 +15,14 @@ tasks.
 //accepted(T): I am doing a task T
 //carrying(D): I am carrying a block in direction D
 
+// Return on D euclidean distance between (X1,Y1) and (X2,Y2)
 distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
+
+// Return the nearest specific thing in the map
+nearest(T,X,Y) :-
+    myposition(X1,Y1) &
+    .findall(p(D,X2,Y2),map(_,X2,Y2,T) & distance(X1,Y1,X2,Y2,D),FL) &
+    .sort(FL,[H|R]) & H =.. A & .nth(2,A,N) & .nth(1,N,X) & .nth(2,N,Y).
 
 goalShape(0, -4).
 goalShape(0,  4).
@@ -117,27 +124,10 @@ routeplan_mindist(5).
 
 // If I know the position of at least B, find the nearest and go there!
 +!gotoNearest(B) :
-    myposition(X,Y) & map(_,_,_,B)
+    myposition(X,Y) & map(_,_,_,B) & nearest(B,XN,YN)
     <-
-    -+nearest(_,_,9999);
-    for (map(_,XP,YP,B)) {
-      ?nearest(_,_,ND);
-      .print("?Going from (",X,",",Y,") to (",XP,",",YP,")? :",ND);
-      ?distance(XP,YP,X,Y,D);
-      if (D < ND) {
-      .print("?Going from (",X,",",Y,") to in (",XP,",",YP,") :",D);
-        -+nearest(XP,YP,D);
-      }
-    }
-    ?nearest(I,J,D0);
-    if (D0 < 9999) {
-    .print("Going from (",X,",",Y,") to in (",I,",",J,") :",D0);
-      !goByBestApproach(I,J);
-    } else {
-      .print("Error on searching for nearest ",B," :",D0);
-      +skipSteps;
-      .drop_all_intentions;
-    }
+    .print("Going from (",X,",",Y,") to in (",XN,",",YN,")");
+    !goByBestApproach(XN,YN);
 .
 
 +!goByBestApproach(I,J) :

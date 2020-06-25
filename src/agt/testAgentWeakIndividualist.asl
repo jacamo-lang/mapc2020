@@ -9,6 +9,7 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
 
 !testDistance.
 !testGoalCenter.
+!testNearest.
 
 /**
  * Test rule that gives euclidean distance between two points
@@ -52,4 +53,21 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
     ?goalCenter(X,Y);
     !assertEquals(X,21);
     !assertEquals(Y,-4);
+.
+
+/**
+ *
+ */
++!testNearest :
+    true
+    <-
+    .abolish(map(_,_,_,_));
+    +map(0,5,5,goal)[source(self)];
+    +map(0,-5,-5,goal)[source(self)];
+    +map(0,-5,-4,goal)[source(self)];
+    +map(0,4,2,goal)[source(self)];
+    +myposition(0,0);
+    ?nearest(goal,X,Y);
+    !assertEquals(4,X);
+    !assertEquals(2,Y);
 .
