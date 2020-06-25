@@ -52,7 +52,7 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
     +map(0,22,-4,goal)[source(self)];
     +map(0,22,-3,goal)[source(self)];
     +map(0,23,-4,goal)[source(self)];
-    ?goalCenter(X,Y);
+    ?map(_,X,Y,goalCenter);
     !assertEquals(X,21);
     !assertEquals(Y,-4);
 .

@@ -88,7 +88,7 @@ routeplan_mindist(5).
      !acceptTask(T);
      !gotoNearest(B);
      !getBlock(B);
-     !gotoNearest(goal);
+     !gotoNearest(goalCenter);
      !submitTask(T);
 .
 
@@ -104,9 +104,9 @@ routeplan_mindist(5).
 
 // I've found a single block task
 +task(T,DL,Y,REQ) :
-    not accepted(_) &               // I am not committed
+    not accepted(_) &                 // I am not committed
     map(_,_,_,taskboard) &            // I know a taskboard position
-    goalCenter(_,_) &                 // I know a goal area position
+    map(_,_,_,goalCenter) &           // I know a goal area position
     (.length(REQ,LR) & LR == 1) &     // The task is a single block task
     (.nth(0,REQ,RR) & .literal(RR))   // The requirement is a valid literal
     <-
@@ -145,27 +145,6 @@ routeplan_mindist(5).
 // It is supposed to keep exploring if I don't know where is a B
 +!gotoNearest(B).
 
-// If it knows at least one board, find the nearest and go there!
-+!gotoNearestGoal :
-    myposition(X,Y) & goalCenter(_,_)
-    <-
-    -+nearestGoal(_,_,9999);
-    for (goalCenter(XP,YP)) {
-      ?nearestGoal(_,_,ND);
-      ?distance(XP,YP,X,Y,D);
-      if (D < ND) {
-        -+nearestGoal(XP,YP,D);
-      }
-    }
-    ?nearestGoal(I,J,D0);
-    if (D0 < 9999) {
-      .print("Going to goal in ",I-1,",",J);
-      !goto(I,J);
-    } else {
-      .print("No goal found!");
-    }
-.
-
 +!getBlock(B) :
     thing(I,J,dispenser,B) &
     directionIncrement(D,I,J)
@@ -199,5 +178,5 @@ routeplan_mindist(5).
 +map(_,X,Y,goal) :
     goalShape(I,J) & map(_,X+I,Y+J,goal)
     <-
-    -+goalCenter(X+(I/2),Y+(J/2));
+    -+map(0,X+(I/2),Y+(J/2),goalCenter);
 .
