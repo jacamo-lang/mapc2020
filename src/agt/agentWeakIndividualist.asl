@@ -13,7 +13,7 @@ tasks.
 //map(_,I,J,B): There is a disposer of block B at I,J in which (.nth(P,[b0,b1,b2,b3],B) & P >= 0)
 //map(_,I,J,taskboard): There is a taskboard I,J
 //accepted(T): I am doing a task T
-//carrying(D): I am carrying a block in direction D
+//attached(I,J): I have a block attached on I,J
 
 // Return on D euclidean distance between (X1,Y1) and (X2,Y2)
 distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
@@ -72,10 +72,8 @@ routeplan_mindist(5).
     // During this path I will see 3 taskboards, 1 goal and depots for b1 and b2
     !goto(-2,-2); // An arbitrary point near the last
     !goto(10,-6); // Go to the depot in the absolute_position(55,67)
-    !goto(20,-4); // Go to the goal in the absolute_position(65,65)
-    !goto(32,-4); // An arbitrary point near other boards
+    //!goto(20,-4); // Go to the goal in the absolute_position(65,65)
     !goto(35,8); // An arbitrary point near other boards
-    //!goRandomly;
     !gotoNearest(takboard);
     !doDummyExploration;
 .
@@ -94,13 +92,14 @@ routeplan_mindist(5).
 
 // Go to some random point around D far away from here (D should be even)
 +!goRandomly:
-  directions(LDIRECTIONS)
+  myposition(X,Y) &
+  directions(LDIRECTIONS) &
+  .nth(math.floor(math.random(4)),LDIRECTIONS,DR) &
+  directionIncrement(DR,XINC,YINC)
   <-
-    .nth(math.floor(math.random(4)),LDIRECTIONS,DR);
-    directionIncrement(DR,XINC,YINC);
     .print("Randomly going do ",DR," (",X+XINC,",",Y+YINC,")");
-    !goto(X+XINC,Y+YINC)
-    .
+    !goto(X+XINC,Y+YINC);
+.
 
 // I've found a single block task
 +task(T,DL,Y,REQ) :
@@ -131,7 +130,23 @@ routeplan_mindist(5).
     }
 .
 
-// If I know the position of at least B, find the nearest and go there!
+/**
+ * If I know the position of at least goalCenter, find the nearest and go there!
+ */
++!gotoNearest(goalCenter) :
+    B = goalCenter &
+    myposition(X,Y) &
+    map(_,_,_,B) &
+    nearest(B,XN,YN)
+    <-
+    .print("Going from (",X,",",Y,") to in (",XN-1,",",YN,")");
+    !goto(XN,YN);
+.
+
+/**
+ * If I know the position of at least B, find the nearest neighbour
+ * point and go there!
+ */
 +!gotoNearest(B) :
     myposition(X,Y) &
     map(_,_,_,B) &
@@ -153,21 +168,19 @@ routeplan_mindist(5).
     !do(attach(D),R1);
     if ((R0 == success) & (R1 == success)) {
       .print("I have attached a block ",B);
-      +carrying(D);
     } else {
       .print("Could not request/attach block ",B, "::",R0,"/",R1);
     }
 .
 
 +!submitTask(T) :
-    carrying(D)
+    attached(I,J)
     <-
     .print("I've submitted");
     !do(submit(T),R0);
     if (R0 == success) {
       .print("I've submitted task ",T);
       .abolish(accepted(_));
-      -carrying(_);
     } else {
       .print("Fail on submitting task ",T);
       !do(detach(D),R1);
