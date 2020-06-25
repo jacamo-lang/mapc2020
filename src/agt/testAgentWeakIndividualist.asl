@@ -11,6 +11,7 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
 !testGoalCenter.
 !testNearest.
 !testNearestNeighbour.
+!testGetBlock.
 
 /**
  * Test rule that gives euclidean distance between two points
@@ -75,6 +76,10 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
     !assertEquals(2,Y);
 .
 
+/*
+ * Nearest neighbour is the nearest adjacent position
+ * of a given point (X,Y) in relation to myposition(X,Y)
+ */
 +!testNearestNeighbour :
     true
     <-
@@ -83,4 +88,19 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
     ?nearest_neighbour(10,10,X,Y);
     !assertEquals(10,X);
     !assertEquals(11,Y);
+.
+
+/*
+ * Test get block which request/attach a block
+ * It is actually returning error since the simulator is not on
+ */
++!testGetBlock :
+    true
+    <-
+    .abolish(carrying(_));
+    .abolish(thing(_,_,_,_));
+    +thing(1,0,dispenser,b1);
+    !!getBlock(b1);
+    .wait(100);
+    !assertTrue(carrying(D));
 .

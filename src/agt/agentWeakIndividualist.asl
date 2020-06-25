@@ -88,7 +88,7 @@ routeplan_mindist(5).
      !acceptTask(T);
      !gotoNearest(B);
      !getBlock(B);
-     !gotoNearestGoal;
+     !gotoNearest(goal);
      !submitTask(T);
 .
 
@@ -167,10 +167,8 @@ routeplan_mindist(5).
 .
 
 +!getBlock(B) :
-    myposition(X,Y) &
-    thing(XT,YT,dispenser,B) &
-    directionIncrement(D,I,J) &
-    (XT == X + I & YT == Y + J)
+    thing(I,J,dispenser,B) &
+    directionIncrement(D,I,J)
     <-
     !do(request(D),R0);
     !do(attach(D),R1);
@@ -179,8 +177,6 @@ routeplan_mindist(5).
       +carrying(D);
     } else {
       .print("Could not request/attach block ",B, "::",R0,"/",R1);
-      !goRandomly;
-      !getBlock(B);
     }
 .
 
