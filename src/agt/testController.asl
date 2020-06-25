@@ -6,7 +6,7 @@
 /**
  * Configurations
  */
-//verbose.        // enable to see full log debug
+verbose.        // enable to see full log debug
 shutdownHook.     // enable to shutdown after finishing tests
 
 
@@ -14,14 +14,14 @@ shutdownHook.     // enable to shutdown after finishing tests
 /**
  * Startup operations
  */
-!setController.    // starts test controller operations
+!setTestController.    // starts test controller operations
 
 
 
 /**
  * setup of the controller, including hook for shutdown
  */
-+!setController :
++!setTestController :
     true & .my_name(testController)
     <-
     .print("\n\n\n");
@@ -30,7 +30,7 @@ shutdownHook.     // enable to shutdown after finishing tests
 .
 
 // avoid plan not found for asl that includes controller
-+!setController.
++!setTestController.
 
 /**
  * enable to shutdown after finishing tests
