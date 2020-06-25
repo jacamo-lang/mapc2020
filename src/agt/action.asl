@@ -7,7 +7,7 @@
     <- action(A);
        //.print("Doing ",A," at step ",S);
        // wait next step
-       .wait( step(S+1) );
+       .wait( step(NS)&NS>S );
        if (lastActionResult(failed_random)) {
          // try again
          .print(A," randomly failed, trying again ...");
