@@ -33,40 +33,30 @@ nearest_neighbour(XP,YP,X,Y) :-
     ) & .sort(FL,[H|R]) & H =.. A & .nth(2,A,N) & .nth(1,N,X) &
     .nth(2,N,Y).
 
+// Used to determine the goal center area
+// It was created due to errors on submitting, but is probably useless
 goalShape(0, -4).
 goalShape(0,  4).
 goalShape(-4,  0).
 goalShape(4,  0).
 
+// Use route planner for distances greater than 5
 routeplan_mindist(5).
+
+// Spiral walk setup
+nextDirection(w,n).
+nextDirection(n,e).
+nextDirection(e,s).
+nextDirection(s,w).
+direction(w,1).
+lastDirection(w).
+size(1).
 
 // Just to avoid plan not found
 +!areyou.
 
-// If something disturbs me but I am performing a task, let's go back to this
-+lastAction(no_action):
-    accepted(T) &
-    task(T,DL,Y,RR) &
-    not .intend(_) &
-    not skipSteps
-    <-
-    .print("back to fulfil the task");
-    -+RR;
-    ?req(_,_,RQ);
-    !performTask(T,DL,Y,RQ);
-.
-
-// If somehow I don't know what to do, just explore
-+lastAction(no_action):
-    not .intend(_) &
-    not skipSteps
-    <-
-    .print("Let's explore the area");
-    !!doDummyExploration;
-.
-
-// Go to some random point and go back to the task board
-+!doDummyExploration:
+// FAKE EXPLORATION just for tests!!!
++!explore(fakeExploration):
     true
     <-
     // During this path I will see 3 taskboards, 1 goal and depots for b1 and b2
@@ -75,10 +65,55 @@ routeplan_mindist(5).
     //!goto(20,-4); // Go to the goal in the absolute_position(65,65)
     !goto(35,8); // An arbitrary point near other boards
     !gotoNearest(takboard);
-    !doDummyExploration;
+    !explore(fakeExploration);
+.
+
+/**
+ * Spiral walk exploration
+ */
++!explore(X): lastDirection(LD) & direction(D,N)
+    <-
+    !do(move(D),R);
+    if (R==success) {
+      !mapping(D);
+      -+lastDirection(D);
+      if (N==1) {
+        ?nextDirection(D,ND);
+        ?size(S);
+        -+direction(ND,S+1);
+        -+size(S+1);
+      } else {
+        -+direction(D,N-1);
+      }
+    } else {
+      ?nextDirection(D,ND);
+      ?size(S);
+      -+lastDirection(ND);
+      -+direction(ND,S);
+      -+size(S+1);
+    }
+.
+
+/**
+ * If something disturbs me but I am performing a task,
+ * let's go back to this or just explore
+ */
+@lastActionResult[atomic]
++lastAction(X):
+    not .intend(_)
+    <-
+    if (accepted(T) & task(T,DL,Y,RR)) {
+      .print("back to fulfil the task");
+      .findall(req(_,_,RQ),RR,RQ);
+      !performTask(T,DL,Y,RQ);
+    } else {
+      .print("Let's explore the area");
+      !explore(X);
+    }
 .
 
  // Go to some random point and go back to the task board
+ @performTask[atomic]
  +!performTask(T,DL,Y,B):
      not desire(performTask(_,_,_,_))
      <-
@@ -86,7 +121,7 @@ routeplan_mindist(5).
      !acceptTask(T);
      !gotoNearest(B);
      !getBlock(B);
-     !gotoNearest(goalCenter);
+     !gotoNearest(goal);
      !submitTask(T);
 .
 
@@ -105,11 +140,11 @@ routeplan_mindist(5).
 +task(T,DL,Y,REQ) :
     not accepted(_) &                 // I am not committed
     map(_,_,_,taskboard) &            // I know a taskboard position
-    map(_,_,_,goalCenter) &           // I know a goal area position
+    map(_,_,_,goal) &           // I know a goal area position
     (.length(REQ,LR) & LR == 1) &     // The task is a single block task
     (.nth(0,REQ,RR) & .literal(RR))   // The requirement is a valid literal
     <-
-    .succeed_goal(doDummyExploration);
+    .succeed_goal(explore(_));
     -+RR;
     ?req(_,_,RQ);
     !performTask(T,DL,Y,RQ);
@@ -139,7 +174,7 @@ routeplan_mindist(5).
     map(_,_,_,B) &
     nearest(B,XN,YN)
     <-
-    .print("Going from (",X,",",Y,") to in (",XN-1,",",YN,")");
+    .print("Going from (",X,",",Y,") to (",XN-1,",",YN,")");
     !goto(XN,YN);
 .
 
@@ -153,7 +188,7 @@ routeplan_mindist(5).
     nearest(B,XN,YN) &
     nearest_neighbour(XN,YN,XT,YT)
     <-
-    .print("Going from (",X,",",Y,") to in (",XT,",",YT,")");
+    .print("Going to nearest ",B," from (",X,",",Y,") to (",XT,",",YT,")");
     !goto(XT,YT);
 .
 
@@ -164,6 +199,7 @@ routeplan_mindist(5).
     thing(I,J,dispenser,B) &
     directionIncrement(D,I,J)
     <-
+    +carrying(0);
     !do(request(D),R0);
     !do(attach(D),R1);
     if ((R0 == success) & (R1 == success)) {
