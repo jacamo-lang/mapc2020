@@ -24,8 +24,9 @@ shutdownHook.     // enable to shutdown after finishing tests
 +!setTestController :
     true & .my_name(testController)
     <-
-    .print("\n\n\n");
-    .print("**** Starting Jason unit tests...");
+    .println("\n\n");
+    .println("**** Starting Jason unit tests...\n\n");
+
     .at("now +2 s", {+!shutdownAferTests});
 .
 
@@ -39,8 +40,8 @@ shutdownHook.     // enable to shutdown after finishing tests
     shutdownHook
     <-
     if (not intention(_)) {
-      .print("**** End of Jason unit tests.");
-      .print("\n\n\n");
+      .print("\n\n");
+      .print("**** End of Jason unit tests.\n\n");
       .stopMAS;
     }
 .
