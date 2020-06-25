@@ -10,6 +10,7 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
 !testDistance.
 !testGoalCenter.
 !testNearest.
+!testNearestNeighbour.
 
 /**
  * Test rule that gives euclidean distance between two points
@@ -56,12 +57,14 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
 .
 
 /**
- *
+ * Test nearest rule which uses myposition and map(_X,Y,thing)
+ * to return the nearest thing regarding the reference (myposition)
  */
 +!testNearest :
     true
     <-
     .abolish(map(_,_,_,_));
+    .abolish(myposition(_,_));
     +map(0,5,5,goal)[source(self)];
     +map(0,-5,-5,goal)[source(self)];
     +map(0,-5,-4,goal)[source(self)];
@@ -70,4 +73,14 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
     ?nearest(goal,X,Y);
     !assertEquals(4,X);
     !assertEquals(2,Y);
+.
+
++!testNearestNeighbour :
+    true
+    <-
+    .abolish(myposition(_,_));
+    +myposition(12,12);
+    ?nearest_neighbour(10,10,X,Y);
+    !assertEquals(10,X);
+    !assertEquals(11,Y);
 .

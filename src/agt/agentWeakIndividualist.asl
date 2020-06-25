@@ -24,6 +24,15 @@ nearest(T,X,Y) :-
     .findall(p(D,X2,Y2),map(_,X2,Y2,T) & distance(X1,Y1,X2,Y2,D),FL) &
     .sort(FL,[H|R]) & H =.. A & .nth(2,A,N) & .nth(1,N,X) & .nth(2,N,Y).
 
+// Return the nearest adjacent position, good to do an approach
+nearest_neighbour(XP,YP,X,Y) :-
+    myposition(X1,Y1) &
+    .findall(p(D,X2,Y2),
+      directionIncrement(_,I,J) & X2 = XP+I & Y2 = YP + J &
+      distance(X1,Y1,X2,Y2,D), FL
+    ) & .sort(FL,[H|R]) & H =.. A & .nth(2,A,N) & .nth(1,N,X) &
+    .nth(2,N,Y).
+
 goalShape(0, -4).
 goalShape(0,  4).
 goalShape(-4,  0).
@@ -124,26 +133,13 @@ routeplan_mindist(5).
 
 // If I know the position of at least B, find the nearest and go there!
 +!gotoNearest(B) :
-    myposition(X,Y) & map(_,_,_,B) & nearest(B,XN,YN)
+    myposition(X,Y) &
+    map(_,_,_,B) &
+    nearest(B,XN,YN) &
+    nearest_neighbour(XN,YN,XT,YT)
     <-
-    .print("Going from (",X,",",Y,") to in (",XN,",",YN,")");
-    !goByBestApproach(XN,YN);
-.
-
-+!goByBestApproach(I,J) :
-    myposition(X,Y)
-    <-
-    ?distance(I,J,X,Y,D);
-    -+bestApproach(I,J,D);
-    for (directionIncrement(_,II,JJ)) {
-      ?bestApproach(_,_,D0);
-      ?distance(I-II,J-JJ,X,Y,D1);
-      if (D1 < D0) {
-        -+bestApproach(I-II,J-JJ,D1);
-      }
-    }
-    ?bestApproach(BI,BJ,D1);
-    !goto(BI,BJ);
+    .print("Going from (",X,",",Y,") to in (",XT,",",YT,")");
+    !goto(XT,YT);
 .
 
 // It is supposed to keep exploring if I don't know where is a B
