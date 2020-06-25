@@ -2,6 +2,7 @@
  * Test controller provides general test configurations and facilities
  */
 
+{ include("$jacamoJar/templates/common-cartago.asl") }
 
 /**
  * Configurations
@@ -36,12 +37,20 @@ shutdownHook.     // enable to shutdown after finishing tests
 /**
  * enable to shutdown after finishing tests
  */
+ +!shutdownAferTests :
+     shutdownHook &
+     error
+     <-
+     .print("\n\n");
+     .print("**** End of Jason unit tests.\n\n");
+     exitWithError;
+ .
+
 +!shutdownAferTests :
-    shutdownHook
+    shutdownHook &
+    not intention(_)
     <-
-    if (not intention(_)) {
-      .print("\n\n");
-      .print("**** End of Jason unit tests.\n\n");
-      .stopMAS;
-    }
+    .print("\n\n");
+    .print("**** End of Jason unit tests.\n\n");
+    .stopMAS;
 .

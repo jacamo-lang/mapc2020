@@ -1,7 +1,15 @@
 mas tests {
-    agent testController
+    agent testController {
+     join: testEnvironment
+     focus: unitTestControl
+    }
 
     agent testAgentWeakIndividualist
+
+
+    workspace testEnvironment {
+      artifact  unitTestControl: unitTest.TestControl()
+    }
 
     //platform: jacamo.web.JCMWeb("--main 2181 --restPort 8080") // zookeeper at 2181, rest/web at 8080
 }

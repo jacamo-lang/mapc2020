@@ -74,6 +74,7 @@ task testJason (type: JavaExec, dependsOn: 'classes') {
     args 'src/jcm/unit_tests.jcm'
     classpath sourceSets.main.runtimeClasspath
 }
+test.dependsOn testJason
 
 task fixTab {
     ant.fixcrlf(eol: 'lf',  includes: '**/*.txt,**/*.bat, **/*.adoc', srcdir: '.')

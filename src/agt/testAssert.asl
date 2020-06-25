@@ -42,3 +42,9 @@ getIntentionId(I,ID) :- I =.. A & .nth(2,A,B) & .nth(0,B,ID).
       }
     }
 .
+
+-!assertTrue(X) :
+    true
+    <-
+    .send(testController,tell,error);
+    .
