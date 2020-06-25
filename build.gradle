@@ -65,16 +65,15 @@ task run (type: JavaExec, dependsOn: 'classes') {
 }
 
 
-/*task run (type: JavaExec, dependsOn: 'classes') {
-    group      ' MAPC'
-    description 'runs the team1'
+task testJason (type: JavaExec, dependsOn: 'classes') {
+    description 'runs Jason unit tests: unit_tests.jcm'
     doFirst {
         mkdir 'log'
     }
     main 'jacamo.infra.JaCaMoLauncher'
-    args 'src/jcm/randomwalk_X_donothing.jcm'
+    args 'src/jcm/unit_tests.jcm'
     classpath sourceSets.main.runtimeClasspath
-}*/
+}
 
 task fixTab {
     ant.fixcrlf(eol: 'lf',  includes: '**/*.txt,**/*.bat, **/*.adoc', srcdir: '.')
