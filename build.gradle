@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.jacamo:jacamo:0.8'
+	implementation 'org.jacamo:jacamo:0.9-SNAPSHOT'
 	implementation 'org.jason-lang:jason:2.5.1'
 	implementation 'org.jacamo:jacamo-web:0.5-SNAPSHOT'
     implementation name: 'search'
@@ -70,7 +70,7 @@ task testJacamo (type: JavaExec, dependsOn: 'classes') {
         mkdir 'log'
     }
     main 'jacamo.infra.JaCaMoLauncher'
-    args 'src/jcm/jacamoUnitTests.jcm'
+    args = ['test/jacamoUnitTests.jcm']
     classpath sourceSets.main.runtimeClasspath
 }
 test.dependsOn testJacamo
