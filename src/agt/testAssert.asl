@@ -24,6 +24,11 @@ getIntentionId(I,ID) :- I =.. A & .nth(2,A,B) & .nth(0,B,ID).
       }
     }
 .
+-!assertEquals(X,Y) :
+    true
+    <-
+    .send(testController,tell,error);
+.
 
 /**
  * Assert if X is true / exists
@@ -42,9 +47,31 @@ getIntentionId(I,ID) :- I =.. A & .nth(2,A,B) & .nth(0,B,ID).
       }
     }
 .
-
 -!assertTrue(X) :
     true
     <-
     .send(testController,tell,error);
-    .
+.
+
+/**
+ * Assert if X is false / does not exist
+ */
+@assertFalse
++!assertFalse(X) :
+    .current_intention(I) &
+    getIntentionId(I,ID)
+    <-
+    if (X) {
+      .print("Error on assenting false!");
+      .fail;
+    } else {
+      if (verbose) {
+        .print("Intention ",ID," passed!");
+      }
+    }
+.
+-!assertFalse(X) :
+    true
+    <-
+    .send(testController,tell,error);
+.
