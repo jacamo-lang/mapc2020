@@ -10,6 +10,7 @@
 /**
  * Test rule that gives euclidean distance between two points
  */
+@testDistance[atomic]
 +!testDistance :
     distance(0,0,3,3,D0) &
     distance(-30,-20,4,4,D1) &
