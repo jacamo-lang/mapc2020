@@ -98,6 +98,5 @@
     .abolish(map(_,_,_,_));
     !assertFalse(map(_,_,_,goalCenter));
     +map(ag,10,12,goalCenter);
-    .wait(100);
     !assertTrue(map(_,_,_,goalCenter));
 .
