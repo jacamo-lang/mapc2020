@@ -60,9 +60,9 @@ public class GridState implements Estado, Heuristica {
     private void suc(List<Estado> s, Location newl, String direction) {
         // Avoiding obstacles and agents of both teams
         if (    (!map.contains(newl.x, newl.y)) || (
-                (!map.get(newl.x, newl.y).equals("a") || euclidianDistance(from,newl) > 3) && // an agent of team a
-                (!map.get(newl.x, newl.y).equals("b") || euclidianDistance(from,newl) > 3) && // an agent of team b
-                (!map.get(newl.x, newl.y).equals("obstacle") || euclidianDistance(from,newl) > 10)
+                (!map.get(newl.x, newl.y).equals("a") || euclideanDistance(from,newl) > 3) && // an agent of team a
+                (!map.get(newl.x, newl.y).equals("b") || euclideanDistance(from,newl) > 3) && // an agent of team b
+                (!map.get(newl.x, newl.y).equals("obstacle") || euclideanDistance(from,newl) > 10)
                 )) {
             s.add(new GridState(newl, from, to, direction, map));
         }
@@ -76,7 +76,7 @@ public class GridState implements Estado, Heuristica {
         return false;
     }
 
-    public int euclidianDistance(Location from, Location to) {
+    public int euclideanDistance(Location from, Location to) {
         return Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
     }
 

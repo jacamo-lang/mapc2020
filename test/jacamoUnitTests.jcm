@@ -1,0 +1,17 @@
+mas jacamoUnitTests {
+    agent testController {
+     join: testEnvironment
+     focus: unitTestControl
+    }
+
+    agent testAgentWeakIndividualist
+
+    agent testSampleAgent
+
+    workspace testEnvironment {
+      artifact  unitTestControl: unitTest.TestControl()
+    }
+
+    asl-path: src/agt, test/agt, test/agt/inc
+    java-path: src/env, test/env
+}
