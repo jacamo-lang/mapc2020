@@ -5,13 +5,7 @@
 { include("agentWeakIndividualist.asl") }
 { include("testAssert.asl") }
 
-distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
-
-!testDistance.
-!testGoalCenter.
-!testNearest.
-!testNearestNeighbour.
-!testGetBlock.
+!executeTestPlans.
 
 /**
  * Test rule that gives euclidean distance between two points
@@ -34,6 +28,7 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
  * When the agent knows two edges of the goal area
  * it can tell where is the center
  */
+@testGoalCenter[atomic]
 +!testGoalCenter :
     true
     <-
@@ -61,6 +56,7 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
  * Test nearest rule which uses myposition and map(_X,Y,thing)
  * to return the nearest thing regarding the reference (myposition)
  */
+@testNearest[atomic]
 +!testNearest :
     true
     <-
@@ -80,6 +76,7 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
  * Nearest neighbour is the nearest adjacent position
  * of a given point (X,Y) in relation to myposition(X,Y)
  */
+@testNearestNeighbour[atomic]
 +!testNearestNeighbour :
     true
     <-
@@ -94,13 +91,13 @@ distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
  * Test get block which request/attach a block
  * It is actually returning error since the simulator is not on
  */
-+!testGetBlock :
+@testAddGoalCenterBB[atomic]
++!testAddGoalCenterBB :
     true
     <-
-    .abolish(carrying(_));
-    .abolish(thing(_,_,_,_));
-    +thing(1,0,dispenser,b1);
-    !!getBlock(b1);
+    .abolish(map(_,_,_,_));
+    !assertFalse(map(_,_,_,goalCenter));
+    +map(ag,10,12,goalCenter);
     .wait(100);
-    !assertTrue(carrying(D));
+    !assertTrue(map(_,_,_,goalCenter));
 .
