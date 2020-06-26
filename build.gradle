@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
 	implementation 'org.jacamo:jacamo:0.8'
-	implementation 'org.jason-lang:jason:2.4'
+	implementation 'org.jason-lang:jason:2.5.1'
 	implementation 'org.jacamo:jacamo-web:0.5-SNAPSHOT'
     implementation name: 'search'
     implementation name: 'eismassim-4.2-jar-with-dependencies'
@@ -64,17 +64,16 @@ task run (type: JavaExec, dependsOn: 'classes') {
     classpath sourceSets.main.runtimeClasspath
 }
 
-
-task testJason (type: JavaExec, dependsOn: 'classes') {
-    description 'runs Jason unit tests: unit_tests.jcm'
+task testJacamo (type: JavaExec, dependsOn: 'classes') {
+    description 'runs Jason unit tests: jacamoUnitTests.jcm'
     doFirst {
         mkdir 'log'
     }
     main 'jacamo.infra.JaCaMoLauncher'
-    args 'src/jcm/unit_tests.jcm'
+    args 'src/jcm/jacamoUnitTests.jcm'
     classpath sourceSets.main.runtimeClasspath
 }
-test.dependsOn testJason
+test.dependsOn testJacamo
 
 task fixTab {
     ant.fixcrlf(eol: 'lf',  includes: '**/*.txt,**/*.bat, **/*.adoc', srcdir: '.')
