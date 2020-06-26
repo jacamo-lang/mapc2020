@@ -72,8 +72,10 @@ task testJacamo (type: JavaExec, dependsOn: 'classes') {
     main 'jacamo.infra.JaCaMoLauncher'
     args = ['test/jacamoUnitTests.jcm']
     classpath sourceSets.main.runtimeClasspath
+    sourceSets.main.java.srcDirs += ['test/env']
 }
 test.dependsOn testJacamo
+
 
 task fixTab {
     ant.fixcrlf(eol: 'lf',  includes: '**/*.txt,**/*.bat, **/*.adoc', srcdir: '.')
