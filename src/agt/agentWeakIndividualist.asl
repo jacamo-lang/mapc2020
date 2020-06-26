@@ -199,7 +199,6 @@ size(1).
     thing(I,J,dispenser,B) &
     directionIncrement(D,I,J)
     <-
-    +carrying(0);
     !do(request(D),R0);
     !do(attach(D),R1);
     if ((R0 == success) & (R1 == success)) {
@@ -224,8 +223,10 @@ size(1).
 .
 
 // Mapping goal positions
-+map(_,X,Y,goal) :
-    goalShape(I,J) & map(_,X+I,Y+J,goal)
++map(N,X,Y,goal) :
+    goalShape(I,J) &
+    map(_,X+I,Y+J,goal) &
+    .my_name(ME)
     <-
-    -+map(0,X+(I/2),Y+(J/2),goalCenter);
+    -+map(ME,X+(I/2),Y+(J/2),goalCenter);
 .
