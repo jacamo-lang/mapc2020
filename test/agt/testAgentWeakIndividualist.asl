@@ -101,3 +101,21 @@
     +map(ag,10,12,goalCenter);
     !assertTrue(map(_,_,_,goalCenter));
 .
+
+/*
+ * Test if the agent got the right rotation
+ */
+@testSetRightPosition[atomic]
++!testSetRightPosition :
+    true
+    <-
+    +attached(0,1); // I have a block at 12 o'clock
+    !setRightPosition(req(0,1,_)); // The block must be at 6 o'clock
+    !assertTrue(attached(0,1));
+    !setRightPosition(req(1,0,_)); // The block must be at 3 o'clock
+    !assertTrue(attached(1,0));
+    !setRightPosition(req(-1,0,_)); // The block must be 9 o'clock
+    !assertTrue(attached(-1,0));
+    !setRightPosition(req(0,-1,_)); // The block must be 12 o'clock
+    !assertTrue(attached(0,-1));
+.
