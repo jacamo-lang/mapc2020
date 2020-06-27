@@ -10,7 +10,7 @@ getIntentionId(I,ID) :- I =.. A & .nth(2,A,B) & .nth(0,B,ID).
  * Assert if X is equals to Y
  * IMPORTANT! Do no use this method to compare float numbers
  */
-@assertEquals
+@assertEquals[atomic]
 +!assertEquals(X,Y) :
     .current_intention(I) &
     getIntentionId(I,ID)
@@ -34,7 +34,7 @@ getIntentionId(I,ID) :- I =.. A & .nth(2,A,B) & .nth(0,B,ID).
  * Assert if X is equals to Y with tolerance T
  * IMPORTANT! Do no use this method to compare float numbers
  */
-@assertEqualsWithTolerance
+@assertEqualsWithTolerance[atomic]
 +!assertEquals(X,Y,T) :
     .current_intention(I) &
     getIntentionId(I,ID)
@@ -57,7 +57,7 @@ getIntentionId(I,ID) :- I =.. A & .nth(2,A,B) & .nth(0,B,ID).
 /**
  * Assert if X is true / exists
  */
-@assertTrue
+@assertTrue[atomic]
 +!assertTrue(X) :
     .current_intention(I) &
     getIntentionId(I,ID)
@@ -80,7 +80,7 @@ getIntentionId(I,ID) :- I =.. A & .nth(2,A,B) & .nth(0,B,ID).
 /**
  * Assert if X is false / does not exist
  */
-@assertFalse
+@assertFalse[atomic]
 +!assertFalse(X) :
     .current_intention(I) &
     getIntentionId(I,ID)

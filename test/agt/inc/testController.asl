@@ -57,6 +57,7 @@ shutdownHook.     // enable to shutdown after finishing tests
 /**
  * enable to shutdown after finishing tests
  */
+ @shutdownAferTestsError[atomic]
  +!shutdownAferTests :
      shutdownHook &
      error
@@ -65,7 +66,7 @@ shutdownHook.     // enable to shutdown after finishing tests
      .print("**** End of Jason unit tests.\n\n");
      exitWithError;
  .
-
+@shutdownAferTestsSuccess[atomic]
 +!shutdownAferTests :
     shutdownHook &
     not intention(_)
@@ -75,6 +76,9 @@ shutdownHook.     // enable to shutdown after finishing tests
     .stopMAS;
 .
 
+/**
+ * create agents by files present in folder test/agt/
+ */
 @createTestAgents[atomic]
 +!createTestAgents :
     .my_name(testController)
