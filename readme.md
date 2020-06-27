@@ -52,15 +52,17 @@ docker run -ti --rm -u gradle -v gradle-cache:/home/gradle/.gradle -v "$PWD":/ho
 # Using jacamo unit tests
 
 1. Make sure the log handler is `java.util.logging.ConsoleHandler` and no other visual interface is enable since github action engine has no X11 support
-2. Create an agent for testing your agent(s). You can use the default `test/agt` folder or you can also place it on `src/agt`
-3. Add this agent on the `test/jacamoUnitTests.jcm` (e.g.: `agent testSampleAgent`)
-4. Add to this agent support to testAssert.asl lib and to your agent (e.g. `testSampleAgent.asl`)
+2. Create an agent for testing your agent(s). You can use the default `test/agt` folder (all agents in this folder are automatically launched in the test task).
+3. Add to your test agent support to testAssert.asl lib:
  ```
  { include("testAssert.asl") }
- { include("testSampleAgent.asl") }
+ ```
+4. Add to your test agent support to the agent it is going to test, eg:
+  ```
+  { include("testSampleAgent.asl") }
   ```
 5. Activate auto execution of plans labeled with `test` and make it atomic (e.g.: `@testSum[atomic]`)
-```
-!executeTestPlans.
  ```
- 6. Run `./gradlew test` to check results
+ !executeTestPlans.
+ ```
+6. Run `./gradlew test` to check results

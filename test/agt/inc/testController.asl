@@ -11,15 +11,10 @@ verbose.        // enable to see full log debug
 shutdownHook.     // enable to shutdown after finishing tests
 
 /**
- * Add item to list tail
- */
-addItem([],X,[X]).
-addItem([H|T],X,[H|L]):-addItem(T,X,L).
-
-/**
  * Startup operations
  */
 !setTestController.    // starts test controller operations
+!createTestAgents.     // create agents by .asl files in test/agt/
 
 /**
  * execute plans that contains "test" in the name
@@ -28,28 +23,36 @@ addItem([H|T],X,[H|L]):-addItem(T,X,L).
 +!executeTestPlans:
     .relevant_plans({+!_},_,LL)
     <-
-    for (.member(X,LL)) {
-      if (.substring("test",X)) {
-        .print("Executing: ",X);
-        !!X;
+    for (.member(P,LL)) {
+      if (.substring("test",P)) {
+        !!executeTestPlan(P);
       }
     }
+.
+
+@executeTestPlan[atomic]
++!executeTestPlan(P) :
+    true
+    <-
+    .current_intention(I);
+    I = intention(Id,IStack);
+    .print("Executing ",Id," (main plan: ",P,")");
+    !P;
 .
 
 /**
  * setup of the controller, including hook for shutdown
  */
+ @setTestController[atomic]
 +!setTestController :
-    true & .my_name(testController)
+    .my_name(testController)
     <-
-    .println("\n\n");
-    .println("**** Starting Jason unit tests...\n\n");
+    .print("\n\n");
+    .print("**** Starting Jason unit tests...\n\n");
 
     .at("now +2 s", {+!shutdownAferTests});
 .
-
-// avoid plan not found for asl that includes controller
-+!setTestController.
++!setTestController. // avoid plan not found for asl that includes controller
 
 /**
  * enable to shutdown after finishing tests
@@ -71,3 +74,24 @@ addItem([H|T],X,[H|L]):-addItem(T,X,L).
     .print("**** End of Jason unit tests.\n\n");
     .stopMAS;
 .
+
+@createTestAgents[atomic]
++!createTestAgents :
+    .my_name(testController)
+    <-
+    .list_files("./test/agt/inc",".*.asl",IGNORE);
+    .list_files("./test/agt",".*.asl",FILES);
+    for (.member(M,FILES)) {
+      if (not .nth(N,IGNORE,M)) {
+        for (.substring("/",M,R)) {
+          -+lastSlash(R);
+        }
+        ?lastSlash(R0);
+        .length(M,L);
+        .substring(M,AGENT,R0+1,L-4);
+        .print("Launching : ",AGENT," (",M,")");
+        .create_agent(AGENT,M);
+      }
+    }
+.
++!createTestAgents. // avoid plan not found for asl that includes controller
