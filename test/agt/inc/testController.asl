@@ -14,6 +14,7 @@ shutdownHook.     // enable to shutdown after finishing tests
  * Startup operations
  */
 !setTestController.    // starts test controller operations
+!createTestAgents.     // create agents by .asl files in test/agt/
 
 /**
  * execute plans that contains "test" in the name
@@ -42,12 +43,12 @@ shutdownHook.     // enable to shutdown after finishing tests
 /**
  * setup of the controller, including hook for shutdown
  */
+ @setTestController[atomic]
 +!setTestController :
-    true &
     .my_name(testController)
     <-
-    .println("\n\n");
-    .println("**** Starting Jason unit tests...\n\n");
+    .print("\n\n");
+    .print("**** Starting Jason unit tests...\n\n");
 
     .at("now +2 s", {+!shutdownAferTests});
 .
@@ -73,3 +74,24 @@ shutdownHook.     // enable to shutdown after finishing tests
     .print("**** End of Jason unit tests.\n\n");
     .stopMAS;
 .
+
+@createTestAgents[atomic]
++!createTestAgents :
+    .my_name(testController)
+    <-
+    .list_files("./test/agt/inc",".*.asl",IGNORE);
+    .list_files("./test/agt",".*.asl",FILES);
+    for (.member(M,FILES)) {
+      if (not .nth(N,IGNORE,M)) {
+        for (.substring("/",M,R)) {
+          -+lastSlash(R);
+        }
+        ?lastSlash(R0);
+        .length(M,L);
+        .substring(M,AGENT,R0+1,L-4);
+        .print("Launching : ",AGENT," (",M,")");
+        .create_agent(AGENT,M);
+      }
+    }
+.
++!createTestAgents. // avoid plan not found for asl that includes controller

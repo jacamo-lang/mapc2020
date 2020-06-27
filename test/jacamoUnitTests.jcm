@@ -4,10 +4,6 @@ mas jacamoUnitTests {
      focus: unitTestControl
     }
 
-    agent testAgentWeakIndividualist
-
-    agent testSampleAgent
-
     workspace testEnvironment {
       artifact  unitTestControl: unitTest.TestControl()
     }
