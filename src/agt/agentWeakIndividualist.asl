@@ -79,44 +79,63 @@ size(1).
 /**
  * Spiral walk exploration
  */
-+!explore(X): lastDirection(LD) & direction(D,N)
+ +!explore(X): // Preventing collisions
+    lastDirection(LD) &
+     (thing(I,J,entity,_) | obstacle(I,J)) &
+     direction(D,N) &
+     directionIncrement(N,I,J) &
+     size(S)
+     <-
+     -+lastDirection(ND);
+     -+direction(ND,S);
+     -+size(S+1);
+     !explore(X);
+.
++!explore(X):
+    lastDirection(LD) &
+    direction(D,N) &
+    nextDirection(D,ND) &
+    size(S)
     <-
     !do(move(D),R);
     if (R==success) {
       !mapping(D);
       -+lastDirection(D);
       if (N==1) {
-        ?nextDirection(D,ND);
-        ?size(S);
         -+direction(ND,S+1);
         -+size(S+1);
       } else {
         -+direction(D,N-1);
       }
     } else {
-      ?nextDirection(D,ND);
-      ?size(S);
       -+lastDirection(ND);
       -+direction(ND,S);
       -+size(S+1);
     }
 .
 
+
+
 /**
  * If something disturbs me but I am performing a task,
  * let's go back to this or just explore
  */
-@lastActionResult[atomic]
++lastAction(rotate). // Don't interrupt rotates
+@lastActionPerformTask[atomic]
++lastAction(X):
+    not .intend(_) &
+    accepted(T) &
+    task(T,DL,Y,RR)
+    <-
+    .print("back to fulfil the task");
+    !performTask(T,DL,Y,RR);
+.
+@lastActionExplore[atomic]
 +lastAction(X):
     not .intend(_)
     <-
-    if (accepted(T) & task(T,DL,Y,RR)) {
-      .print("back to fulfil the task");
-      !performTask(T,DL,Y,RR);
-    } else {
-      .print("Let's explore the area");
-      !explore(X);
-    }
+    .print("Let's explore the area");
+    !explore(X);
 .
 
  // Go to some random point and go back to the task board
@@ -233,6 +252,7 @@ size(1).
     } else {
       .print("Could not rotate in cw");
     }
+    !setRightPosition(R);
 .
 +!setRightPosition(R) :
     attached(I,J) &
