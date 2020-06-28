@@ -2,8 +2,8 @@
  * Test best performance of agent speak approaches
  */
 
-{ include("testPerformance.asl") }
-{ include("testAssert.asl") }
+{ include("test_performance.asl") }
+{ include("test_assert.asl") }
 
 distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
 
@@ -17,7 +17,7 @@ nearest_b(T,X,Y) :-
     .findall(p(D,X2,Y2),map(_,X2,Y2,T) & distance(X1,Y1,X2,Y2,D),FL) &
     .min(FL,p(_,X,Y)).
 
-!executeTestPlans.
+!execute_test_plans.
 
 /**
  * Test nearest rules
@@ -34,13 +34,13 @@ nearest_b(T,X,Y) :-
     +map(0,4,2,goal)[source(self)];
     +myposition(0,0);
     ?nearest_a(goal,X1,Y1);
-    !assertEquals(4,X1);
-    !assertEquals(2,Y1);
+    !assert_equals(4,X1);
+    !assert_equals(2,Y1);
     ?nearest_a(goal,X2,Y2);
-    !assertEquals(4,X2);
-    !assertEquals(2,Y2);
-    !checkPerformance(testNearest_aPerformance,10);
-    !checkPerformance(testNearest_bPerformance,10);
+    !assert_equals(4,X2);
+    !assert_equals(2,Y2);
+    !check_performance(testNearest_aPerformance,10);
+    !check_performance(testNearest_bPerformance,10);
 .
 +!testNearest_aPerformance :
     true

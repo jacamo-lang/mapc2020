@@ -3,9 +3,9 @@
  */
 
 { include("agentWeakIndividualist.asl") }
-{ include("testAssert.asl") }
+{ include("test_assert.asl") }
 
-!executeTestPlans.
+!execute_test_plans.
 
 /**
  * Test rule that gives euclidean distance between two points
@@ -17,10 +17,10 @@
     distance(-0,10,-9,8.9,D2) &
     distance(0.7,-17,4,-19,D3)
     <-
-    !assertEquals(D0,6);
-    !assertEquals(D1,58);
-    !assertEquals(D2,10.1);
-    !assertEquals(D3,5.3);
+    !assert_equals(D0,6);
+    !assert_equals(D1,58);
+    !assert_equals(D2,10.1);
+    !assert_equals(D3,5.3);
 .
 
 /**
@@ -49,8 +49,8 @@
     +map(0,22,-3,goal)[source(self)];
     +map(0,23,-4,goal)[source(self)];
     ?map(_,X,Y,goalCenter);
-    !assertEquals(X,21);
-    !assertEquals(Y,-4);
+    !assert_equals(X,21);
+    !assert_equals(Y,-4);
 .
 
 /**
@@ -69,8 +69,8 @@
     +map(0,4,2,goal)[source(self)];
     +myposition(0,0);
     ?nearest(goal,X,Y);
-    !assertEquals(4,X);
-    !assertEquals(2,Y);
+    !assert_equals(4,X);
+    !assert_equals(2,Y);
 .
 
 /*
@@ -84,8 +84,8 @@
     .abolish(myposition(_,_));
     +myposition(12,12);
     ?nearest_neighbour(10,10,X,Y);
-    !assertEquals(10,X);
-    !assertEquals(11,Y);
+    !assert_equals(10,X);
+    !assert_equals(11,Y);
 .
 
 /*
@@ -97,9 +97,9 @@
     true
     <-
     .abolish(map(_,_,_,_));
-    !assertFalse(map(_,_,_,goalCenter));
+    !assert_false(map(_,_,_,goalCenter));
     +map(ag,10,12,goalCenter);
-    !assertTrue(map(_,_,_,goalCenter));
+    !assert_true(map(_,_,_,goalCenter));
 .
 
 /*
@@ -111,11 +111,11 @@
     <-
     +attached(0,1); // I have a block at 12 o'clock
     !setRightPosition(req(0,1,_)); // The block must be at 6 o'clock
-    !assertTrue(attached(0,1));
+    !assert_true(attached(0,1));
     !setRightPosition(req(1,0,_)); // The block must be at 3 o'clock
-    !assertTrue(attached(1,0));
+    !assert_true(attached(1,0));
     !setRightPosition(req(-1,0,_)); // The block must be 9 o'clock
-    !assertTrue(attached(-1,0));
+    !assert_true(attached(-1,0));
     !setRightPosition(req(0,-1,_)); // The block must be 12 o'clock
-    !assertTrue(attached(0,-1));
+    !assert_true(attached(0,-1));
 .

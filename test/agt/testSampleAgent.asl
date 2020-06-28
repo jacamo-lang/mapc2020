@@ -3,9 +3,9 @@
  */
 
 { include("sampleAgent.asl") }
-{ include("testAssert.asl") }
+{ include("test_assert.asl") }
 
-!executeTestPlans.
+!execute_test_plans.
 
 /**
  * Test sum using just equals(EXPECTED,ACTUAL)
@@ -15,7 +15,7 @@
     true
     <-
     ?sum(1.3,2.65,R);
-    !assertEquals(3.95,R);
+    !assert_equals(3.95,R);
 .
 
 /**
@@ -26,7 +26,7 @@
     true
     <-
     ?divide(10,3,R);
-    !assertEquals(3.33,R,0.01);
+    !assert_equals(3.33,R,0.01);
 .
 
 /*
@@ -37,7 +37,7 @@
     true
     <-
     .abolish(raining);
-    !assertFalse(raining);
+    !assert_false(raining);
     +doSomethingAddsBelief;
-    !assertTrue(raining);
+    !assert_true(raining);
 .

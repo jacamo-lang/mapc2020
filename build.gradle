@@ -70,7 +70,7 @@ task testJacamo (type: JavaExec, dependsOn: 'classes') {
         mkdir 'log'
     }
     main 'jacamo.infra.JaCaMoLauncher'
-    args = ['test/jacamoUnitTests.jcm']
+    args = ['test/unit_tests.jcm']
     classpath sourceSets.main.runtimeClasspath
     sourceSets.main.java.srcDirs += ['test/env']
 }
