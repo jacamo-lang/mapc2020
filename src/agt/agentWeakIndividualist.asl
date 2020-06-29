@@ -43,6 +43,14 @@ goalShape(4,  0).
 // Use route planner for distances greater than 5
 routeplan_mindist(5).
 
+// For rotation unifies the next clock dir or counterwise dir
+// e.g.: clockDir(0,1,NI,NJ) which is 6 o'clock gives 3 o'clock
+// e.g.: clockDir(PI,PJ,0,-1) which is 12 o'clock gives 3 o'clock
+clockDir(0,-1,1,0).   // 12 o'clock -> 3  o'clock
+clockDir(1,0,0,1).    // 3  o'clock -> 6  o'clock
+clockDir(0,1,-1,0).   // 6  o'clock -> 9  o'clock
+clockDir(-1,0,0,-1).  // 9  o'clock -> 12 o'clock
+
 // Spiral walk setup
 nextDirection(w,n).
 nextDirection(n,e).
@@ -71,56 +79,76 @@ size(1).
 /**
  * Spiral walk exploration
  */
-+!explore(X): lastDirection(LD) & direction(D,N)
+ +!explore(X): // Preventing collisions
+    lastDirection(LD) &
+     (thing(I,J,entity,_) | obstacle(I,J)) &
+     direction(D,N) &
+     directionIncrement(N,I,J) &
+     size(S)
+     <-
+     -+lastDirection(ND);
+     -+direction(ND,S);
+     -+size(S+1);
+     !explore(X);
+.
++!explore(X):
+    lastDirection(LD) &
+    direction(D,N) &
+    nextDirection(D,ND) &
+    size(S)
     <-
     !do(move(D),R);
     if (R==success) {
       !mapping(D);
       -+lastDirection(D);
       if (N==1) {
-        ?nextDirection(D,ND);
-        ?size(S);
         -+direction(ND,S+1);
         -+size(S+1);
       } else {
         -+direction(D,N-1);
       }
     } else {
-      ?nextDirection(D,ND);
-      ?size(S);
       -+lastDirection(ND);
       -+direction(ND,S);
       -+size(S+1);
     }
 .
 
+
+
 /**
  * If something disturbs me but I am performing a task,
  * let's go back to this or just explore
  */
-@lastActionResult[atomic]
++lastAction(rotate). // Don't interrupt rotates
+@lastActionPerformTask[atomic]
++lastAction(X):
+    not .intend(_) &
+    accepted(T) &
+    task(T,DL,Y,RR)
+    <-
+    .print("back to fulfil the task");
+    !performTask(T,DL,Y,RR);
+.
+@lastActionExplore[atomic]
 +lastAction(X):
     not .intend(_)
     <-
-    if (accepted(T) & task(T,DL,Y,RR)) {
-      .print("back to fulfil the task");
-      .findall(req(_,_,RQ),RR,RQ);
-      !performTask(T,DL,Y,RQ);
-    } else {
-      .print("Let's explore the area");
-      !explore(X);
-    }
+    .print("Let's explore the area");
+    !explore(X);
 .
 
  // Go to some random point and go back to the task board
  @performTask[atomic]
- +!performTask(T,DL,Y,B):
+ +!performTask(T,DL,Y,R):
      not desire(performTask(_,_,_,_))
      <-
+     R = req(_,_,B);
      !gotoNearest(taskboard);
      !acceptTask(T);
      !gotoNearest(B);
      !getBlock(B);
+     !setRightPosition(R);
      !gotoNearest(goal);
      !submitTask(T);
 .
@@ -145,9 +173,7 @@ size(1).
     (.nth(0,REQ,RR) & .literal(RR))   // The requirement is a valid literal
     <-
     .succeed_goal(explore(_));
-    -+RR;
-    ?req(_,_,RQ);
-    !performTask(T,DL,Y,RQ);
+    !performTask(T,DL,Y,RR);
 .
 
 // If this task was already accepted, just skip.
@@ -206,6 +232,42 @@ size(1).
     } else {
       .print("Could not request/attach block ",B, "::",R0,"/",R1);
     }
+.
+
++!setRightPosition(R) :
+    attached(I,J) &
+    R = req(RI,RJ,B) &
+    ((I == RI) & (J == RJ)) // no rotation is necessary
+.
++!setRightPosition(R) :
+    attached(I,J) &
+    R = req(RI,RJ,B) &
+    clockDir(I,J,RI,RJ) // if it is necessary 1 clockwise rotation
+    <-
+    .print("I will rotate if necessary");
+    !do(rotate(cw),R);
+    if (R == success) {
+      .print("I have done a clockwise rotation");
+      -+attached(RI,RJ);
+    } else {
+      .print("Could not rotate in cw");
+    }
+    !setRightPosition(R);
+.
++!setRightPosition(R) :
+    attached(I,J) &
+    R = req(RI,RJ,B) & // rotate counterclockwise by default
+    clockDir(NI,NJ,I,J)
+    <-
+    .print("I will rotate if necessary");
+    !do(rotate(ccw),R);
+    if (R == success) {
+      .print("I have done a counterclockwise rotation");
+      -+attached(NI,NJ);
+    } else {
+      .print("Could not rotate in ccw");
+    }
+    !setRightPosition(R);
 .
 
 +!submitTask(T) :
