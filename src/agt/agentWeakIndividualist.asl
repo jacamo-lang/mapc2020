@@ -114,10 +114,11 @@ size(1).
 +lastAction(X):
     not .intend(_) &
     accepted(T) &
-    task(T,DL,Y,RR)
+    task(T,DL,_,_) &
+    step(S) & DL > S
     <-
-    .print("back to fulfil the task");
-    !performTask(T,DL,Y,RR);
+    .print("Back to fulfill ",T);
+    !performTask(T);
 .
 @lastActionExplore[atomic]
 +lastAction(X):
@@ -129,17 +130,18 @@ size(1).
 
  // Go to some random point and go back to the task board
  @performTask[atomic]
- +!performTask(T,DL,Y,R):
-     not desire(performTask(_,_,_,_))
+ +!performTask(T):
+     not desire(performTask(_)) &
+     task(T,DL,Y,REQs) &
+     .nth(0,REQs,REQ) &
+     REQ = req(_,_,B)
      <-
-     R = req(_,_,B);
      !gotoNearestNeighbour(taskboard);
      !acceptTask(T);
      !gotoNearestNeighbour(B);
      !getBlock(B);
-     !setRightPosition(R);
+     !setRightPosition(REQ);
      !gotoNearest(goal);
-     !gotoNearestNeighbour(goalCenter);
      !submitTask(T);
 .
 
@@ -157,8 +159,7 @@ size(1).
 // I've found a single block task
 +task(T,DL,Y,REQs) :
     not accepted(_) &                 // I am not committed
-    step(S) &
-    DL > S                            // I still have time
+    step(S) & DL > S &                // I still have time
     map(_,_,_,taskboard) &            // I know a taskboard position
     map(_,_,_,goal) &                 // I know a goal area position
     (.length(REQs,LR) & LR == 1) &    // The task is a single block task
@@ -167,7 +168,7 @@ size(1).
     map(_,_,_,B)                      // I know where to find B
     <-
     .succeed_goal(explore(_));
-    !performTask(T,DL,Y,REQ);
+    !performTask(T);
 .
 
 /**
