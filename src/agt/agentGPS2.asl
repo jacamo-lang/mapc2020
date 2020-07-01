@@ -109,6 +109,7 @@ myposition(0,0).
         NX= X+INCX;
         NY= Y+INCY;
         -+myposition(NX,NY);
+        -+update_position_step(STEP); 
         if(origin(OL) & originlead(OL)) {
             unmark(X,Y); 
             ?vision(S)
