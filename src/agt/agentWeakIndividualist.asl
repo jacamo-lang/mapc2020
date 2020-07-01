@@ -119,6 +119,10 @@ size(1).
 /**
  * If something disturbs me but I am performing a task,
  * let's go back to this or just explore
+ *
+ * The agent is maybe trying to do multiple rotations in
+ * order to find the right position, in this case,
+ * do not interrupt!
  */
 +lastAction(rotate). // Don't interrupt rotates
 @lastActionPerformTask[atomic]
@@ -234,14 +238,14 @@ size(1).
     }
 .
 
-+!setRightPosition(R) :
++!setRightPosition(REQ) :
     attached(I,J) &
-    R = req(RI,RJ,B) &
+    REQ = req(RI,RJ,B) &
     ((I == RI) & (J == RJ)) // no rotation is necessary
 .
-+!setRightPosition(R) :
++!setRightPosition(REQ) :
     attached(I,J) &
-    R = req(RI,RJ,B) &
+    REQ = req(RI,RJ,B) &
     clockDir(I,J,RI,RJ) // if it is necessary 1 clockwise rotation
     <-
     .print("I will rotate if necessary");
@@ -252,11 +256,11 @@ size(1).
     } else {
       .print("Could not rotate in cw");
     }
-    !setRightPosition(R);
+    !setRightPosition(REQ);
 .
-+!setRightPosition(R) :
++!setRightPosition(REQ) :
     attached(I,J) &
-    R = req(RI,RJ,B) & // rotate counterclockwise by default
+    REQ = req(RI,RJ,B) & // rotate counterclockwise by default
     clockDir(NI,NJ,I,J)
     <-
     .print("I will rotate if necessary");
@@ -267,7 +271,7 @@ size(1).
     } else {
       .print("Could not rotate in ccw");
     }
-    !setRightPosition(R);
+    !setRightPosition(REQ);
 .
 
 +!submitTask(T) :
