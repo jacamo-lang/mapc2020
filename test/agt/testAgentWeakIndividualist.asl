@@ -109,13 +109,18 @@
 +!testSetRightPosition :
     true
     <-
-    +attached(0,1); // I have a block at 12 o'clock
-    !setRightPosition(req(0,1,_)); // The block must be at 6 o'clock
+    .add_plan({ +!do(rotate(D),success) :
+        attached(I,J) & rotate(D,I,J,II,JJ)
+        <-
+        -+attached(II,JJ);
+    }, self, begin);
+    +attached(0,1); // I have a block at 6 o'clock
+    !setRightPosition(req(0,1,tstB));  // The block must be at 6 o'clock
     !assert_true(attached(0,1));
-    !setRightPosition(req(1,0,_)); // The block must be at 3 o'clock
-    !assert_true(attached(1,0));
-    !setRightPosition(req(-1,0,_)); // The block must be 9 o'clock
+    !setRightPosition(req(-1,0,tstB)); // The block must be at 9 o'clock
     !assert_true(attached(-1,0));
-    !setRightPosition(req(0,-1,_)); // The block must be 12 o'clock
+    !setRightPosition(req(1,0,tstB));  // The block must be at 3 o'clock
+    !assert_true(attached(1,0));
+    !setRightPosition(req(0,-1,tstB)); // The block must be at 12 o'clock
     !assert_true(attached(0,-1));
 .

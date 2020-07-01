@@ -50,6 +50,14 @@ clockDir(0,-1,1,0).   // 12 o'clock -> 3  o'clock
 clockDir(1,0,0,1).    // 3  o'clock -> 6  o'clock
 clockDir(0,1,-1,0).   // 6  o'clock -> 9  o'clock
 clockDir(-1,0,0,-1).  // 9  o'clock -> 12 o'clock
+rotate(cw,0,-1,1,0).
+rotate(cw,1,0,0,1).
+rotate(cw,0,1,-1,0).
+rotate(cw,-1,0,0,-1).
+rotate(ccw,1,0,0,-1).
+rotate(ccw,0,1,1,0).
+rotate(ccw,-1,0,1,0).
+rotate(ccw,0,-1,-1,0).
 
 // Spiral walk setup
 nextDirection(w,n).
@@ -238,10 +246,12 @@ size(1).
 .
 +!getBlock(B) : attached(_,_). // If I am already carrying a block B
 
+//@setRightPositionNoRotate[atomic]
 +!setRightPosition(REQ) :
     attached(I,J) &
     REQ = req(I,J,B) // no rotation is necessary
 .
+//@setRightPositionCWRotate[atomic]
 +!setRightPosition(REQ) :
     attached(I,J) &
     REQ = req(RI,RJ,B) &
@@ -255,6 +265,7 @@ size(1).
     }
     !setRightPosition(REQ);
 .
+//@setRightPositionCCWRotate[atomic]
 +!setRightPosition(REQ) :
     attached(I,J) &
     REQ = req(_,_,B) &
@@ -262,12 +273,13 @@ size(1).
     <-
     !do(rotate(ccw),R);
     if (R == success) {
-      .print("Rotated ",B," (",I,",",J,") to  (",NI,",",NJ,") dir: ccw");
+      .print("Rotated ",B," (",I,",",J,") to (",NI,",",NJ,") dir: ccw");
     } else {
       .print("Could not rotate ",B," (",I,",",J,") to (",NI,",",NJ,") dir: ccw");
     }
     !setRightPosition(REQ);
 .
+//@setRightPositionFail[atomic]
 +!setRightPosition(REQ) : // If other plans fail
     REQ = req(_,_,B)
     <-
