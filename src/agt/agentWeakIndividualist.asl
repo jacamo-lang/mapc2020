@@ -33,6 +33,12 @@ nearest_neighbour(XP,YP,X,Y) :-
       distance(X1,Y1,X2,Y2,D), FL
     ) & .min(FL,p(_,X,Y)).
 
+task_shortest_path(B,D) :-
+    (myposition(X1,Y1) & map(_,_,_,taskboard) & nearest(taskboard,X2,Y2) & distance(X1,Y1,X2,Y2,D12)) &
+    (map(_,_,_,B) & nearest(B,X3,Y3) & distance(X2,Y2,X3,Y3,D23)) &
+    (map(_,_,_,goal) & nearest(goal,X4,Y4) & distance(X3,Y3,X4,Y4,D34)) &
+    D = D12 + D23 + D34.
+
 // Used to determine the goal center area
 // It was created due to errors on submitting, but is probably useless
 goalShape(0, -4).
@@ -147,7 +153,9 @@ size(1).
      not desire(performTask(_)) &
      task(T,DL,Y,REQs) &
      .nth(0,REQs,REQ) &
-     REQ = req(_,_,B)
+     REQ = req(_,_,B) &
+     task_shortest_path(B,D) &
+     step(S) & DL > (S + D)     // deadline must be greater than step + shortest path
      <-
      !gotoNearestNeighbour(taskboard);
      !acceptTask(T);
@@ -313,7 +321,7 @@ size(1).
     <-
     .print("Fail on submitting block on (",I,",",J,") task ",T," : ",REQs," : ",R0);
     !do(detach(D),R1);
-    if (R1 != success) {
+    if (R1 \== success) {
       .print("Fail on detaching block on ",D);
     }
 .

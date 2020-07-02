@@ -165,3 +165,20 @@
 
     +task(task22,503,1,[req(0,1,b2)]);
 .
+
+/**
+ * Test got new task
+ */
+ @test_task_shortest_path[atomic]
+ +!test_task_shortest_path :
+    true
+    <-
+    .abolish(myposition(_,_));
+    .abolish(map(_,_,_,_));
+    +myposition(0,0);
+    +map(_,0,5,taskboard);
+    +map(_,0,-10,tstB);
+    +map(_,0,10,goal);
+    ?task_shortest_path(tstB,D);
+    !assert_equals(D,40);
+.
