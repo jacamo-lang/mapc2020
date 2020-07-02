@@ -43,21 +43,15 @@ goalShape(4,  0).
 // Use route planner for distances greater than 5
 routeplan_mindist(5).
 
-// For rotation unifies the next clock dir or counterwise dir
-// e.g.: clockDir(0,1,NI,NJ) which is 3 o'clock gives 6 o'clock (cw dir)
-// e.g.: clockDir(PI,PJ,0,-1) which is 12 o'clock gives 9 o'clock (ccw dir)
-clockDir(0,-1,1,0).   // 12 o'clock -> 3  o'clock
-clockDir(1,0,0,1).    // 3  o'clock -> 6  o'clock
-clockDir(0,1,-1,0).   // 6  o'clock -> 9  o'clock
-clockDir(-1,0,0,-1).  // 9  o'clock -> 12 o'clock
-rotate(cw,0,-1,1,0).
-rotate(cw,1,0,0,1).
-rotate(cw,0,1,-1,0).
-rotate(cw,-1,0,0,-1).
-rotate(ccw,1,0,0,-1).
-rotate(ccw,0,1,1,0).
-rotate(ccw,-1,0,1,0).
-rotate(ccw,0,-1,-1,0).
+// For rotation
+rotate(cw,0,-1,1,0).  // 12 o'clock -> 3  o'clock
+rotate(cw,1,0,0,1).   // 3  o'clock -> 6  o'clock
+rotate(cw,0,1,-1,0).  // 6  o'clock -> 9  o'clock
+rotate(cw,-1,0,0,-1). // 9  o'clock -> 12 o'clock
+rotate(ccw,1,0,0,-1). // 3  o'clock -> 12  o'clock
+rotate(ccw,0,1,1,0).  // 6  o'clock -> 3  o'clock
+rotate(ccw,-1,0,1,0). // 9  o'clock -> 6 o'clock
+rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
 
 // Spiral walk setup
 nextDirection(w,n).
@@ -255,7 +249,7 @@ size(1).
 +!setRightPosition(REQ) :
     attached(I,J) &
     REQ = req(RI,RJ,B) &
-    clockDir(I,J,RI,RJ) // if it is necessary 1 clockwise rotation
+    rotate(cw,I,J,RI,RJ) // if it is necessary 1 clockwise rotation
     <-
     !do(rotate(cw),R);
     if (R == success) {
@@ -269,7 +263,7 @@ size(1).
 +!setRightPosition(REQ) :
     attached(I,J) &
     REQ = req(_,_,B) &
-    clockDir(NI,NJ,I,J) // rotate counterclockwise by default
+    rotate(ccw,NI,NJ,I,J) // rotate counterclockwise by default
     <-
     !do(rotate(ccw),R);
     if (R == success) {
@@ -292,10 +286,10 @@ size(1).
     task(T,DL,Y,REQs) &
     goal(0,0)         // I am over a goal
     <-
+    .abolish(accepted(_));
     !do(submit(T),R0);
     if (R0 == success) {
       .print("I've submitted task ",T);
-      .abolish(accepted(_));
     } else {
       .print("Fail on submitting block on (",I,",",J,") task ",T," : ",REQs," : ",R0);
       !do(detach(D),R1);
