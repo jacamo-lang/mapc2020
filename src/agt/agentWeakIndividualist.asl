@@ -122,6 +122,17 @@ size(1).
     .print("Back to fulfill ",T);
     !performTask(T);
 .
+@lastActionExploreDetach[atomic]
++lastAction(X):
+    attached(I,J) &
+    directionIncrement(D,I,J)
+    <-
+    !do(detach(D),R1);
+    if (R1 \== success) {
+      .print("Fail on detaching block on ",D);
+    }
+    .print("Detached and let's explore the area");
+.
 @lastActionExplore[atomic]
 +lastAction(X):
     not .intend(_)
@@ -159,7 +170,9 @@ size(1).
 .
 
 // I've found a single block task
+@task[atomic]
 +task(T,DL,Y,REQs) :
+    not desire(performTask(_)) &
     not accepted(_) &                 // I am not committed
     step(S) & DL > S &                // I still have time
     map(_,_,_,taskboard) &            // I know a taskboard position
