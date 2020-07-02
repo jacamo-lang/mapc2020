@@ -292,7 +292,6 @@ size(1).
     task(T,DL,Y,REQs) &
     goal(0,0)         // I am over a goal
     <-
-    .print("I've submitted");
     !do(submit(T),R0);
     if (R0 == success) {
       .print("I've submitted task ",T);

@@ -109,11 +109,18 @@
 +!testSetRightPosition :
     true
     <-
+    /**
+     * Add mock plan for !do(rotate()) since it needs external library
+     */
     .add_plan({ +!do(rotate(D),success) :
         attached(I,J) & rotate(D,I,J,II,JJ)
         <-
         -+attached(II,JJ);
     }, self, begin);
+
+    /**
+     * Perform tests
+     */
     +attached(0,1); // I have a block at 6 o'clock
     !setRightPosition(req(0,1,tstB));  // The block must be at 6 o'clock
     !assert_true(attached(0,1));
@@ -123,4 +130,38 @@
     !assert_true(attached(1,0));
     !setRightPosition(req(0,-1,tstB)); // The block must be at 12 o'clock
     !assert_true(attached(0,-1));
+.
+
+/**
+ * Test got new task
+ */
+ @testGotNewTask
+ +!testGotNewTask :
+    true
+    <-
+    .abolish(accepted(_));
+    .abolish(myposition(_,_));
+    .abolish(map(_,_,_,_));
+    .abolish(task(_,_,_,_));
+    +step(450);
+    -+myposition(0,0);
+    +map(_,10,10,taskboard);            // I know a taskboard position
+    +map(_,15,15,b2);
+    +map(_,20,20,goal);                 // I know a goal area position
+    +goal(0,0);                         // To submit a task it has to be on a goal area
+
+    /**
+     * Mock plan to goto since it uses external lib
+     */
+    .add_plan({ +!goto(X,Y)
+        <-
+        -+myposition(X,Y);
+    }, self, begin);
+
+    /**
+     * Add mock plan for !do(submit()) since it needs external library
+     */
+    .add_plan({ +!do(submit(T),success) <- .print("mock submit") }, self, begin);
+
+    +task(task22,503,1,[req(0,1,b2)]);
 .
