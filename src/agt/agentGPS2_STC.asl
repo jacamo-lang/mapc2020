@@ -117,6 +117,7 @@ run_after_sync. //for STC
         NX= X+INCX;
         NY= Y+INCY;
         -+myposition(NX,NY);
+        -+update_position_step(STEP);  
         if(origin(OL) & originlead(OL)) {
             //unmark(X,Y);
             //mark(X, Y, path, Me,0); //STC: keep track of the taken way 

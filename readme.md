@@ -53,9 +53,9 @@ docker run -ti --rm -u gradle -v gradle-cache:/home/gradle/.gradle -v "$PWD":/ho
 
 1. Make sure the log handler is `java.util.logging.ConsoleHandler` and no other visual interface is enable since github action engine has no X11 support
 2. Create an agent for testing your agent(s). You can use the default `test/agt` folder (all agents in this folder are automatically launched in the test task).
-3. Add to your test agent support to testAssert.asl lib:
+3. Add to your test agent support to test_assert.asl lib:
  ```
- { include("testAssert.asl") }
+ { include("test_assert.asl") }
  ```
 4. Add to your test agent support to the agent it is going to test, eg:
   ```
@@ -63,6 +63,6 @@ docker run -ti --rm -u gradle -v gradle-cache:/home/gradle/.gradle -v "$PWD":/ho
   ```
 5. Activate auto execution of plans labeled with `test` and make it atomic (e.g.: `@testSum[atomic]`)
  ```
- !executeTestPlans.
+ !execute_test_plans.
  ```
 6. Run `./gradlew test` to check results

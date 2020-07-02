@@ -2,6 +2,8 @@ package localPositionSystem.stc;
 
 import java.awt.Color;
 import cartago.*;
+import com.google.common.collect.Table;
+import com.google.common.collect.HashBasedTable;
 
 import localPositionSystem.lps;
 
@@ -10,6 +12,7 @@ public class lpsSTC extends lps {
     @OPERATION 
     void init (int size, int viewOn){
         this.viewOn = viewOn;
+        this.map = HashBasedTable.create();
         if (viewOn != 0)
            view = new ViewSTC(size);
     }

@@ -89,7 +89,7 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
         checkscene(SCENE) & 
         not (origin(OL) & originlead(OL)) &
         myposition(MX,MY) &
-        step(S) & S==STEP //sync. when the areyou request sent and received in the same step. ToDo: Maybe not necessary after discover the inconsistent position problem  
+        step(S) & S==STEP & update_position_step(STEP) //sync. when the areyou request sent and received in the same step. ToDo: Maybe not necessary after discover the inconsistent position problem  
     <-  
         +pending_isme(PID,MX,MY,AG,RX,RY,AX,AY);
         .send( AG,achieve, isme(PID) );
@@ -153,7 +153,7 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
 //(AX,AY): position of AG when meets with the agent   
 @sync_isme[atomic]   //atomic to avoid update the coordinates before (i) finishing the plan and (ii) start a parallel update          
 +!sync_isme(PID)[source(AG)] : pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)  & origin(OL) & not (originlead(OL)) & myposition(Xnow,Ynow)            
-   <-  
+   <-  .abolish(update_position_step(_));
        .perceive;
        ?myposition(Xnow_2,Ynow_2);
        -+myposition(AX+RX + (Xnow_2-MX), AY+RY + (Ynow_2-MY));
