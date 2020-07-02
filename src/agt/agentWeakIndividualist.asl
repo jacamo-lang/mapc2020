@@ -291,8 +291,17 @@ size(1).
     if (R0 == success) {
       .print("I've submitted task ",T);
     } else {
-      .print("Fail on submitting block on (",I,",",J,") task ",T," : ",REQs," : ",R0);
-      !do(detach(D),R1);
+      .fail;
+    }
+.
+-!submitTask(T) : // Fail on submitting task
+    attached(I,J) &
+    directionIncrement(D,I,J)
+    <-
+    .print("Fail on submitting block on (",I,",",J,") task ",T," : ",REQs," : ",R0);
+    !do(detach(D),R1);
+    if (R1 != success) {
+      .print("Fail on detaching block on ",D);
     }
 .
 
