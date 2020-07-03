@@ -181,14 +181,13 @@ size(1).
 @task[atomic]
 +task(T,DL,Y,REQs) :
     not desire(performTask(_)) &
-    not accepted(_) &                 // I am not committed
-    step(S) & DL > S &                // I still have time
-    map(_,_,_,taskboard) &            // I know a taskboard position
-    map(_,_,_,goal) &                 // I know a goal area position
-    (.length(REQs,LR) & LR == 1) &    // The task is a single block task
-    .nth(0,REQs,REQ) &
-    REQ = req(_,_,B) &
-    map(_,_,_,B)                      // I know where to find B
+    not accepted(_) &                     // I am not committed
+    step(S) & DL > S &                    // I still have time
+    map(_,_,_,taskboard) &                // I know a taskboard position
+    map(_,_,_,goal) &                     // I know a goal area position
+    (.length(REQs,LR) & LR == 1) &        // The task is a single block task
+    .nth(0,REQs,REQ) & REQ = req(_,_,B) & // Get the requirement (must be only one)
+    map(_,_,_,B)                          // I know where to find B
     <-
     .succeed_goal(explore(_));
     !performTask(T);
