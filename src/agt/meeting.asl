@@ -152,7 +152,8 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
 //(RX,RY): relative position of the agent with respect to AG
 //(AX,AY): position of AG when meets with the agent   
 @sync_isme[atomic]   //atomic to avoid update the coordinates before (i) finishing the plan and (ii) start a parallel update          
-+!sync_isme(PID)[source(AG)] : pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)  & origin(OL) & not (originlead(OL)) & myposition(Xnow,Ynow)            
++!sync_isme(PID)[source(AG)] : pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)  & origin(OL) & not (originlead(OL)) & myposition(Xnow,Ynow)  &  
+                               step(Step) & update_position_step(Step) //synchronize only if the agent has updated its position in the current step             
    <-  .abolish(update_position_step(_));
        .perceive;
        ?myposition(Xnow_2,Ynow_2);
@@ -172,7 +173,14 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
        replaceMap(OL,ORIGIN); //remove the old map from the shared representation
        .abolish(map(OL,_,_,_));      
        //?step(S); .print("... SYNC areyou origin: ", ORIGIN, " Agent: ", AG, " Step ", S, "");
-       !after_sync(PID).    
+       !after_sync(PID). 
+
+
+//If the agent has not updated its position in the current step, ignore the synchronization
++!sync_isme(PID)[source(AG)] : pending_isme(PID,MX,MY,AG,RX,RY,AX,AY) & step(Step) & not(update_position_step(Step))   
+   <- -pending_isme(PID,_,_,_,_,_,_,_).
+      
+       
 
 +!sync_isme(PID).
 
