@@ -3,7 +3,7 @@
  */
 
 { include("sampleAgent.asl") }
-{ include("test_assert.asl") }
+{ include("tester_agent.asl") }
 
 !execute_test_plans.
 

@@ -3,7 +3,7 @@
  */
 
 { include("test_performance.asl") }
-{ include("test_assert.asl") }
+{ include("tester_agent.asl") }
 
 distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
 
