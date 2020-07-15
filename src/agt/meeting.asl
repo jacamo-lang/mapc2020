@@ -38,11 +38,17 @@ coordYnegative(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>5  & (math.ab
 coordYnegative(X,Y,XR,YR,L,R) :- .concat(L,[],R).
 
 
-buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .member(m(X,Y,goal),Goals) & .concat([m(X,Y,goal)],L,RR) & buildscene(Goals,Obstacles,Things,T,RR,R).
-buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .member(m(X,Y,obst),Obstacles) & .concat([m(X,Y,obst)],L,RR) & buildscene(Goals,Obstacles,Things,T,RR,R).
-buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .member(m(X,Y,W),Things) & .concat([m(X,Y,W)],L,RR) & buildscene(Goals,Obstacles,Things,T,RR,R).
-buildscene(Goals,Obstacles,Things,[p(X,Y)|T],L,R) :- .concat(L,[m(X,Y,empty)],RR) & buildscene(Goals,Obstacles,Things,T,RR,R).                                                  
-buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.                                                  
+checkscene ([m(X0,Y0,goal)|T]):-goal(X0,Y0) & checkscene (T).
+checkscene ([m(X0,Y0,obst)|T]):-obstacle(X0,Y0) & checkscene (T).
+checkscene ([m(X0,Y0,TYPE)|T]):-thing(X0,Y0,_,TYPE) & checkscene (T).
+checkscene ([m(X0,Y0,empty)|T]):- not (  goal(X0,Y0) |
+                                         obstacle(X0,Y0) | 
+                                         thing(X0,Y0,_,_) ) &
+                                         checkscene (T).
+
+checkscene ([]):-true.
+
+
 
 //+replace_map(OldMapId, NewMapId) <- .print(">>>> I should replaceMap from ", OldMapId, " to ", NewMapId).
 
@@ -66,25 +72,50 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
          */        
         
    
-        .findall(m(I,J,goal),goal(I,J) & math.abs(-XR+I)+math.abs(-YR+J)<=5 ,G);
-        .findall(m(I,J,obst),obstacle(I,J) & math.abs(-XR+I)+math.abs(-YR+J)<=5 ,O);
-        .findall(m(I,J,TYPE),thing(I,J,_,TYPE) & math.abs(-XR+I)+math.abs(-YR+J)<=5,T);             
+   
+        .findall(m(-XR+I,-YR+J,goal),goal(I,J) & math.abs(-XR+I)+math.abs(-YR+J)<=5 ,G);
+        .findall(m(-XR+I,-YR+J,obst),obstacle(I,J) & math.abs(-XR+I)+math.abs(-YR+J)<=5 ,O);
+        .findall(m(-XR+I,-YR+J,TYPE),thing(I,J,_,TYPE) & math.abs(-XR+I)+math.abs(-YR+J)<=5,T);         
         ?coord(0,0,XR,YR,[],Coord); //Coord is a list of all coordinates visible to both the agents involved in the interaction
-        ?buildscene(G,O,T,Coord,[],FinalScene); //Build a final list with goals, obstacles, entities, and empty coordinates        
-        .broadcast (achieve,areyou(XR,YR,AX,AY,FinalScene,PID,S)); 
+        .findall(m(-XR+X,-YR+Y,empty),.member(p(X,Y),Coord)&not(.member(m(-XR+X,-YR+Y,goal),G))&not(.member(m(-XR+X,-YR+Y,obs),O))&not(.member(m(-XR+X,-YR+Y,Ag),T)) & math.abs(-XR+X)+math.abs(-YR+Y)<=5,Empty);
+        .concat(G,O,T,Empty,FinalScene); 
+        .broadcast (achieve,areyou(XR,YR,AX,AY,FinalScene,PID,S)[critical_section(sync), priority(2)]); 
         
         .
     
 +!sincMap(_,_) <- true.
  
  
-//Case 1: empty scene -> it is not possible to check whether is a neighbour 
+
+//TODO: merge areyou/7, areyou8, and do_areyou when possible (conditions overlapping)
+
+//areyou/7 - Case 1: empty scene -> it is not possible to check whether is a neighbour 
 +!areyou(XR,YR,AX,AY,[],PID,STEP).
 
+//areyou/7 - Case 2: The agent is some step behind the sender (perceptions may be outdated) -> wait until reaching the same step of the sender, then add the intention areyou/8
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP)[source(AG)] : step(S) & S<STEP
+   <- .wait(step(ST)&ST>=STEP); //wait until to reach the same step of the sender
+      !areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG).
+
+//areyou/7 - Case 3: The agent is in the same step (or ahead) as the sender -> add the intention areyou/8
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP)[source(AG)]
+   <- !areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG).
+
+//areyou/8 - Case 1: The agent is in the same step as the sender but the position has not been updated in the current step -> wait for updating the position
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG): step(S) & S==STEP & update_position_step(U) & U<S
+   <- .wait(update_position_step(UPS)&step(STP)&STP>=UPS); //wait until (i) the perceptions of the map are updated in the current step or (ii) step is higher that updating (stopped to explore or problems in the exploration)
+      !do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG). 
+
+//areyou/8 - Case 2: The agent is in the same step as the sender but the position has been updated in the current step -> proceed to synchronize
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG): step(S) & S==STEP & update_position_step(U) & U==S
+   <- !do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG). 
+
+//areyou/8 - Case 3: The agent is not in a different step as the sender or the position updating is ahead the sender's step -> ignore the synchronization
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG).
 
 
 //Case 2: the agent is not synchronized: returns an isme achieve message and add the pending_isme belief  
-+!areyou(RX,RY,AX,AY,SCENE,PID,STEP)[source(AG)]: 
++!do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG):  
         thing(-RX,-RY,entity,TEAM) & team(TEAM)  & 
         checkscene(SCENE) & 
         not (origin(OL) & originlead(OL)) &
@@ -97,18 +128,17 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
         .
         
 //Case 3: the agent is already synchronized: returns an isme message to avoid a false positive, but does not add the pending_isme belief to not sync again  
-+!areyou(RX,RY,AX,AY,SCENE,PID,STEP)[source(AG)]: 
++!do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG):  
         thing(-RX,-RY,entity,TEAM) & team(TEAM)  & 
         checkscene(SCENE) &
         step(S)
     <-  
         .send( AG,achieve, isme(PID) );
         //.print("2. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")    Step: ", S,"/",STEP);
-        .            
-
-+!areyou(_,_,_,_,_,_,_) <- true.
+        .         
 
 
++!do_areyou(_,_,_,_,_,_,_,_).
 
 //Receiving messages of possible neighbours, adding their names to the possible neighbours list 
 //it is atomic to ensure that incoming messages of possible neighbours be processed one at a time, keeping the list of possible neighbours consistent  
@@ -122,7 +152,7 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
 +!isme(PID).    
 
 
-+pending_areyou(PID,S,[]) <- !!sync_areyou(PID). 
++pending_areyou(PID,S,[]) <- !!sync_areyou(PID)[critical_section(sync), priority(1)]. 
 
 //Case 1: the minimum number of steps has not been achieved - wait for the next step
 +!sync_areyou(PID) : pending_areyou(PID,S,L)  &
@@ -156,6 +186,8 @@ buildscene(Goals,Obstacles,Things,[],L,R) :- R=L.
                                step(Step) & update_position_step(Step) //synchronize only if the agent has updated its position in the current step             
    <-  .abolish(update_position_step(_));
        .perceive;
+       .abolish(goal(_,_)); .abolish(obstacle(_,_)); .abolish(thing(_,_,_,_)); 
+      
        ?myposition(Xnow_2,Ynow_2);
        -+myposition(AX+RX + (Xnow_2-MX), AY+RY + (Ynow_2-MY));
    
