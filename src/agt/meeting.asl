@@ -9,7 +9,8 @@
  * 
  */
 
-
+field_size(70). //size of the field
+field_center(C) :- field_size(S) & C=S div 2.
 
 steps_for_sync(4). /* Number of steps to wait for answers of possible neighbours */
 
@@ -48,6 +49,10 @@ checkscene ([m(X0,Y0,empty)|T]):- not (  goal(X0,Y0) |
 
 checkscene ([]):-true.
 
+//adapt a coordinate A to to a new value B that fits with the field size
+adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & (A>=C) & AA=A-S & adapt_coordinate_map(AA,B).
+adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & (A<C*-1) & AA=A+S & adapt_coordinate_map(AA,B).
+adapt_coordinate_map(A,B) :- B=A.                                             
 
 
 //+replace_map(OldMapId, NewMapId) <- .print(">>>> I should replaceMap from ", OldMapId, " to ", NewMapId).
@@ -198,7 +203,7 @@ checkscene ([]):-true.
        OLDORIGINY=OMY-MY;                     
        .my_name(NAG);   
        for (gps_map(X,Y,TYPE,MapId) & compare_bels(MapId,OL) & OL\==ORIGIN){
-           mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG,0,ORIGIN);
+           !sync_mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG,ORIGIN);
            //.print("...ARE YOU - mark(", OLDORIGINX+X,",",OLDORIGINY+Y,",",TYPE,",", MapId,") OldMap: ", OL, " OldOrigin: (",OLDORIGINX,",",OLDORIGINY,")  Original Pos:(",X,",",Y,")  Current Pos: (",OMX + (Xnow-MX),",",OMY + (Ynow-MY),")  My Pos: (",MX,",",MY,")- PID: ", PID);
        }       
        -+origin(ORIGIN);
@@ -215,6 +220,22 @@ checkscene ([]):-true.
        
 
 +!sync_isme(PID).
+
+//when testing (STC mainly) under a known field size, must adapt the coordinates
++!sync_mark(X,Y,Type,Agent,MapId) : testing_exploration & 
+                                    field_size(S) & S >0 & field_center(C) &
+                                    field_center(C) & (math.abs(X)>C | math.abs(Y)>C) &
+                                    adapt_coordinate_map(X,XX) & adapt_coordinate_map(Y,YY) &
+                                    step(Step)   
+   <- .concat(Agent, " Sync - Step: ", Step, Legend);
+      !sync_mark(XX,YY,Type,Legend,MapId).                                    
+
+
++!sync_mark(X,Y,Type,Agent,MapId) : originlead(MapId)
+   <- mark(X,Y,Type,Agent,0,MapId).
+
++!sync_mark(X,Y,Type,Agent,MapId) : not(originlead(MapId))
+   <- mark(X,Y,Type,MapId). 
 
 
 //after_sync: if necessary to run something else after sync, add the belief run_after_sinc and implement a plan in the agent

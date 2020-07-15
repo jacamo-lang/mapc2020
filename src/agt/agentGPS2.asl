@@ -29,6 +29,9 @@ size(1).
 lastmapping(-1).
 myposition(0,0).
 
+
+//testing_exploration. //<<< uncomment to test exploration strategies
+
 !start.
 
 +!start: 
@@ -112,6 +115,17 @@ myposition(0,0).
    TODO: check the reason for this exception */
 -!mapping(DIRECTION).
 
+
+//The origin is the originLead (the one that draws in the viewer)
++!addMap(I,J,X,Y,TYPE) : testing_exploration & 
+                         field_size(S) & S >0 &
+                         adapt_coordinate_map(X+I,XX) & adapt_coordinate_map(Y+J,YY)  &
+                         .my_name(AG) & origin(O) & originlead(O) & step(Step)  
+    <-  .concat(AG," - Exp. Step ", Step, Hint); 
+        if(origin(OL) & originlead(OL)) {
+            mark(XX, YY, TYPE, Hint,0, O); //The last parameter is the map identifier              
+        }           
+    .
 
 //The origin is the originLead (the one that draws in the viewer)
 +!addMap(I,J,X,Y,TYPE) :  
