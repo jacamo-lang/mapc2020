@@ -45,7 +45,7 @@ exploration_strategy(spiral). //Current exploration strategy. Possible strategie
       !mapping(R,S,D).  
             
             
-+!move(D) : disabled(true).
++!move(D).
 
 
 
@@ -80,6 +80,12 @@ exploration_strategy(spiral). //Current exploration strategy. Possible strategie
       !explore.
                         
       
+              
++!explore 
+   <- .wait(step(_));
+      !explore.
+
+
 +!check_direction : exploration_strategy(random)
    <- !update_direction_random.
    
