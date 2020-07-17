@@ -25,7 +25,7 @@
 
 
 exploring. //The agent keep exploring explore when the belief "explore" is true.
-exploration_strategy(stc). //Current exploration strategy. Possible strategies: random, spiral, stc
+exploration_strategy(spiral). //Current exploration strategy. Possible strategies: random, spiral, stc
 
 
 
