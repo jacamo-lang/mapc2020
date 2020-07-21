@@ -1,6 +1,0 @@
-mas unit_tests {
-    agent test_manager
-
-    asl-path: src/agt, test/agt, test/agt/inc
-    java-path: src/env, test/env
-}
