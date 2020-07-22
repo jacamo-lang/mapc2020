@@ -143,36 +143,36 @@ size(1).
 +lastAction(X):
     not .intend(_)
     <-
-    .print("Let's explore the area");
+    //.print("Let's explore the area");
     !explore(X);
 .
 
  // Go to some random point and go back to the task board
  @performTask[atomic]
  +!performTask(T):
-     not desire(performTask(_)) &
-     task(T,DL,Y,REQs) &
-     .nth(0,REQs,REQ) &
-     REQ = req(_,_,B) &
-     task_shortest_path(B,D) &
-     step(S) & DL > (S + D)     // deadline must be greater than step + shortest path
-     <-
-     !gotoNearestNeighbour(taskboard);
-     !acceptTask(T);
-     !gotoNearestNeighbour(B);
-     !getBlock(B);
-     !setRightPosition(REQ);
-     !gotoNearest(goal);
-     !submitTask(T);
+    task(T,DL,Y,REQs) &
+    not desire(performTask(_)) &            // I am not committed
+    (.length(REQs,LR) & LR == 1) &          // The task is a single block task
+    .nth(0,REQs,REQ) & REQ = req(_,_,B) &   // Get the requirement (must be only one)
+    task_shortest_path(B,D) &
+    step(S) & DL > (S + D)                  // deadline must be greater than step + shortest path
+    <-
+    !gotoNearestNeighbour(taskboard);
+    !acceptTask(T);
+    !gotoNearestNeighbour(B);
+    !getBlock(B);
+    !setRightPosition(REQ);
+    !gotoNearest(goal);
+    !submitTask(T);
 .
 
 // Go to some random point around D far away from here (D should be even)
 +!goRandomly:
-  myposition(X,Y) &
-  directions(LDIRECTIONS) &
-  .nth(math.floor(math.random(4)),LDIRECTIONS,DR) &
-  directionIncrement(DR,XINC,YINC)
-  <-
+    myposition(X,Y) &
+    directions(LDIRECTIONS) &
+    .nth(math.floor(math.random(4)),LDIRECTIONS,DR) &
+    directionIncrement(DR,XINC,YINC)
+    <-
     .print("Randomly going do ",DR," (",X+XINC,",",Y+YINC,")");
     !goto(X+XINC,Y+YINC);
 .
@@ -182,12 +182,13 @@ size(1).
 +task(T,DL,Y,REQs) :
     not desire(performTask(_)) &
     not accepted(_) &                     // I am not committed
-    step(S) & DL > S &                    // I still have time
     map(_,_,_,taskboard) &                // I know a taskboard position
     map(_,_,_,goal) &                     // I know a goal area position
     (.length(REQs,LR) & LR == 1) &        // The task is a single block task
     .nth(0,REQs,REQ) & REQ = req(_,_,B) & // Get the requirement (must be only one)
-    map(_,_,_,B)                          // I know where to find B
+    map(_,_,_,B) &                        // I know where to find B
+    task_shortest_path(B,D) &
+    step(S) & DL > (S + D)                // deadline must be greater than step + shortest path
     <-
     .succeed_goal(explore(_));
     !performTask(T);
@@ -332,4 +333,11 @@ size(1).
     .my_name(ME)
     <-
     -+map(ME,X+(I/2),Y+(J/2),goalCenter);
+.
+
+-!P[code(C),code_src(S),code_line(L),error_msg(M)] :
+    true
+    <-
+    .log(severe,"Fail on event '",C,"' of '",S,"' at line ",L,", Message: ",M);
+    .stopMAS(0,1);
 .
