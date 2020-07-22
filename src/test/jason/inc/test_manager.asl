@@ -2,7 +2,7 @@
  * Test manager provides general test configurations and facilities
  */
 
- /**
+/**
  * Setup statistics
  */
 tests_performed(0).
@@ -43,7 +43,7 @@ shutdown_hook.          // enable to shutdown after finishing tests
      tests_passed(P)
      <-
      .log(severe,"\n\n");
-     .log(severe,"#",N," plans executed, #",P," passed and #",F," FAILED.");
+     .log(severe,"#",N," tests executed, #",P," passed and #",F," FAILED.");
      .log(severe,"End of Jason unit tests: FAILED!\n\n");
      .stopMAS(0,1);
  .
@@ -56,7 +56,7 @@ shutdown_hook.          // enable to shutdown after finishing tests
     tests_passed(P)
     <-
     .log(info,"\n\n");
-    .log(info,"#",N," plans executed, #",P," PASSED and #",F," failed.");
+    .log(info,"#",N," tests executed, #",P," PASSED and #",F," failed.");
     .log(info,"End of Jason unit tests: PASSED\n\n");
     .stopMAS;
 .

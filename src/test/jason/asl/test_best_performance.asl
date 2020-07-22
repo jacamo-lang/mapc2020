@@ -22,7 +22,7 @@ nearest_b(T,X,Y) :-
 /**
  * Test nearest rules
  */
-@testNearestPerformance[atomic]
+@[atomic,test]
 +!testNearestPerformance :
     true
     <-

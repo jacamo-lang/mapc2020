@@ -10,7 +10,7 @@
 /**
  * Test rule that gives euclidean distance between two points
  */
-@testDistance[atomic]
+@[atomic,test]
 +!testDistance :
     distance(0,0,3,3,D0) &
     distance(-30,-20,4,4,D1) &
@@ -29,7 +29,7 @@
  * When the agent knows two edges of the goal area
  * it can tell where is the center
  */
-@testGoalCenter[atomic]
+@[atomic,test]
 +!testGoalCenter :
     true
     <-
@@ -57,7 +57,7 @@
  * Test nearest rule which uses myposition and map(_X,Y,thing)
  * to return the nearest thing regarding the reference (myposition)
  */
-@testNearest[atomic]
+@[atomic,test]
 +!testNearest :
     true
     <-
@@ -77,7 +77,7 @@
  * Nearest neighbour is the nearest adjacent position
  * of a given point (X,Y) in relation to myposition(X,Y)
  */
-@testNearestNeighbour[atomic]
+@[atomic,test]
 +!testNearestNeighbour :
     true
     <-
@@ -92,7 +92,7 @@
  * Test get block which request/attach a block
  * It is actually returning error since the simulator is not on
  */
-@testAddGoalCenterBB[atomic]
+@[atomic,test]
 +!testAddGoalCenterBB :
     true
     <-
@@ -105,7 +105,7 @@
 /*
  * Test if the agent got the right rotation
  */
-@testSetRightPosition[atomic]
+@[atomic,test]
 +!testSetRightPosition :
     true
     <-
@@ -135,7 +135,7 @@
 /**
  * Test got new task
  */
- @testGotNewTask
+ @[test]
  +!testGotNewTask :
     true
     <-
@@ -169,7 +169,7 @@
 /**
  * Test got new task
  */
- @test_task_shortest_path[atomic]
+ @[atomic,test]
  +!test_task_shortest_path :
     true
     <-
