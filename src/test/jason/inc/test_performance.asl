@@ -2,29 +2,29 @@
  * Performance meter helpers
  */
 
-intention_id(I,ID) :- I =.. A & .nth(2,A,B) & .nth(0,B,ID).
-
 /**
- * Check the performance of executing a plan
+ * Check the performance of executing a plan P
+ * take the average on N iterations
  */
 @check_performance[atomic]
-+!check_performance(P,N) :
-    .current_intention(I) &
-    intention_id(I,ID)
++!check_performance(P,N,R) :
+    .intention(ID,_,[ im(Label,{+!Goal[An]},{ Test; _ },_)|_],current) &
+    _[code_line(Line),code_src(Src)] = Label
     <-
-    -+mean(0);
+    -+mean(P,0);
     for (.range(J,1,N)) {
       .nano_time(T0);
       !P;
       .nano_time(T1);
-      ?mean(M);
-      -+mean(M+((T1-T0)/N));
+      ?mean(P,M);
+      -+mean(P,M+((T1-T0)/N));
     }
-    ?mean(MEAN);
-    .print("Time intention ",ID,": ",math.round(MEAN/1000)," microseconds");
+    ?mean(P,MEAN);
+    .log(info,"check_performance on event '",Goal,"' starting at line ",Line,": ",math.round(MEAN/1000)," microseconds");
+    R = MEAN;
 .
 -!check_performance(X,Y) :
     true
     <-
-    .send(test_controller,tell,error);
+    +test(Test,failed,Src,Line)[check_performance(P,N)];
 .
