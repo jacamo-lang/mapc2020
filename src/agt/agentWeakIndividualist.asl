@@ -335,6 +335,9 @@ size(1).
     -+map(ME,X+(I/2),Y+(J/2),goalCenter);
 .
 
+/**
+ * Just for debugging, stop the system if an unexpected error occurs
+ */
 -!P[code(C),code_src(S),code_line(L),error_msg(M)] :
     true
     <-
