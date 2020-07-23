@@ -41,6 +41,7 @@ public class lps extends Artifact {
             this.view.mark(i, j, type, info, vision);
         }
         
+        // Update map used by route planner
         this.map.put(i, j, type);
     }
     
@@ -58,6 +59,9 @@ public class lps extends Artifact {
             else 
                 prop.updateValues(i,j,type,mapId);
         }
+        
+        // Update map used by route planner
+        this.map.put(i, j, type);
     }
     
     /**
@@ -72,6 +76,9 @@ public class lps extends Artifact {
             else 
                 prop.updateValues(i,j,type,mapId);
         }
+        
+        // Update map used by route planner
+        this.map.put(i, j, type);
     }
     
     /**
@@ -79,12 +86,12 @@ public class lps extends Artifact {
      */
     @OPERATION
     void replaceMap(String oldMapId, String newMapId) {
-         ObsProperty prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
-        while(prop!=null) {
-            this.removeObsPropertyByTemplate("gps_map", null, null, null, oldMapId);            
+        ObsProperty prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
+        while (prop != null) {
+            this.removeObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
             prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
         }
-        //signal("replace_map",oldMapId,newMapId);     
+        // signal("replace_map",oldMapId,newMapId);
     }
     
     @OPERATION
@@ -93,7 +100,7 @@ public class lps extends Artifact {
             this.view.unmark(i, j);
         }
         
-        if (!this.map.contains(i, j)) {
+        if (this.map.contains(i, j)) {
             this.map.remove(i,i);        
         }
     }

@@ -1,8 +1,5 @@
 package localPositionSystem.rp;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-
 import busca.AEstrela;
 import busca.Busca;
 import busca.Estado;
