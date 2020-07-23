@@ -1,127 +1,134 @@
 mas env.connection {
-
-agent agenta0: agentWeakIndividualist.asl{
+agent agenta0: agentBase.asl{
  join: enva
-focus: enva.arta0, artGPSa0
+focus: enva.arta0, artGPS
 }
-agent agenta1: agentWeakIndividualist.asl{
+agent agenta1: agentBase.asl{
  join: envb
-focus: enva.arta1, artGPSa1
+focus: enva.arta1, artGPS
 }
-agent agenta2: agentWeakIndividualist.asl{
+agent agenta2: agentBase.asl{
  join: enva
-focus: enva.arta2, artGPSa2
+focus: enva.arta2, artGPS
 }
-agent agenta3: agentWeakIndividualist.asl{
+agent agenta3: agentBase.asl{
  join: enva
-focus: enva.arta3, artGPSa3
+focus: enva.arta3, artGPS
 }
-agent agenta4: agentWeakIndividualist.asl{
+agent agenta4: agentBase.asl{
  join: enva
-focus: enva.arta4, artGPSa4
+focus: enva.arta4, artGPS
 }
-agent agenta5: agentWeakIndividualist.asl{
+agent agenta5: agentBase.asl{
  join: enva
-focus: enva.arta5, artGPSa5
+focus: enva.arta5, artGPS
 }
-agent agenta6: agentWeakIndividualist.asl{
+agent agenta6: agentBase.asl{
  join: enva
-focus: enva.arta6, artGPSa6
+focus: enva.arta6, artGPS
 }
-agent agenta7: agentWeakIndividualist.asl{
+agent agenta7: agentBase.asl{
  join: enva
-focus: enva.arta7, artGPSa7
+focus: enva.arta7, artGPS
 }
-agent agenta8: agentWeakIndividualist.asl{
+agent agenta8: agentBase.asl{
  join: enva
-focus: enva.arta8, artGPSa8
+focus: enva.arta8, artGPS
 }
-agent agenta9: agentWeakIndividualist.asl{
+agent agenta9: agentBase.asl{
  join: enva
-focus: enva.arta9, artGPSa9
+focus: enva.arta9, artGPS
 }
-agent agenta10: agentWeakIndividualist.asl{
+agent agenta10: agentBase.asl{
  join: enva
-focus: enva.arta10, artGPSa10
+focus: enva.arta10, artGPS
 }
-agent agenta11: agentWeakIndividualist.asl{
+agent agenta11: agentBase.asl{
  join: enva
-focus: enva.arta11, artGPSa11
+focus: enva.arta11, artGPS
 }
-agent agenta12: agentWeakIndividualist.asl{
+agent agenta12: agentBase.asl{
  join: enva
-focus: enva.arta12, artGPSa12
+focus: enva.arta12, artGPS
 }
-agent agenta13: agentWeakIndividualist.asl{
+agent agenta13: agentBase.asl{
  join: enva
-focus: enva.arta13, artGPSa13
+focus: enva.arta13, artGPS
 }
-agent agenta14: agentWeakIndividualist.asl{
+agent agenta14: agentBase.asl{
  join: enva
-focus: enva.arta14, artGPSa14
+focus: enva.arta14, artGPS
 }
+
 
 
 agent agentb0: agentDoNothing.asl{
  join: envb
-focus: envb.artb0, artGPSb
+focus: envb.artb0
 }
 agent agentb1: agentDoNothing.asl{
  join: envb
-focus: envb.artb1, artGPSb
+focus: envb.artb1
 }
 agent agentb2: agentDoNothing.asl{
  join: envb
-focus: envb.artb2, artGPSb
+focus: envb.artb2
 }
 agent agentb3: agentDoNothing.asl{
  join: envb
-focus: envb.artb3, artGPSb
+focus: envb.artb3
 }
 agent agentb4: agentDoNothing.asl{
  join: envb
-focus: envb.artb4, artGPSb
+focus: envb.artb4
 }
 agent agentb5: agentDoNothing.asl{
  join: envb
-focus: envb.artb5, artGPSb
+focus: envb.artb5
 }
 agent agentb6: agentDoNothing.asl{
  join: envb
-focus: envb.artb6, artGPSb
+focus: envb.artb6
 }
 agent agentb7: agentDoNothing.asl{
  join: envb
-focus: envb.artb7, artGPSb
+focus: envb.artb7
 }
 agent agentb8: agentDoNothing.asl{
  join: envb
-focus: envb.artb8, artGPSb
+focus: envb.artb8
 }
 agent agentb9: agentDoNothing.asl{
  join: envb
-focus: envb.artb9, artGPSb
+focus: envb.artb9
 }
 agent agentb10: agentDoNothing.asl{
  join: envb
-focus: envb.artb10, artGPSb
+focus: envb.artb10
 }
 agent agentb11: agentDoNothing.asl{
  join: envb
-focus: envb.artb11, artGPSb
+focus: envb.artb11
 }
 agent agentb12: agentDoNothing.asl{
  join: envb
-focus: envb.artb12, artGPSb
+focus: envb.artb12
 }
 agent agentb13: agentDoNothing.asl{
  join: envb
-focus: envb.artb13, artGPSb
+focus: envb.artb13
 }
-agent agent14: agentDoNothing.asl{
+agent agent1b4: agentDoNothing.asl{
  join: envb
-focus: envb.artb14, artGPSb
+focus: envb.artb14
 }
+
+/* Uncomment to monitor the exploration strategy */
+/*agent explorationMonitor: explorationMonitor.asl{
+ join: enva
+ focus: enva.arta0, artGPS
+}*/
+
 
 workspace enva {
 artifact  arta0: connection.EISAccess("clientconf/eisa0.json")
@@ -139,21 +146,8 @@ artifact  arta11: connection.EISAccess("clientconf/eisa11.json")
 artifact  arta12: connection.EISAccess("clientconf/eisa12.json")
 artifact  arta13: connection.EISAccess("clientconf/eisa13.json")
 artifact  arta14: connection.EISAccess("clientconf/eisa14.json")
-artifact  artGPSa0: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa1: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa2: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa3: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa4: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa5: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa6: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa7: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa8: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa9: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa10: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa11: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa12: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa13: localPositionSystem.rp.rp(90,0)
-artifact  artGPSa14: localPositionSystem.rp.rp(90,0)
+artifact  artGPS: localPositionSystem.lps(70,1) //<- use when run STC exploration - TODO: unify the artifact
+//artifact  artGPS: localPositionSystem.stc.lpsSTC(70,1) //<- use when run STC exploration - TODO: unify the artifact
 }
 
 workspace envb {
@@ -172,9 +166,6 @@ artifact  artb11: connection.EISAccess("clientconf/eisb11.json")
 artifact  artb12: connection.EISAccess("clientconf/eisb12.json")
 artifact  artb13: connection.EISAccess("clientconf/eisb13.json")
 artifact  artb14: connection.EISAccess("clientconf/eisb14.json")
-artifact  artGPSb: localPositionSystem.rp.rp(90,0)
 }
-
-//platform: jacamo.web.JCMWeb("--main 2181 --restPort 8080") // zookeeper at 2181, rest/web at 8080
 
 }

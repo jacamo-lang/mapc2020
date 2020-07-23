@@ -49,20 +49,19 @@ docker run -ti --rm -u gradle -v gradle-cache:/home/gradle/.gradle -v "$PWD":/ho
   * change `./logging.properties` file to use `handlers= java.util.logging.ConsoleHandler` and make sure no debug windows are activated in the `.jcm` file.
   * make sure in the `.jcm` the visual interface for local position system is off (`0`), which is the second parameter of `localPositionSystem.lps(_,0)`.
 
-# Using jacamo unit tests
+# Using jason unit tests
 
-1. Make sure the log handler is `java.util.logging.ConsoleHandler` and no other visual interface is enable since github action engine has no X11 support
-2. Create an agent for testing your agent(s). You can use the default `test/agt` folder (all agents in this folder are automatically launched in the test task).
-3. Add to your test agent support to test_assert.asl lib:
+1. Create an agent for testing your agent(s). You can use the default `src/test/jason/asl` folder (all agents in this folder are automatically launched in the test task).
+2. Provide to your tester agent the testing facilities
  ```
- { include("test_assert.asl") }
+ { include("tester_agent.asl") }
  ```
-4. Add to your test agent support to the agent it is going to test, eg:
+3. Add to your test agent support to the agent it is going to test, eg:
   ```
-  { include("testSampleAgent.asl") }
+ { include("agentWeakIndividualist.asl") }
   ```
-5. Activate auto execution of plans labeled with `test` and make it atomic (e.g.: `@testSum[atomic]`)
+4. Activate auto execution of plans labeled with `test` and make it atomic (e.g.: `@testSum[atomic]`)
  ```
  !execute_test_plans.
  ```
-6. Run `./gradlew test` to check results
+5. Run `./gradlew test` to check results. You can run `./gradlew test -i` to see more detailed messages or event `./gradlew test --debug` for a full debug

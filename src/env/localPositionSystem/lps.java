@@ -97,4 +97,16 @@ public class lps extends Artifact {
             this.map.remove(i,i);        
         }
     }
+    
+    
+    /**
+     * Add an edge from the point (xStart, yStart) to (xEnd,yEnd).
+     * Useful in tree based exploration strategies.
+     */
+    @OPERATION
+    void setEdge(int xStart, int yStart, int direction, int xEnd, int yEnd, String mapId) {       
+        ObsProperty prop = this.getObsPropertyByTemplate("edge", xStart, yStart, direction, xEnd, yEnd, mapId);
+        if(prop==null) 
+            defineObsProperty("edge", xStart, yStart, direction, xEnd, yEnd, mapId);        
+    }
 }

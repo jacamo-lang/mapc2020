@@ -5,29 +5,7 @@
 { include("src/agt/STC_Strategy.asl")} //exploration strategy
 { include("src/agt/meeting.asl")} //exploration strategy
 
-buildscene(SIZE, SIZE, _, _,[]).
 
-buildscene(START, SIZE, LINESIZE, [m(X0,Y0,TYPE)|TAIL],SCENEOUTPUT):-
-        X0= START div LINESIZE &
-        Y0= START mod LINESIZE &
-        buildscene(START+1,SIZE, LINESIZE, TAIL,SCNOUT) &
-        SCENEOUTPUT=[m(X0,Y0,TYPE)|SCNOUT].
-
-buildscene(START, SIZE, LINESIZE, [m(X0,Y0,TYPE)|TAIL],SCENEOUTPUT):-
-        XT=START div LINESIZE &
-        YT= START mod LINESIZE  & 
-        not (X0= XT & Y0= YT) &                 
-        buildscene(START+1,SIZE, LINESIZE, [m(X0,Y0,TYPE)|TAIL],SCNOUT) &
-        SCENEOUTPUT=[m(XT,YT,empty)|SCNOUT].
-
-checkscene ([m(X0,Y0,goal)|T]):-goal(-X0,-Y0) & checkscene (T).
-checkscene ([m(X0,Y0,obst)|T]):-obstacle(-X0,-Y0) & checkscene (T).
-checkscene ([m(X0,Y0,TYPE)|T]):-thing(-X0,-Y0,_,TYPE) & checkscene (T).
-checkscene ([m(X0,Y0,empty)|T]):- not (  goal(-X0,-Y0) |
-                                         obstacle(-X0,-Y0) | 
-                                         thing(-X0,-Y0,_,_) ) &
-                                         checkscene (T).
-checkscene ([]):-true.
 
 
 newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
@@ -56,6 +34,8 @@ myposition(0,0).
 teammates([]). //for STC
 
 run_after_sync. //for STC
+
+testing_exploration. //<<< uncomment to test exploration strategies
 
 !start.
 
@@ -140,10 +120,25 @@ run_after_sync. //for STC
         }       
 .
 
+/* Handling exception - same exception stack as -addMap(I,J,X,Y,TYPE) below)
+   TODO: check the reason for this exception */
+-!mapping(DIRECTION).
 
 
 
 
+//The origin is the originLead (the one that draws in the viewer)
++!addMap(I,J,X,Y,TYPE) : testing_exploration & 
+                         field_size(S) & S >0 &
+                         adapt_coordinate_map(X+I,XX) & adapt_coordinate_map(Y+J,YY)  &
+                         .my_name(AG) & origin(O) & originlead(O)  
+    <- 
+        if(origin(OL) & originlead(OL)) {
+            ?step(Step);
+            .concat(AG, "Exp Step: ", Step, Hint);
+            mark(XX, YY, TYPE, Hint,0, O); //The last parameter is the map identifier              
+        }           
+    .
 
 //The origin is the originLead (the one that draws in the viewer)
 +!addMap(I,J,X,Y,TYPE) :  
@@ -161,6 +156,29 @@ run_after_sync. //for STC
    <- mark(X+I, Y+J, TYPE,  O); //The last parameter is the map identifier                
      //+map(O,X+I,Y+J,TYPE).
      .
+
+/* Handling exception
+   TODO: check the reason for this exception:
+
+   java.lang.NullPointerException
+        at cartago.ObsPropMap.readAll(ObsPropMap.java:224)
+    at cartago.Artifact.readProperties(Artifact.java:1186)
+    at cartago.Artifact.access$000(Artifact.java:32)
+    at cartago.Artifact$ArtifactAdapter.readProperties(Artifact.java:1277)
+    at cartago.WorkspaceKernel.getArtifactInfo(WorkspaceKernel.java:1397)
+    at cartago.WorkspaceKernel.access$500(WorkspaceKernel.java:48)
+    at cartago.WorkspaceKernel$CartagoController.getArtifactInfo(WorkspaceKernel.java:1534)
+    at jaca.CAgentArch.act(CAgentArch.java:274)
+    at jason.asSemantics.TransitionSystem.act(TransitionSystem.java:1498)
+    at jason.infra.centralised.CentralisedAgArch.act(CentralisedAgArch.java:239)
+    at jason.infra.centralised.CentralisedAgArch.reasoningCycle(CentralisedAgArch.java:250)
+    at jason.infra.centralised.CentralisedAgArch.run(CentralisedAgArch.java:271)
+    at java.base/java.lang.Thread.run(Thread.java:830)
+   [CAgentArch] Op mark(-26,-28,obstacle,agenta4) on artifact null(artifact_name= null) by agenta4 failed - op: mark(-26,-28,obstacle,agenta4)
+   [agenta4] No failure event was generated for +!addMap(-1,-2,-25,-26,obstacle)[code(mark(-26,-28,obstacle,agenta4)),code_line(139),code_src("agentGPS2_STC.asl"),env_failure_reason(env_failure(action_failed(mark,generic_error))),error(action_failed),error_msg("Action failed: mark(-26,-28,obstacle,agenta4). null"),source(self)]
+   intention 10573: 
+*/
+-!addMap(I,J,X,Y,TYPE). 
 
     
     

@@ -3,14 +3,14 @@
  */
 
 { include("agentWeakIndividualist.asl") }
-{ include("test_assert.asl") }
+{ include("tester_agent.asl") }
 
 !execute_test_plans.
 
 /**
  * Test rule that gives euclidean distance between two points
  */
-@testDistance[atomic]
+@[atomic,test]
 +!testDistance :
     distance(0,0,3,3,D0) &
     distance(-30,-20,4,4,D1) &
@@ -29,7 +29,7 @@
  * When the agent knows two edges of the goal area
  * it can tell where is the center
  */
-@testGoalCenter[atomic]
+@[atomic,test]
 +!testGoalCenter :
     true
     <-
@@ -57,7 +57,7 @@
  * Test nearest rule which uses myposition and map(_X,Y,thing)
  * to return the nearest thing regarding the reference (myposition)
  */
-@testNearest[atomic]
+@[atomic,test]
 +!testNearest :
     true
     <-
@@ -77,7 +77,7 @@
  * Nearest neighbour is the nearest adjacent position
  * of a given point (X,Y) in relation to myposition(X,Y)
  */
-@testNearestNeighbour[atomic]
+@[atomic,test]
 +!testNearestNeighbour :
     true
     <-
@@ -92,7 +92,7 @@
  * Test get block which request/attach a block
  * It is actually returning error since the simulator is not on
  */
-@testAddGoalCenterBB[atomic]
+@[atomic,test]
 +!testAddGoalCenterBB :
     true
     <-
@@ -105,17 +105,114 @@
 /*
  * Test if the agent got the right rotation
  */
-@testSetRightPosition[atomic]
+@[atomic,test]
 +!testSetRightPosition :
     true
     <-
-    +attached(0,1); // I have a block at 12 o'clock
-    !setRightPosition(req(0,1,_)); // The block must be at 6 o'clock
+    /**
+     * Add mock plan for !do(rotate()) since it needs external library
+     */
+    .add_plan({ +!do(rotate(D),success) :
+        attached(I,J) & rotate(D,I,J,II,JJ)
+        <-
+        -+attached(II,JJ);
+    }, self, begin);
+
+    /**
+     * Perform tests
+     */
+    +attached(0,1); // I have a block at 6 o'clock
+    !setRightPosition(req(0,1,tstB));  // The block must be at 6 o'clock
     !assert_true(attached(0,1));
-    !setRightPosition(req(1,0,_)); // The block must be at 3 o'clock
-    !assert_true(attached(1,0));
-    !setRightPosition(req(-1,0,_)); // The block must be 9 o'clock
+    !setRightPosition(req(-1,0,tstB)); // The block must be at 9 o'clock
     !assert_true(attached(-1,0));
-    !setRightPosition(req(0,-1,_)); // The block must be 12 o'clock
+    !setRightPosition(req(1,0,tstB));  // The block must be at 3 o'clock
+    !assert_true(attached(1,0));
+    !setRightPosition(req(0,-1,tstB)); // The block must be at 12 o'clock
     !assert_true(attached(0,-1));
+.
+
+/**
+ * Test got new task
+ */
+ @[test]
+ +!testGotNewTask :
+    true
+    <-
+    .abolish(accepted(_));
+    .abolish(myposition(_,_));
+    .abolish(map(_,_,_,_));
+    .abolish(task(_,_,_,_));
+    +step(450);
+    -+myposition(0,0);
+    +map(_,10,10,taskboard);            // I know a taskboard position
+    +map(_,15,15,b2);
+    +map(_,20,20,goal);                 // I know a goal area position
+    +goal(0,0);                         // To submit a task it has to be on a goal area
+
+    /**
+     * Mock plan to goto since it uses external lib
+     */
+    .add_plan({ +!goto(X,Y)
+        <-
+        -+myposition(X,Y);
+    }, self, begin);
+
+    /**
+     * Add mock plan for !do(submit()) since it needs external library
+     */
+    .add_plan({ +!do(submit(T),success) <- .print("mock submit") }, self, begin);
+
+    +task(task22,503,1,[req(0,1,b2)]);
+.
+
+/**
+ * Test got new task
+ */
+ @[atomic,test]
+ +!test_task_shortest_path :
+    true
+    <-
+    .abolish(myposition(_,_));
+    .abolish(map(_,_,_,_));
+    +myposition(0,0);
+    +map(_,0,5,taskboard);
+    +map(_,0,-10,tstB);
+    +map(_,0,10,goal);
+    ?task_shortest_path(tstB,D);
+    !assert_equals(D,40);
+.
+
+/**
+ * Test if statement with equals and unification
+ */
+ @[atomic,test]
+ +!test_if_equals_and_unify :
+    true
+    <-
+    R=success;
+
+    // Try equals
+    if (R == success) {
+        !force_pass;
+    } else {
+        !force_failure;
+    }
+    if (R == something_else) {
+        !force_failure;
+    } else {
+        !force_pass;
+    }
+
+    // Try unification
+    if (R = success) {
+        !force_pass;
+    } else {
+        !force_failure;
+    }
+    if (R = something_else) {
+        !force_failure;
+    } else {
+        !force_pass;
+    }
 .

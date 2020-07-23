@@ -2,8 +2,7 @@
  * Test best performance of agent speak approaches
  */
 
-{ include("test_performance.asl") }
-{ include("test_assert.asl") }
+{ include("tester_agent.asl") }
 
 distance(X1,Y1,X2,Y2,D) :- D = math.abs(X2-X1) + math.abs(Y2-Y1).
 
@@ -20,10 +19,11 @@ nearest_b(T,X,Y) :-
 !execute_test_plans.
 
 /**
- * Test nearest rules
+ * Compare two approaches: 'sort+nth' vs 'min'
+ * It is expected that 'sort+nth' takes more time than 'min'
  */
-@testNearestPerformance[atomic]
-+!testNearestPerformance :
+@[atomic,test]
++!test_sortnth_vs_min :
     true
     <-
     .abolish(map(_,_,_,_));
@@ -39,8 +39,9 @@ nearest_b(T,X,Y) :-
     ?nearest_a(goal,X2,Y2);
     !assert_equals(4,X2);
     !assert_equals(2,Y2);
-    !check_performance(testNearest_aPerformance,10);
-    !check_performance(testNearest_bPerformance,10);
+    !check_performance(testNearest_aPerformance,10,R0);
+    !check_performance(testNearest_bPerformance,10,R1);
+    !assert_greaterthan(R0,R1);
 .
 +!testNearest_aPerformance :
     true
