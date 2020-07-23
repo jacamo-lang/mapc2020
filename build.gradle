@@ -84,6 +84,11 @@ task fixTab {
     //ant.fixcrlf(tab: 'remove', tablength: '4', javafiles: 'true', includes: '**/*.java,**/*.xml,**/*.asl,**/*.jcm,**/*.txt', srcdir: 'doc')
 }
 
+task runMAB(type: JavaExec) {
+  classpath sourceSets.main.runtimeClasspath
+  main = "mabOptimizer.MABSimulator"
+}
+
 
 clean {
     delete 'bin'
