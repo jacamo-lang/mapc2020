@@ -23,7 +23,7 @@ import cartago.*;
  *
  */
 public class rp extends lps {
-
+    
     /**
      * getDirection for MAPC 2020. It uses A* to generate the path to driven an
      * agent 'from' iagx/y 'to' itox/y. The solution should be the next step of the
@@ -42,7 +42,27 @@ public class rp extends lps {
             Busca search = new AEstrela();
             Location lini = new Location(iagx, iagy);
 
-            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", this.map));
+            Table<Integer, Integer, String> map = HashBasedTable.create();
+            ArtifactInfo info = CartagoService.getController(this.getId().getWorkspaceId().getName()).getArtifactInfo(this.getId().getName());
+            for (ArtifactObsProperty op : info.getObsProperties()) {
+                if (op.getName().equals("gps_map")) {
+                    map.put((int)op.getValues()[0], (int) op.getValues()[1], (String) op.getValues()[2]);
+                }
+            }
+            
+            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map));
+            
+            //The view of the agent
+            int SIZE = 50;
+            for (int i = -SIZE; i < SIZE; i++ ) {
+                for (int j = -SIZE; j < SIZE; j++ ) {
+                    if (map.contains(j, i))
+                        System.out.printf("%c",map.get(j, i).charAt(0));
+                    else
+                        System.out.printf("%c",' ');
+                }
+                System.out.printf("%n");
+            }
 
             // The solution "solution.montaCaminho()" can be a long path, we need the next direction
             if (solution != null) {

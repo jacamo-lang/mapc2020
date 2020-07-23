@@ -19,21 +19,8 @@ myAbsPosition(45,3).
     !goto(10,-6); // Go to the depot in the absolute_position(55,67)
     !goto(8,-4); // An arbitrary point near the last
 
-    // Later go randomly elsewhere
-    !goRandomly;
-
     // Keep exploring
     !doDummyExploration;
  .
-
-+!goRandomly:
-  true
-  <-
-    // Go to some random position
-    -+targetPosition(math.floor(math.random(40))-20,math.floor(math.random(40))-20);
-    ?targetPosition(TX,TY);
-    .print("Target: ",TX," ",TY);
-    !goto(TX,TY);
-    .
 
 +!areyou(_,_,_,_,_,_,_) <- true.

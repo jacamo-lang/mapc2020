@@ -15,7 +15,7 @@ targetCompatibility = 1.13
 repositories {
     mavenCentral()
 
-    maven { url "http://jacamo.sourceforge.net/maven2" }
+    //maven { url "http://jacamo.sourceforge.net/maven2" }
     maven { url "https://raw.github.com/jacamo-lang/mvn-repo/master" }
     flatDir {
        dirs 'libs'

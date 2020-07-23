@@ -1,8 +1,6 @@
 package localPositionSystem;
 
 import cartago.*;
-import com.google.common.collect.Table;
-import com.google.common.collect.HashBasedTable;
 
 /**
  *  Observable properties:
@@ -14,12 +12,10 @@ import com.google.common.collect.HashBasedTable;
 public class lps extends Artifact {
     protected View view;
     protected int viewOn;
-    protected Table<Integer, Integer, String> map;
 
     @OPERATION 
     void init (int size, int viewOn){
         this.viewOn = viewOn;
-        map = HashBasedTable.create();
         
         if (viewOn != 0) {
             view = new View(size);
@@ -41,7 +37,13 @@ public class lps extends Artifact {
             this.view.mark(i, j, type, info, vision);
         }
         
-        this.map.put(i, j, type);
+        if(!type.equals("self")) {
+            ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,0);
+            if(prop==null) 
+                defineObsProperty("gps_map",i,j,type,0);
+            else 
+                prop.updateValues(i,j,type,0);
+        }
     }
     
     /**
@@ -79,23 +81,19 @@ public class lps extends Artifact {
      */
     @OPERATION
     void replaceMap(String oldMapId, String newMapId) {
-         ObsProperty prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
-        while(prop!=null) {
-            this.removeObsPropertyByTemplate("gps_map", null, null, null, oldMapId);            
+        ObsProperty prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
+        while (prop != null) {
+            this.removeObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
             prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
         }
-        //signal("replace_map",oldMapId,newMapId);     
+        // signal("replace_map",oldMapId,newMapId);
     }
     
     @OPERATION
     void unmark(int i, int j) {     
         if (viewOn != 0) {
             this.view.unmark(i, j);
-        }
-        
-        if (!this.map.contains(i, j)) {
-            this.map.remove(i,i);        
-        }
+        }        
     }
     
     

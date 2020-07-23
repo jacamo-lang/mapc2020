@@ -182,37 +182,3 @@
     ?task_shortest_path(tstB,D);
     !assert_equals(D,40);
 .
-
-/**
- * Test if statement with equals and unification
- */
- @[atomic,test]
- +!test_if_equals_and_unify :
-    true
-    <-
-    R=success;
-
-    // Try equals
-    if (R == success) {
-        !force_pass;
-    } else {
-        !force_failure;
-    }
-    if (R == something_else) {
-        !force_failure;
-    } else {
-        !force_pass;
-    }
-
-    // Try unification
-    if (R = success) {
-        !force_pass;
-    } else {
-        !force_failure;
-    }
-    if (R = something_else) {
-        !force_failure;
-    } else {
-        !force_pass;
-    }
-.
