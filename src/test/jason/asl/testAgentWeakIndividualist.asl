@@ -3,7 +3,7 @@
  */
 
 { include("agentWeakIndividualist.asl") }
-{ include("tester_agent.asl") }
+{ include("$jasonJar/test/jason/inc/tester_agent.asl") }
 
 !execute_test_plans.
 
