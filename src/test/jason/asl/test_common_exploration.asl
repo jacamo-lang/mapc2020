@@ -9,6 +9,17 @@
  * Initial belief
  */
 vision(5).
+proof(-5,"-----X-----").
+proof(-4,"----XXX----").
+proof(-3,"---XXXXX---").
+proof(-2,"--XXXXXXX--").
+proof(-1,"-XXXXXXXXX-").
+proof( 0,"XXXXXXXXXXX").
+proof( 1,"-XXXXXXXXX-").
+proof( 2,"--XXXXXXX--").
+proof( 3,"---XXXXX---").
+proof( 4,"----XXX----").
+proof( 5,"-----X-----").
 
 /**
  * Execute test plans!
@@ -24,8 +35,6 @@ vision(5).
 @[atomic,test]
 +!test_erase_map_view
     <-
-    .log(warning,"Starting test_erase_map_view...");
-
     ?vision(S);
 
     /**
@@ -56,10 +65,7 @@ vision(5).
     !erase_map_view(0,0);
 
     // Show final view
-    for ( .range(J,-S, S) ) {
-        ?line(J,L);
-        .print(L);
+    for ( .range(J,-S, S) & proof(J,L1) & line(J,L2)) {
+        !assert_equals(L1,L2);
     }
-
-    .log(warning,"End of test_erase_map_view");
 .
