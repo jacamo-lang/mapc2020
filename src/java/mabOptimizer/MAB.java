@@ -59,5 +59,13 @@ public class MAB {
         }
     }
     
+    public ArrayList<Integer> getFrequencies() {
+        ArrayList<Integer> frequencies = new ArrayList<Integer>();
+        for(MABArm arm: this.arms) {
+            frequencies.add(arm.getRewardHistory().size());
+        }
+        return frequencies;
+    }
+    
     
 }

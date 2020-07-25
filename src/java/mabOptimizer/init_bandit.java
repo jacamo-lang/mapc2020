@@ -7,6 +7,8 @@ import jason.asSemantics.DefaultInternalAction;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;
 import jason.asSyntax.ListTerm;
+import jason.asSyntax.NumberTerm;
+import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Term;
 import mabOptimizer.*;
 
@@ -20,13 +22,15 @@ public class init_bandit extends DefaultInternalAction  {
         ListTerm tArmNames = (ListTerm) args[0];
         Term epsilon = args[1];
         Term decayRate = args[2];
+        Term handoverArg = args[3];
         if (args.length > 3) {
             Term seed = args[3];
             random.setSeed(Long.parseLong(seed.toString()));
+            handoverArg = args[4];
         }
         ArrayList<MABArm> arms =  new ArrayList<MABArm>();
         for(Term tArmName: tArmNames) {
-            arms.add(new MABArm(tArmName.toString()));
+            arms.add(new MABArm(tArmName.toString().replace("\"", "")));
         }
         MAB bandit = new MAB(
                 arms,
@@ -35,6 +39,7 @@ public class init_bandit extends DefaultInternalAction  {
                 true,
                 random);
         BanditManager.bandits.add(bandit);
-        return BanditManager.bandits.size() -1;
+        NumberTerm banditIndex = ASSyntax.createNumber(BanditManager.bandits.size() -1);
+        return un.unifies(banditIndex, handoverArg);
     }
 }
