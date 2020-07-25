@@ -143,7 +143,7 @@ myposition(0,0).
     <-
     .my_name(AG);
     mark(X+I, Y+J, TYPE, AG, 0);
-    +map(0,X+I,Y+J,TYPE);
+    +gps_map(X+I,Y+J,TYPE,0);
 .
 
 /**

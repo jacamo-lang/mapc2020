@@ -33,40 +33,40 @@
 +!testGoalCenter :
     true
     <-
-    .abolish(map(_,_,_,_));
+    .abolish(gps_map(_,_,_,_));
     .abolish(goalCenter(_,_));
-    +map(0,19,-4,goal)[source(self)];
-    +map(0,20,-5,goal)[source(self)];
-    +map(0,20,-4,goal)[source(self)];
-    +map(0,20,-3,goal)[source(self)];
-    +map(0,21,-6,goal)[source(self)];
-    +map(0,21,-5,goal)[source(self)];
-    +map(0,21,-4,goal)[source(self)];
-    +map(0,21,-3,goal)[source(self)];
-    +map(0,21,-2,goal)[source(self)];
-    +map(0,22,-5,goal)[source(self)];
-    +map(0,22,-4,goal)[source(self)];
-    +map(0,22,-3,goal)[source(self)];
-    +map(0,23,-4,goal)[source(self)];
-    ?map(_,X,Y,goalCenter);
+    +gps_map(19,-4,goal,0)[source(self)];
+    +gps_map(20,-5,goal,0)[source(self)];
+    +gps_map(20,-4,goal,0)[source(self)];
+    +gps_map(20,-3,goal,0)[source(self)];
+    +gps_map(21,-6,goal,0)[source(self)];
+    +gps_map(21,-5,goal,0)[source(self)];
+    +gps_map(21,-4,goal,0)[source(self)];
+    +gps_map(21,-3,goal,0)[source(self)];
+    +gps_map(21,-2,goal,0)[source(self)];
+    +gps_map(22,-5,goal,0)[source(self)];
+    +gps_map(22,-4,goal,0)[source(self)];
+    +gps_map(22,-3,goal,0)[source(self)];
+    +gps_map(23,-4,goal,0)[source(self)];
+    ?gps_map(X,Y,goalCenter,_);
     !assert_equals(X,21);
     !assert_equals(Y,-4);
 .
 
 /**
- * Test nearest rule which uses myposition and map(_X,Y,thing)
+ * Test nearest rule which uses myposition and gps_map(X,Y,thing,ag)
  * to return the nearest thing regarding the reference (myposition)
  */
 @[atomic,test]
 +!testNearest :
     true
     <-
-    .abolish(map(_,_,_,_));
+    .abolish(gps_map(_,_,_,_));
     .abolish(myposition(_,_));
-    +map(0,5,5,goal)[source(self)];
-    +map(0,-5,-5,goal)[source(self)];
-    +map(0,-5,-4,goal)[source(self)];
-    +map(0,4,2,goal)[source(self)];
+    +gps_map(5,5,goal,0)[source(self)];
+    +gps_map(-5,-5,goal,0)[source(self)];
+    +gps_map(-5,-4,goal,0)[source(self)];
+    +gps_map(4,2,goal,0)[source(self)];
     +myposition(0,0);
     ?nearest(goal,X,Y);
     !assert_equals(4,X);
@@ -96,10 +96,10 @@
 +!testAddGoalCenterBB :
     true
     <-
-    .abolish(map(_,_,_,_));
-    !assert_false(map(_,_,_,goalCenter));
-    +map(ag,10,12,goalCenter);
-    !assert_true(map(_,_,_,goalCenter));
+    .abolish(gps_map(_,_,_,_));
+    !assert_false(gps_map(_,_,goalCenter,_));
+    +gps_map(10,12,goalCenter,ag);
+    !assert_true(gps_map(_,_,goalCenter,_));
 .
 
 /*
@@ -141,13 +141,13 @@
     <-
     .abolish(accepted(_));
     .abolish(myposition(_,_));
-    .abolish(map(_,_,_,_));
+    .abolish(gps_map(_,_,_,_));
     .abolish(task(_,_,_,_));
     +step(450);
     -+myposition(0,0);
-    +map(_,10,10,taskboard);            // I know a taskboard position
-    +map(_,15,15,b2);
-    +map(_,20,20,goal);                 // I know a goal area position
+    +gps_map(10,10,taskboard,_);            // I know a taskboard position
+    +gps_map(15,15,b2,_);
+    +gps_map(20,20,goal,_);                 // I know a goal area position
     +goal(0,0);                         // To submit a task it has to be on a goal area
 
     /**
@@ -174,11 +174,11 @@
     true
     <-
     .abolish(myposition(_,_));
-    .abolish(map(_,_,_,_));
+    .abolish(gps_map(_,_,_,_));
     +myposition(0,0);
-    +map(_,0,5,taskboard);
-    +map(_,0,-10,tstB);
-    +map(_,0,10,goal);
+    +gps_map(0,5,taskboard,_);
+    +gps_map(0,-10,tstB,_);
+    +gps_map(0,10,goal,_);
     ?task_shortest_path(tstB,D);
     !assert_equals(D,40);
 .
