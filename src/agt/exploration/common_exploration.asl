@@ -106,6 +106,6 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
 +!erase_map_point(X,Y,J,T)
     <-
     if (T == true) {
-        unmark(X+I, Y+J);
+        unmark(X, Y);
     }
 .
