@@ -73,3 +73,39 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
 -!addMap(I,J,X,Y,TYPE).     
      
 +!after_sync(PID).     
+
+/**
+ * Erase current view, an action done before
+ * a new mapping of the view area.
+ * When vision(S) & S == 5, the agent's view is:
+ *      0
+ *     101
+ *    21012
+ *   3210123
+ *  432101234
+ * 54321012345
+ *  432101234
+ *   3210123
+ *    21012
+ *     101
+ *      0
+ */
++!erase_map_view(X,Y) :
+    vision(S)
+    <-
+    for ( .range(J,-S, S) ) {
+        for ( .range(I,-S, S) ) {
+            if (math.abs(I) <= math.abs(math.abs(J)-S)) {
+                !erase_map_point(X+I,Y+J,J,true);
+            } else {
+                !erase_map_point(X+I,Y+J,J,false);
+            }
+        }
+    }
+.
++!erase_map_point(X,Y,J,T)
+    <-
+    if (T == true) {
+        unmark(X+I, Y+J);
+    }
+.
