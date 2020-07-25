@@ -1,3 +1,9 @@
+/**
+ * Common beliefs, rules and plans for goto with algorihtm A*
+ * This lib depends on exploration/common_exploration, the agent
+ * must include both to work properly
+ */
+
 nextDirection(w,n).
 nextDirection(n,e).
 nextDirection(e,s).

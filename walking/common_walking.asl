@@ -1,4 +1,6 @@
-/* Common beliefs, rules and plans for walking */
+/** 
+ * Common beliefs, rules and plans for walking 
+ */
 
 /**
  * Initial beliefs
