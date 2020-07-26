@@ -35,6 +35,9 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
         for (thing(I,J,dispenser,TYPE)) {
             !addMap(I,J,X+INCX, Y+INCY,TYPE);
         }
+        for (thing(I,J,taskboard,_)) {
+            !addMap(I,J,X+INCX, Y+INCY,taskboard);
+        }
         for (thing(I,J,entity,TEAM) & team(TEAM)) {
             !sincMap(I,J);
         }
