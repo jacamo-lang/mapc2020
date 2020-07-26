@@ -33,14 +33,14 @@ myposition(0,0).
         .nth(math.floor(math.random(4)),LDIRECTIONS,DR);
         !do(move(DR),R);
         if (R=success) {
-            !mapping(DR);
+            !mapping(success,_,DR);
         } else {
             .print("Fail on random to x: ",X," y: ",Y," act: ",DR);
         }
       } else {
         !do(move(DIRECTION),R);
         if (R=success) {
-            !mapping(DIRECTION);
+            !mapping(success,_,DIRECTION);
         } else {
             .print("Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);
         }
@@ -67,7 +67,7 @@ myposition(0,0).
         ?directionIncrement(DIRECTION,DESIRABLEX,DESIRABLEY);
         !do(move(DIRECTION),R);
         if (R=success) {
-            !mapping(DIRECTION);
+            !mapping(success,_,DIRECTION);
         } else {
             .print("Simply fail: ",X," y: ",Y," act: ",DIRECTION);
         }
@@ -91,7 +91,7 @@ myposition(0,0).
       else {
           !do(move(DIRECTION),R);
           if (R=success) {
-            !mapping(DIRECTION);
+            !mapping(success,_,DIRECTION);
           }
           else
           //if (R=failed_path)
@@ -103,7 +103,7 @@ myposition(0,0).
       }
     .
 
-+!mapping(DIRECTION) :
++!mapping(success,_,DIRECTION) :
     directionIncrement(DIRECTION, INCX,  INCY) &
     step(STEP) &
     myposition(X,Y)
