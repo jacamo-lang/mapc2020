@@ -1,9 +1,9 @@
 /*
- * Spiral exploration strategy: tries to go a number of steps (given by the belief path_length) in all the 4 possible directions. 
- *                              When finished, starts again increasing the number of steps.    
+ * Spiral2 is the simplest method which tries to increase the 
+ * radius of a circular walking
  */
 
-//{ include("common_exploration.asl") }
+{ include("common_exploration.asl") }
 
 current_direction(w). //initial direction
 
@@ -19,7 +19,7 @@ size(1).
 /**
  * Spiral walk exploration
  */
-+!explore(X):
++!update_direction_spiral2:
     lastDirection(LD,N) &
     current_direction(D) &
     nextDirection(D,ND) &
@@ -27,7 +27,6 @@ size(1).
     <-
     !do(move(D),R);
     if (R==success) {
-      !mapping(success,_,D);
       if (N==1) {
         -+lastDirection(D,S+1);
         -+current_direction(ND);
