@@ -1,8 +1,8 @@
-/*
-The individualist acts alone, it will try to submit tasks that it can do alone.
-The weak individualist can carry only one block, so it will only accept such simple
-tasks.
-*/
+/**
+ * The individualist acts alone, it will try to submit tasks that it can 
+ * do alone. The weak individualist can carry only one block, so it will 
+ * only accept such simple tasks.
+ */
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
@@ -31,9 +31,6 @@ rotate(ccw,1,0,0,-1). // 3  o'clock -> 12  o'clock
 rotate(ccw,0,1,1,0).  // 6  o'clock -> 3  o'clock
 rotate(ccw,-1,0,1,0). // 9  o'clock -> 6 o'clock
 rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
-
-// Just to avoid plan not found
-+!areyou.
 
 /**
  * If something disturbs me but I am performing a task,
@@ -90,17 +87,6 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     !setRightPosition(REQ);
     !gotoNearest(goal);
     !submitTask(T);
-.
-
-// Go to some random point around D far away from here (D should be even)
-+!goRandomly:
-    myposition(X,Y) &
-    directions(LDIRECTIONS) &
-    .nth(math.floor(math.random(4)),LDIRECTIONS,DR) &
-    directionIncrement(DR,XINC,YINC)
-    <-
-    .print("Randomly going do ",DR," (",X+XINC,",",Y+YINC,")");
-    !goto(X+XINC,Y+YINC);
 .
 
 // I've found a single block task

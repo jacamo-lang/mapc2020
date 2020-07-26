@@ -51,7 +51,7 @@ public class rp extends lps {
             }
             
             Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map));
-            
+            /*
             //The view of the agent
             int SIZE = 50;
             for (int i = -SIZE; i < SIZE; i++ ) {
@@ -63,7 +63,7 @@ public class rp extends lps {
                 }
                 System.out.printf("%n");
             }
-
+            */
             // The solution "solution.montaCaminho()" can be a long path, we need the next direction
             if (solution != null) {
                 Nodo root = solution;
