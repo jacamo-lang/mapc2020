@@ -3,17 +3,17 @@
  * to inform where is the center of the respective goal area
  *
  * IMPORTANT! Currently, it is working just for goal areas with
- * 5 squares in length 
+ * 5 squares in length
  */
- 
- 
+
+
 /**
  * Used to determine the goal center area (for 5 squares in length)
  */
-goal_share(0, -4).
-goal_share(0,  4).
-goal_share(-4,  0).
-goal_share(4,  0).
+goal_edge( 0,-4).
+goal_edge( 0, 4).
+goal_edge(-4, 0).
+goal_edge( 4, 0).
 
 /**
  * Map goal center position based on new gps_map(X,Y,goal,_)
@@ -22,9 +22,9 @@ goal_share(4,  0).
  * area
  */
 +gps_map(X,Y,goal,_) :
-    goal_share(I,J) &
+    goal_edge(I,J) &
     gps_map(X+I,Y+J,goal,_) &
     .my_name(ME)
     <-
-    -+gps_map(X+(I/2),Y+(J/2),goal_center,ME);
+    +gps_map(X+(I/2),Y+(J/2),goal_center,ME);
 .

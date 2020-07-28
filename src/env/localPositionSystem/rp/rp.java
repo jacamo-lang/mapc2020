@@ -46,7 +46,7 @@ public class rp extends lps {
             ArtifactInfo info = CartagoService.getController(this.getId().getWorkspaceId().getName()).getArtifactInfo(this.getId().getName());
             for (ArtifactObsProperty op : info.getObsProperties()) {
                 if (op.getName().equals("gps_map")) {
-                    map.put((int)op.getValues()[0], (int) op.getValues()[1], (String) op.getValues()[2]);
+                    map.put((int)op.getValues()[0], (int) op.getValues()[1], ((Atom) op.getValues()[2]).toString());
                 }
             }
             

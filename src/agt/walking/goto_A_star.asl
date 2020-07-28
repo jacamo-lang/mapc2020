@@ -4,7 +4,7 @@
  * must include both to work properly
  */
 
-{ include("common_exploration.asl") }
+{ include("exploration/common_exploration.asl") }
 
 nextDirection(w,n).
 nextDirection(n,e).

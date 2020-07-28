@@ -57,8 +57,8 @@ nearest_neighbour(XP,YP,X,Y) :-
  * perform a task to submit a block b1
  */
 task_shortest_path(B,D) :-
-    (myposition(X1,Y1) & gps_map(_,_,"taskboard",_) & nearest("taskboard",X2,Y2) & distance(X1,Y1,X2,Y2,D12)) &
+    (myposition(X1,Y1) & gps_map(_,_,taskboard,_) & nearest(taskboard,X2,Y2) & distance(X1,Y1,X2,Y2,D12)) &
     (gps_map(_,_,B,_) & nearest(B,X3,Y3) & distance(X2,Y2,X3,Y3,D23)) &
-    (gps_map(_,_,"goal",_) & nearest("goal",X4,Y4) & distance(X3,Y3,X4,Y4,D34)) &
+    (gps_map(_,_,goal,_) & nearest(goal,X4,Y4) & distance(X3,Y3,X4,Y4,D34)) &
     D = D12 + D23 + D34
 .
