@@ -44,17 +44,6 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     !submitTask(T);
 .
 
-+gps_map(10,-5,taskboard,_) :
-    .findall(Trigger3,.intention(I3_1,_,[im(_,{+!Trigger3[_]},_,_)]),L3_1) &
-    .findall(i(D,I1),.intention(I1,_,[im(_,D,_,_)]),L1)
-    <-
-    .print(L3_1);
-    .print(L1);
-    .wait(1500);
-    .drop_all_desires;
-    .drop_all_intentions;
-.
-
 // I've found a single block task
 +task(T,DL,Y,REQs) :
     exploring &
