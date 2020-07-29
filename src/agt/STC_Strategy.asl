@@ -27,12 +27,6 @@ approach_factor(4).//highest -> closer
        
 
 
-//a movement is not taken into account when it fails
-+lastAction(move) : not(lastActionResult(success))  & current_moving_step(C) & vision(V)
-   <-  .print("Move not succeeded");
-       //-+current_moving_step(V+1). // current cell exploration is finished
-       .
-
 
 field_center(C) :- field_size(S) & C=S div 2. 
 //adapt a coordinate A to to a new value B that fits with the field size
