@@ -21,21 +21,22 @@ approach_factor(4).//highest -> closer
 
 
 //a movement is not taken into account when it fails
- +lastAction(move) : lastActionResult(success)  & current_moving_step(C) & lastActionParams([D])
+ +lastAction(move) : exploration_strategy(stc) &
+                     lastActionResult(success)  & current_moving_step(C) & lastActionParams([D])
    <- -+direction(D,1); //for compatibility with agentGPS      
       -+current_moving_step(C+1).
        
 
 
 
-field_center(C) :- field_size(S) & C=S div 2. 
+field_center(C) :-  field_size(S) & C=S div 2. 
 //adapt a coordinate A to to a new value B that fits with the field size
 //adapt_coordinate(A,B) :- field_size(S) & field_center(C) & (A>=C) & B=A-S.
 //adapt_coordinate(A,B) :- field_size(S) & field_center(C) & (A<C*-1) & B=A+S.
 adapt_coordinate(A,B) :- B=A.
 
 
-+myposition(X,Y): adapt_coordinate(X,XX) & adapt_coordinate(Y,YY) & (X\==XX | Y\==YY)  
++myposition(X,Y): exploration_strategy(stc) & adapt_coordinate(X,XX) & adapt_coordinate(Y,YY) & (X\==XX | Y\==YY)  
    <- -+myposition(XX,YY).
    
 //+myposition(X,Y) :  last_node(LX,LY) <- .print("... position (", X, ",", Y,") Last Node: (", LX, ",", LY,")").
@@ -86,20 +87,24 @@ ancestor(X,Y,XX,YY):- parent(X,Y,_,V,W)& ancestor(V,W,XX,YY).
 
 cycle(X,Y,XX,YY) :- false.
 
-+lastActionResult(failed_path) : lastAction(move) & lastActionParams([D]) & (failed_move_count(D,Count)|not(failed_move_count(D,Count))&Count=0)
++lastActionResult(failed_path) : exploration_strategy(stc) &
+                                 lastAction(move) & lastActionParams([D]) & (failed_move_count(D,Count)|not(failed_move_count(D,Count))&Count=0)
    <- -+failed_move_count(D,Count+1).
-+lastActionResult(success): failed_move_count(_,_) <- .abolish(failed_move_count(_,_)).   
++lastActionResult(success): exploration_strategy(stc) & failed_move_count(_,_) 
+   <- .abolish(failed_move_count(_,_)).   
 
 
 //At the beginning, go to the first free direction
-+!update_direction: myposition(0,0) & next_direction(X,Y,D) & not(parent(_,_,_,_,_))
++!update_direction: exploration_strategy(stc) & 
+                    myposition(0,0) & next_direction(X,Y,D) & not(parent(_,_,_,_,_))
    <- -+current_moving_step(0); 
       -+current_direction_stc(D).
    
 
 //if the agent is out of the vision range, try to move to it (useful when an agent enters in the map).
 //if the X axis is not in the vision range, try to left
-+!update_direction: myposition(X,Y) & 
++!update_direction: exploration_strategy(stc) &
+                    myposition(X,Y) & 
                     current_moving_step(MS) & vision(CS) & 
                     MS>=CS & ((X mod CS)\==0) & //free_direction(X,Y,ND) & (ND==1|ND==3)                       
                     free_direction(X,Y,ND) & ND=1
@@ -108,7 +113,8 @@ cycle(X,Y,XX,YY) :- false.
       -+last_adapting_direction(ND);       
       -+current_direction_stc(ND).
             
-+!update_direction: myposition(X,Y) & 
++!update_direction: exploration_strategy(stc) &
+                    myposition(X,Y) & 
                     current_moving_step(MS) & vision(CS) & 
                     MS>=CS & ((Y mod CS)\==0) //& free_direction(X,Y,ND) & (ND==0|ND==2)                       
                     & free_direction(X,Y,ND) & ND=0
@@ -116,7 +122,8 @@ cycle(X,Y,XX,YY) :- false.
    <- //.print("02. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
       -+current_direction_stc(ND).
       
-+!update_direction: myposition(X,Y) & 
++!update_direction: exploration_strategy(stc) &
+                    myposition(X,Y) & 
                     current_moving_step(MS) & vision(CS) & 
                     MS>=CS & ((X mod CS)\==0|(Y mod CS)\==0) //& free_direction(X,Y,ND) & (ND==0|ND==2)                       
                     & not((obstacle_direction(ND)))
@@ -126,7 +133,8 @@ cycle(X,Y,XX,YY) :- false.
 
 
 //the agent has reached the next node and there is a free path from there in the direction (ND)     
-+!update_direction: myposition(X,Y) & 
++!update_direction: exploration_strategy(stc) &
+                    myposition(X,Y) & 
                     current_direction_stc(CD) &
                     current_moving_step(MS) & vision(CS) & (MS >= CS & ((X mod CS)==0 & (Y mod CS)==0))  & //the agent has reached the border of the cell                     
                     next_direction(X,Y,ND) & ND>-1 & forward & //the agent has a free-obstacle direction ahead
@@ -159,7 +167,8 @@ cycle(X,Y,XX,YY) :- false.
       
       
 //the agent has (i) reached the next cell and there is no place to go or (ii) is blocked: back to the predecessor node 
-+!update_direction: myposition(X,Y) &
++!update_direction: exploration_strategy(stc) &
+                    myposition(X,Y) &
                     current_direction_stc(CD) & 
                     lastActionResult(failed_path) & //the agent is blocked by an obstacle o                     
                     path_direction(PD)&directions(PD,DIRECTIONS) & 
@@ -173,7 +182,8 @@ cycle(X,Y,XX,YY) :- false.
       -+current_direction_stc(D).       
   
 //the agent has reached the predecessor node and goes to the next unvisited node
-+!update_direction: myposition(X,Y) & path_direction(PD) & directions(PD,DIRECTIONS) & //counter_directions(COUNTER_DIRECTIONS) &
++!update_direction: exploration_strategy(stc) &
+                    myposition(X,Y) & path_direction(PD) & directions(PD,DIRECTIONS) & //counter_directions(COUNTER_DIRECTIONS) &
                     last_node(LX,LY) &  X==LX & Y==LY & //the last visited node is the current node (i.e. the agent has reached the predecessor) 
                     next_direction(X,Y,ND)& ND>-1 //there is a free-obstacle direction ahead
    <- .print("3. Arrived to the precedessor ( ",X,",",Y,"). Moving forward. Direction: ", ND);
@@ -183,7 +193,8 @@ cycle(X,Y,XX,YY) :- false.
       -+current_direction_stc(ND).
     
 //arrived to the previous node and there is not another unvisited node
-+!update_direction: myposition(X,Y) & path_direction(PathDir) & directions(PathDir,DIRECTIONS) & //counter_directions(COUNTER_DIRECTIONS) &
++!update_direction: exploration_strategy(stc) &
+                    myposition(X,Y) & path_direction(PathDir) & directions(PathDir,DIRECTIONS) & //counter_directions(COUNTER_DIRECTIONS) &
                     last_node(LX,LY) & X==LX & Y==LY & //the last visited node is the current node (i.e. the agent has reached the predecessor) 
                     parent(PX,PY,PD,X,Y) & counter_direction(PD,ND) //nowhere to go - back to the predecessor
    <- .print("4. Arrived to the predecessor (",X,",",Y,"). Nowhere to go. Back to predecessor (",PX,",",PY,"). Direction: ", ND );
@@ -195,7 +206,7 @@ cycle(X,Y,XX,YY) :- false.
  
  
  
-+!update_direction.  
++!update_direction: exploration_strategy(stc).  
  
 
 +!do_set_edge(LX,LY,CD,X,Y): (cycle(LX,LY,X,Y)).      
