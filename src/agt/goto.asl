@@ -108,7 +108,7 @@ myposition(0,0).
         ?vision(S);
 
         // First, erase previous mapping of this view
-        !eraseMappingView(NX,NY);
+        !erase_map_view(NX,NY);
 
         mark(NX, NY, self, step, S);
 
@@ -142,7 +142,8 @@ myposition(0,0).
 
 /**
  * Erase current view, an action done before
- * a new mapping of the view area. Agent's view:
+ * a new mapping of the view area.
+ * When vision(S) & S == 5, the agent's view is:
  *      0
  *     101
  *    21012
@@ -155,14 +156,22 @@ myposition(0,0).
  *     101
  *      0
  */
-+!eraseMappingView(X,Y) :
++!erase_map_view(X,Y) :
     vision(S)
     <-
     for ( .range(J,-S, S) ) {
         for ( .range(I,-S, S) ) {
-            if (I <= math.abs(J)-S) {
-                unmark(X+I, Y+J);
+            if (math.abs(I) <= math.abs(math.abs(J)-S)) {
+                !erase_map_point(X+I,Y+J,J,true);
+            } else {
+                !erase_map_point(X+I,Y+J,J,false);
             }
         }
+    }
+.
++!erase_map_point(X,Y,J,T)
+    <-
+    if (T == true) {
+        unmark(X, Y);
     }
 .

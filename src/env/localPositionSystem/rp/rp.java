@@ -46,12 +46,12 @@ public class rp extends lps {
             ArtifactInfo info = CartagoService.getController(this.getId().getWorkspaceId().getName()).getArtifactInfo(this.getId().getName());
             for (ArtifactObsProperty op : info.getObsProperties()) {
                 if (op.getName().equals("gps_map")) {
-                    map.put((int)op.getValues()[0], (int) op.getValues()[1], (String) op.getValues()[2]);
+                    map.put((int)op.getValues()[0], (int) op.getValues()[1], ((Atom) op.getValues()[2]).toString());
                 }
             }
             
             Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map));
-            
+            /*
             //The view of the agent
             int SIZE = 50;
             for (int i = -SIZE; i < SIZE; i++ ) {
@@ -63,7 +63,7 @@ public class rp extends lps {
                 }
                 System.out.printf("%n");
             }
-
+            */
             // The solution "solution.montaCaminho()" can be a long path, we need the next direction
             if (solution != null) {
                 Nodo root = solution;
