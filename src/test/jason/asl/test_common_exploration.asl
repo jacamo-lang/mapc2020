@@ -9,17 +9,68 @@
  * Initial belief
  */
 vision(5).
-proof(-5,"-----X-----").
-proof(-4,"----XXX----").
-proof(-3,"---XXXXX---").
-proof(-2,"--XXXXXXX--").
-proof(-1,"-XXXXXXXXX-").
-proof( 0,"XXXXXXXXXXX").
-proof( 1,"-XXXXXXXXX-").
-proof( 2,"--XXXXXXX--").
-proof( 3,"---XXXXX---").
-proof( 4,"----XXX----").
-proof( 5,"-----X-----").
+
+proof(-5,0).
+proof(-4,-1).
+proof(-4,0).
+proof(-4,1).
+proof(-3,-2).
+proof(-3,-1).
+proof(-3,0).
+proof(-3,1).
+proof(-3,2).
+proof(-2,-3).
+proof(-2,-2).
+proof(-2,-1).
+proof(-2,0).
+proof(-2,1).
+proof(-2,2).
+proof(-2,3).
+proof(-1,-4).
+proof(-1,-3).
+proof(-1,-2).
+proof(-1,-1).
+proof(-1,0).
+proof(-1,1).
+proof(-1,2).
+proof(-1,3).
+proof(-1,4).
+proof(0,-5).
+proof(0,-4).
+proof(0,-3).
+proof(0,-2).
+proof(0,-1).
+proof(0,0).
+proof(0,1).
+proof(0,2).
+proof(0,3).
+proof(0,4).
+proof(0,5).
+proof(1,-4).
+proof(1,-3).
+proof(1,-2).
+proof(1,-1).
+proof(1,0).
+proof(1,1).
+proof(1,2).
+proof(1,3).
+proof(1,4).
+proof(2,-3).
+proof(2,-2).
+proof(2,-1).
+proof(2,0).
+proof(2,1).
+proof(2,2).
+proof(2,3).
+proof(3,-2).
+proof(3,-1).
+proof(3,0).
+proof(3,1).
+proof(3,2).
+proof(4,-1).
+proof(4,0).
+proof(4,1).
+proof(5,0).
 
 /**
  * Execute test plans!
@@ -43,29 +94,19 @@ proof( 5,"-----X-----").
      * it is supposed to erase, and '-' in unchanged
      * point
      */
-    .add_plan({ +!erase_map_point(X,Y,J,T) :
-        true
+    .add_plan({ +!unmark(X,Y)
         <-
-        ?line(J,L);
-        -line(J,L);
-        if (T == true) {
-            .concat(L,"X",LL);
-        } else {
-            .concat(L,"-",LL);
-        }
-        +line(J,LL);
+        +unmarked(X,Y);
     }, self, begin);
-
-    // Create an empty map view
-    for ( .range(J,-S, S) ) {
-        +line(J,"");
-    }
 
     // Trigger erase map
     !erase_map_view(0,0);
 
-    // Show final view
-    for ( .range(J,-S, S) & proof(J,L1) & line(J,L2)) {
-        !assert_equals(L1,L2);
-    }
+    !assert_equals(61,.count(unmarked(_,_)));
+
+    .findall(p(X,Y),proof(X,Y),L0);
+    .findall(p(X,Y),unmarked(X,Y),L1);
+
+    .difference(L0,L1,DIFF);
+    !assert_equals([],DIFF);
 .

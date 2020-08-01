@@ -99,16 +99,12 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
     for ( .range(J,-S, S) ) {
         for ( .range(I,-S, S) ) {
             if (math.abs(I) <= math.abs(math.abs(J)-S)) {
-                !erase_map_point(X+I,Y+J,J,true);
-            } else {
-                !erase_map_point(X+I,Y+J,J,false);
+                !unmark(X+I,Y+J);
             }
         }
     }
 .
-+!erase_map_point(X,Y,J,T)
++!unmark(X,Y)
     <-
-    if (T == true) {
-        unmark(X, Y);
-    }
+    unmark(X, Y);
 .
