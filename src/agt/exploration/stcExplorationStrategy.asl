@@ -1,12 +1,11 @@
 { include("common_exploration.asl") }
 { include("src/agt/STC_Strategy.asl")} //exploration strategy
 
-myposition(0,0).
 run_after_sync.
 directions(0,[n,w,s,e]).//letter corresponding to the directions
 directions(1,[s,e,n,w]).//letter corresponding to the directions
 
-+!update_direction_stc 
++!update_direction_stc : exploration_strategy(stc)
    <- !update_direction; //update direction according to STC strategy
       ?current_direction_stc(Dir); 
       ?path_direction(PD) 

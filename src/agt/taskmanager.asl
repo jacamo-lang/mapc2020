@@ -50,7 +50,7 @@ highpriority(INTENTIONS,INTENTION[critical_section(CS), priority(P)]):-
 	.
 
 ^!X[critical_section(_), priority(_),state(STATE)]: 
-	STATE=started | STATE=finished  
+	STATE=pending | STATE=finished  
 	<- 
 		!!taskmanager;
     .

@@ -1,6 +1,7 @@
 package localPositionSystem;
 
 import cartago.*;
+import jason.asSyntax.Atom;
 
 /**
  *  Observable properties:
@@ -35,14 +36,14 @@ public class lps extends Artifact {
     void mark(int i, int j, String type, String info, int vision) {     
         if (viewOn != 0) {
             this.view.mark(i, j, type, info, vision);
-        }
-        
-        if(!type.equals("self")) {
-            ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,0);
-            if(prop==null) 
-                defineObsProperty("gps_map",i,j,type,0);
-            else 
-                prop.updateValues(i,j,type,0);
+            
+            if(!type.equals("self")) {
+                ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,0);
+                if(prop==null) 
+                    defineObsProperty("gps_map",i,j,type,0);
+                else 
+                    prop.updateValues(i,j,type,0);
+            }
         }
     }
     
@@ -56,9 +57,9 @@ public class lps extends Artifact {
         if(!type.equals("self")) {
             ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,mapId);
             if(prop==null) 
-                defineObsProperty("gps_map",i,j,type,mapId);
+                defineObsProperty("gps_map",i,j,new Atom(type),mapId);
             else 
-                prop.updateValues(i,j,type,mapId);
+                prop.updateValues(i,j,new Atom(type),mapId);
         }
     }
     
@@ -70,9 +71,9 @@ public class lps extends Artifact {
         if(!type.equals("self")) {
             ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,mapId);
             if(prop==null) 
-                defineObsProperty("gps_map",i,j,type,mapId);
+                defineObsProperty("gps_map",i,j,new Atom(type),mapId);
             else 
-                prop.updateValues(i,j,type,mapId);
+                prop.updateValues(i,j,new Atom(type),mapId);
         }
     }
     

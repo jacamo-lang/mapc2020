@@ -2,7 +2,7 @@
  * Test multi-armed bandit Jason extension
 */
 
-{ include("tester_agent.asl") }
+{ include("$jasonJar/test/jason/inc/tester_agent.asl") }
 
 !execute_test_plans.
 
