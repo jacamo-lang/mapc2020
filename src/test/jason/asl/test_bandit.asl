@@ -22,7 +22,7 @@
     !assert_equals([0, 0, 0, 0, 1], F)
 .
 
-+!test_egreedy_bandit_api :
++!test_ubc_bandit_api :
     true
      <-
     .init_bandit([a, b, c, d, e], "UBC")
