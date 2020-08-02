@@ -14,41 +14,14 @@ import java.util.Random;
  * @author Timotheus Kampik
  *
  */
-public class MAB {
+public abstract class MAB {
     private ArrayList<MABArm> arms = new ArrayList<MABArm>();
-    private double epsilon;
-    private double decayRate;
-    private int roundRobinIndex = -1;
-    private Random random;
     
-    public MAB(ArrayList<MABArm> arms, double epsilon, double decayRate, boolean roundRobin, Random random) {
-        this.epsilon = epsilon;
-        this.decayRate = decayRate;
+    public MAB(ArrayList<MABArm> arms) {
         this.arms = arms;
-        this.random = random;
-        if(roundRobin) {
-            this.roundRobinIndex = arms.size() - 1;
-        }
     }
     
-    public String pullArm() {
-        MABArm bestArm = null;
-        if(this.roundRobinIndex >= 0) {
-            String bestArmName = this.arms.get(roundRobinIndex).getName();
-            this.roundRobinIndex--;
-            return bestArmName;
-        }
-        if(this.epsilon > random.nextDouble()) {
-            return this.arms.get(random.nextInt(this.arms.size())).getName();
-        }
-        for(MABArm arm: this.arms) {
-            if(bestArm == null || arm.getAverage() > bestArm.getAverage()) {
-                bestArm = arm;
-            }
-        }
-        this.epsilon = this.epsilon * (1 - this.decayRate);
-        return bestArm.getName();
-    }
+    abstract public String pullArm();
     
     public void setReward(String armName, double reward) {
         for(MABArm arm: this.arms) {

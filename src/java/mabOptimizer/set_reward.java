@@ -14,6 +14,22 @@ import jason.asSyntax.NumberTerm;
 import jason.asSyntax.NumberTermImpl;
 import jason.asSyntax.ASSyntax;
 
+/**
+<p>Internal action: <b><code>set_reward(<i>B</i>, <i>A</i>, <i>R</i>, <i>F</i>)</code></b>.
+<p>Description: sets the reward of an arm's latest "pull" and returns the bandit's current arm frequencies (after the update)
+<p>Parameter:<ul>
+<li>- bandit (number): index (ID) of the bandit that is to be used</li>
+<li>- arm (string): name of the arm whose reward list should be appended</li>
+<li>- reward (number): reward that should be append to the arm's reward list</li>
+<li>- unifier (list of numbers): unifies with the bandit's current arm frequencies</li>
+
+</ul>
+<p>Example:<ul>
+<li><code>set_reward(0, "a", 5, F)</code>: Sets the latest reward of the arm "a" of the bandit with index 0 to 5 and unifies F with the bandit's arm frequencies.</li>
+</ul>
+ */
+
+
 public class set_reward extends DefaultInternalAction {
 
     @Override
