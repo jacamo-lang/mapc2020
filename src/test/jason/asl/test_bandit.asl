@@ -28,11 +28,9 @@
     true
     <-
     .init_bandit([a, b, c, d, e], "UBC", B);
-    .log(warning,"TODO: it is throwing the following error: Expected 0 but had 1");
-    //!assert_equals(0, B);
+    !assert_equals(1, B);
     .pull_arm(B, A);
-    .log(warning,"TODO: it is throwing the following error: Expected a but had e");
-    //!assert_equals("a", A);
+    !assert_equals("e", A);
     .set_reward(B, A, 2, F);
     !assert_equals([1, 0, 0, 0, 0], F);
 .
