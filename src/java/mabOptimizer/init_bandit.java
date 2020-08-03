@@ -10,6 +10,7 @@ import jason.asSyntax.ListTerm;
 import jason.asSyntax.NumberTerm;
 import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Term;
+import jason.asSyntax.StringTerm;
 import mabOptimizer.*;
 
 /**
@@ -30,10 +31,10 @@ import mabOptimizer.*;
  */
 
 public class init_bandit extends DefaultInternalAction  {
-    
+
     static Random random = new Random();
 
-    
+
     @Override
     public Object execute(TransitionSystem ts, Unifier un, Term[] args) throws Exception {
         ListTerm tArmNames = (ListTerm) args[0];
@@ -43,7 +44,7 @@ public class init_bandit extends DefaultInternalAction  {
         }
         Term handoverArg;
         MAB bandit;
-        String type = args[1].toString();
+        String type = ((StringTerm) args[1]).getString();
         switch(BanditType.valueOf(type)) {
 	        case EPSILON_GREEDY:
 	        	 Term epsilon = args[2];
@@ -69,7 +70,7 @@ public class init_bandit extends DefaultInternalAction  {
 	          throw new Exception("Bandit type not specified correctly: " + type + ". Must be one of " + BanditType.values() + ".");
         }
 
-        
+
         BanditManager.bandits.add(bandit);
         NumberTerm banditIndex = ASSyntax.createNumber(BanditManager.bandits.size() -1);
         return un.unifies(banditIndex, handoverArg);
