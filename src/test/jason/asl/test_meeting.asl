@@ -85,7 +85,7 @@ proof(5,0).
  *      0
  */
 @[test]
-+!test_coord
++!test_coord_same_position
     <-
     ?coord(0,0,0,0,[],L1);
 
@@ -95,4 +95,84 @@ proof(5,0).
 
     .difference(L0,L1,DIFF);
     !assert_equals([],DIFF);
+.
+
+@[test]
++!test_coord_far_away
+    <-
+    ?coord(0,0,20,0,[],L1);
+
+    !assert_equals(0,.length(L1));
+    .log(warning,L1);
+.
+
+/**
+ * In the following sitution the agents
+ * are sharing their view as represented below
+ * They are sharing just one square in their views
+ *      0         A
+ *     101       BAB
+ *    21012     CBABC
+ *   3210123   DCBABCD
+ *  432101234 EDCBABCDE
+ * 54321012345EDCBABCDEF
+ *  432101234 EDCBABCDE
+ *   3210123   DCBABCD
+ *    21012     CBABC
+ *     101       BAB
+ *      0         A
+ */
+@[test]
++!test_coord_sharing_one_square
+    <-
+    ?coord(0,0,10,0,[],L1);
+
+    !assert_equals(1,.length(L1));
+.
+
+/**
+ * In the following sitution the agents
+ * are sharing their view as represented below
+ * They are sharing two squares in their views
+ *      0        A
+ *     101      BAB
+ *    21012    CBABC
+ *   3210123  DCBABCD
+ *  432101234EDCBABCDE
+ * 54321012345DCBABCDEF
+ *  432101234EDCBABCDE
+ *   3210123  DCBABCD
+ *    21012    CBABC
+ *     101      BAB
+ *      0        A
+ */
+@[test]
++!test_coord_sharing_two_squares
+    <-
+    ?coord(0,0,9,0,[],L1);
+
+    !assert_equals(2,.length(L1));
+.
+/**
+ * In the following sitution the agents
+ * are sharing their view as represented below
+ * They are sharing five squares in their views
+ *      0       A
+ *     101     BAB
+ *    21012   CBABC
+ *   3210123 DCBABCD
+ *  432101234DCBABCDE
+ * 54321012345CBABCDEF
+ *  432101234DCBABCDE
+ *   3210123 DCBABCD
+ *    21012   CBABC
+ *     101     BAB
+ *      0       A
+ */
+@[test]
++!test_coord_sharing_five_squares
+    <-
+    ?coord(0,0,8,0,[],L1);
+
+    !assert_equals(5,.length(L1));
 .
