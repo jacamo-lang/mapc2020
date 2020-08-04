@@ -6,8 +6,8 @@ inMap(Map) :- mapId(M) & .substring(M,Map).
    <- .abolish(mapping(_,_)); //remove informations of previous simulations
       +mapping(0,0).
 
-+step(S): S mod 5==0 & S <= 700
-   <- .findall(p(X,Y,Z,Map),gps_map(X,Y,Z,MapId)&inMap(MapId)&Z\=="obstacle",L);
++step(S): S mod 5==0 & S <= 700 
+   <- .findall(p(X,Y,Z,Map),gps_map(X,Y,Z,MapId)&inMap(MapId)&Z\=="obstacle"&Z\==obstacle,L);
       .length(L,M);
       +mapping(S,M).
       
