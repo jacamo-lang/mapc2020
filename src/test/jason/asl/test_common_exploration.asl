@@ -4,73 +4,12 @@
 
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 { include("exploration/common_exploration.asl") }
+{ include("meeting.asl") }
 
 /**
  * Initial belief
  */
 vision(5).
-
-proof(-5,0).
-proof(-4,-1).
-proof(-4,0).
-proof(-4,1).
-proof(-3,-2).
-proof(-3,-1).
-proof(-3,0).
-proof(-3,1).
-proof(-3,2).
-proof(-2,-3).
-proof(-2,-2).
-proof(-2,-1).
-proof(-2,0).
-proof(-2,1).
-proof(-2,2).
-proof(-2,3).
-proof(-1,-4).
-proof(-1,-3).
-proof(-1,-2).
-proof(-1,-1).
-proof(-1,0).
-proof(-1,1).
-proof(-1,2).
-proof(-1,3).
-proof(-1,4).
-proof(0,-5).
-proof(0,-4).
-proof(0,-3).
-proof(0,-2).
-proof(0,-1).
-proof(0,0).
-proof(0,1).
-proof(0,2).
-proof(0,3).
-proof(0,4).
-proof(0,5).
-proof(1,-4).
-proof(1,-3).
-proof(1,-2).
-proof(1,-1).
-proof(1,0).
-proof(1,1).
-proof(1,2).
-proof(1,3).
-proof(1,4).
-proof(2,-3).
-proof(2,-2).
-proof(2,-1).
-proof(2,0).
-proof(2,1).
-proof(2,2).
-proof(2,3).
-proof(3,-2).
-proof(3,-1).
-proof(3,0).
-proof(3,1).
-proof(3,2).
-proof(4,-1).
-proof(4,0).
-proof(4,1).
-proof(5,0).
 
 /**
  * Execute test plans!
@@ -83,7 +22,7 @@ proof(5,0).
  * it must be checked if the printed output
  * is correct
  */
-@[atomic,test]
+@[test]
 +!test_erase_map_view
     <-
     ?vision(S);
@@ -104,7 +43,8 @@ proof(5,0).
 
     !assert_equals(61,.count(unmarked(_,_)));
 
-    .findall(p(X,Y),proof(X,Y),L0);
+    /* Testing against coord(X,Y,XR,YR,L,R) */
+    ?coord(0,0,0,0,[],L0);
     .findall(p(X,Y),unmarked(X,Y),L1);
 
     .difference(L0,L1,DIFF);
