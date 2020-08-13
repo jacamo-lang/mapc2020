@@ -150,7 +150,8 @@ adapt_coordinate_map(A,B) :- B=A.
 @isme[atomic]
 +!isme(PID)[source(AG)]: pending_areyou(PID,Step,L)
     <- .concat([AG],L,NewL);
-       -+pending_areyou(PID,Step,NewL);
+       -pending_areyou(PID,Step,L);
+       +pending_areyou(PID,Step,NewL);
        //.print("### Received isme PID: ", PID, " - L", L, "  NewL: ",  NewL, " Step: ", Step , "###");
        .
  
