@@ -98,12 +98,12 @@ exploration_strategy(spiral). //Current exploration strategy. Possible strategie
 /****************************************  Build task ********************************** */
 
 +task(NAME,REWARD,DEADLINE,L)
-	: not taskcommited & readytobuild
-	<-	
-		+taskcommited;
-		!gotask;	
-		-taskcommited;
-	.
+    : not taskcommited & readytobuild
+    <-  
+        +taskcommited;
+        !gotask;    
+        -taskcommited;
+    .
 
 
 /*************************************************************************************** */                 

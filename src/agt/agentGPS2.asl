@@ -35,7 +35,7 @@ myposition(0,0).
 !start.
 
 +!start: 
-	true
+    true
     <-
         .wait(step(_));
         ?name(NAME);        
@@ -45,30 +45,30 @@ myposition(0,0).
 
 
 +disabled(true):
-	true
-	<-
-		.print("recharging...");
-		!!recharge[critical_section(action), priority(2)];
-	.
+    true
+    <-
+        .print("recharging...");
+        !!recharge[critical_section(action), priority(2)];
+    .
 
 +!recharge:
-	true
-	<-
-		!do(skip,R);
-	.
-	
+    true
+    <-
+        !do(skip,R);
+    .
+    
 +!move(D,S,LENGTH): 
-	true
-	<-
-	  if (S=LENGTH) {
-      	?nextDirection(D,ND);
+    true
+    <-
+      if (S=LENGTH) {
+        ?nextDirection(D,ND);
         NS=0;
         NL=LENGTH+1;
       } 
       else {
-      	ND=D;
-      	NS=S+1;
-      	NL=LENGTH;
+        ND=D;
+        NS=S+1;
+        NL=LENGTH;
       }
       !do(move(ND),R);
             
