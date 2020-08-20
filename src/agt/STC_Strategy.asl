@@ -1,5 +1,4 @@
 field_size(70). //size of the field
-vision(5). //size of the cell = sensors' range
 current_moving_step(99). //current step to the next cell ([0...vision]) - starts with 99 to force finding an initial direction
 forward. //moving to forward (becomes false when moving backwards)
 last_node(-1,-1). //last visited node 

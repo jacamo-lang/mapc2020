@@ -20,23 +20,23 @@ compare_bels(Bel1,Bel2):- .concat("-",Bel1,NewBel1) & .concat("-",Bel2,NewBel2) 
                           .substring(NewBel1,NewBel2).
 
 
-coord(X,Y,XR,YR,L,R) :- coordXpositive(X,Y,XR,YR,L,XP) & coordXnegative(X-1,Y,XR,YR,L,XN) & .concat(XP,XN,R).  
-coordXpositive(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=5 & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,[],N) & coordYnegative(X,Y-1,XR,YR,[],NN) & coordXpositive(X+1,Y,XR,YR,L,M) & .concat([p(X,Y)],M,N,NN,R).
-coordXpositive(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>5  & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,[],N) & coordYnegative(X,Y-1,XR,YR,[],NN) & coordXpositive(X+1,Y,XR,YR,L,M) & .concat(M,N,NN,R).
-coordXpositive(X,Y,XR,YR,L,R) :- .concat(L,[],R).
+coord(X,Y,XR,YR,L,R) :- vision(Range) & coordXpositive(X,Y,XR,YR,Range,L,XP) & coordXnegative(X-1,Y,XR,YR,Range,L,XN) & .concat(XP,XN,R).  
+coordXpositive(X,Y,XR,YR,Range,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=Range & (math.abs(X)+ math.abs(Y))<= Range & coordYpositive(X,Y+1,XR,YR,Range,[],N) & coordYnegative(X,Y-1,XR,YR,Range,[],NN) & coordXpositive(X+1,Y,XR,YR,Range,L,M) & .concat([p(X,Y)],M,N,NN,R).
+coordXpositive(X,Y,XR,YR,Range,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>Range  & (math.abs(X)+ math.abs(Y))<= Range & coordYpositive(X,Y+1,XR,YR,Range,[],N) & coordYnegative(X,Y-1,XR,YR,Range,[],NN) & coordXpositive(X+1,Y,XR,YR,Range,L,M) & .concat(M,N,NN,R).
+coordXpositive(X,Y,XR,YR,Range,L,R) :- .concat(L,[],R).
 
-coordXnegative(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=5 & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,[],N) & coordYnegative(X,Y-1,XR,YR,[],NN) & coordXnegative(X-1,Y,XR,YR,L,M) & .concat([p(X,Y)],M,N,NN,R).
-coordXnegative(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>5  & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,[],N) & coordYnegative(X,Y-1,XR,YR,[],NN) & coordXnegative(X-1,Y,XR,YR,L,M) & .concat(M,N,NN,R).                            
-coordXnegative(X,Y,XR,YR,L,R) :- .concat(L,[],R).
+coordXnegative(X,Y,XR,YR,Range,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=Range & (math.abs(X)+ math.abs(Y))<= Range & coordYpositive(X,Y+1,XR,YR,Range,[],N) & coordYnegative(X,Y-1,XR,YR,Range,[],NN) & coordXnegative(X-1,Y,XR,YR,Range,L,M) & .concat([p(X,Y)],M,N,NN,R).
+coordXnegative(X,Y,XR,YR,Range,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>Range  & (math.abs(X)+ math.abs(Y))<= Range & coordYpositive(X,Y+1,XR,YR,Range,[],N) & coordYnegative(X,Y-1,XR,YR,Range,[],NN) & coordXnegative(X-1,Y,XR,YR,Range,L,M) & .concat(M,N,NN,R).                            
+coordXnegative(X,Y,XR,YR,Range,L,R) :- .concat(L,[],R).
 
 
-coordYpositive(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=5 & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,L,M) & .concat([p(X,Y)],M,R) .
-coordYpositive(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>5  & (math.abs(X)+ math.abs(Y))<= 5 & coordYpositive(X,Y+1,XR,YR,L,M) & .concat(M,R).
-coordYpositive(X,Y,XR,YR,L,R) :- .concat(L,[],R).
+coordYpositive(X,Y,XR,YR,Range,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=Range & (math.abs(X)+ math.abs(Y))<= Range & coordYpositive(X,Y+1,XR,YR,Range,L,M) & .concat([p(X,Y)],M,R) .
+coordYpositive(X,Y,XR,YR,Range,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>Range  & (math.abs(X)+ math.abs(Y))<= Range & coordYpositive(X,Y+1,XR,YR,Range,L,M) & .concat(M,R).
+coordYpositive(X,Y,XR,YR,Range,L,R) :- .concat(L,[],R).
 
-coordYnegative(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=5 & (math.abs(X)+ math.abs(Y))<= 5 & coordYnegative(X,Y-1,XR,YR,L,M) & .concat([p(X,Y)],M,R) .
-coordYnegative(X,Y,XR,YR,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>5  & (math.abs(X)+ math.abs(Y))<= 5 & coordYnegative(X,Y-1,XR,YR,L,M) & .concat(M,R).
-coordYnegative(X,Y,XR,YR,L,R) :- .concat(L,[],R).
+coordYnegative(X,Y,XR,YR,Range,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))<=Range & (math.abs(X)+ math.abs(Y))<= Range & coordYnegative(X,Y-1,XR,YR,Range,L,M) & .concat([p(X,Y)],M,R) .
+coordYnegative(X,Y,XR,YR,Range,L,R) :- (math.abs(-XR+X)+math.abs(-YR+Y))>Range  & (math.abs(X)+ math.abs(Y))<= Range & coordYnegative(X,Y-1,XR,YR,Range,L,M) & .concat(M,R).
+coordYnegative(X,Y,XR,YR,Range,L,R) :- .concat(L,[],R).
 
 
 checkscene ([m(X0,Y0,goal)|T]):-goal(X0,Y0) & checkscene (T).
