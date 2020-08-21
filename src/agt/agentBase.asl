@@ -36,7 +36,7 @@ exploration_strategy(spiral2). //Current exploration strategy. Possible strategi
 +!start : .my_name(NAME) 
    <- .wait(step(_));  
       +origin(NAME);
-      !explore.
+      !explore[critical_section(action), priority(1)].
 
 
 /* General plan to move the agent. Can be used in any phase of the game. In the exploration phase, current_direction is defined by the exploration strategies */
@@ -70,21 +70,21 @@ exploration_strategy(spiral2). //Current exploration strategy. Possible strategi
 +!explore : exploring & step(S)
    <- !check_direction; //defines the current_direction(D) belief
       ?current_direction(CD);//  .print("updated direction ", CD, " step: ", S);
-      !move(CD)[critical_section(action), priority(1)]; //moves to the selected direction
+      !move(CD); //moves to the selected direction
       .wait(step(Step)&Step>S); //wait for the next step to continue to explore
-      !explore.
+      !explore[critical_section(action), priority(1)].
                  
       
 +!explore : not exploring
    <- .print("-------------- not exploring ----------------------")
       .wait(exploring);
-      !explore.
+      !explore[critical_section(action), priority(1)].
                         
       
               
 +!explore 
    <- .wait(step(_));
-      !explore.
+      !explore[critical_section(action), priority(1)].
 
 
 +!check_direction : exploration_strategy(random)
