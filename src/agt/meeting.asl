@@ -84,7 +84,7 @@ adapt_coordinate_map(A,B) :- B=A.
         ?coord(0,0,XR,YR,[],Coord); //Coord is a list of all coordinates visible to both the agents involved in the interaction
         .findall(m(-XR+X,-YR+Y,empty),.member(p(X,Y),Coord)&not(.member(m(-XR+X,-YR+Y,goal),G))&not(.member(m(-XR+X,-YR+Y,obs),O))&not(.member(m(-XR+X,-YR+Y,Ag),T)) & math.abs(-XR+X)+math.abs(-YR+Y)<=5,Empty);
         .concat(G,O,T,Empty,FinalScene); 
-        .broadcast (achieve,areyou(XR,YR,AX,AY,FinalScene,PID,S)[critical_section(sync), priority(2)]); 
+        .broadcast (achieve,areyou(XR,YR,AX,AY,FinalScene,PID,S,OL)[critical_section(sync), priority(2)]); 
         
         .
     
@@ -92,35 +92,38 @@ adapt_coordinate_map(A,B) :- B=A.
  
  
 
-//TODO: merge areyou/7, areyou8, and do_areyou when possible (conditions overlapping)
+//TODO: merge areyou/8, areyou9, and do_areyou when possible (conditions overlapping)
 
-//areyou/7 - Case 1: empty scene -> it is not possible to check whether is a neighbour 
-+!areyou(XR,YR,AX,AY,[],PID,STEP).
+//areyou/8 - Case 1: empty scene -> it is not possible to check whether is a neighbour 
++!areyou(XR,YR,AX,AY,[],PID,STEP,MapId).
 
-//areyou/7 - Case 2: The agent is some step behind the sender (perceptions may be outdated) -> wait until reaching the same step of the sender, then add the intention areyou/8
-+!areyou(RX,RY,AX,AY,SCENE,PID,STEP)[source(AG)] : step(S) & S<STEP
+//areyou/8 - Case 1.1: ignore self areyou
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP,MapId)[source(AG)] : .my_name(AG).
+
+//areyou/8 - Case 2: The agent is some step behind the sender (perceptions may be outdated) -> wait until reaching the same step of the sender, then add the intention areyou/8
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP,MapId)[source(AG)] : step(S) & S<STEP
    <- .wait(step(ST)&ST>=STEP); //wait until to reach the same step of the sender
-      !areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG).
+      !areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId).
 
-//areyou/7 - Case 3: The agent is in the same step (or ahead) as the sender -> add the intention areyou/8
-+!areyou(RX,RY,AX,AY,SCENE,PID,STEP)[source(AG)]
-   <- !areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG).
+//areyou/8 - Case 3: The agent is in the same step (or ahead) as the sender -> add the intention areyou/8
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP,MapId)[source(AG)]
+   <- !areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId).
 
-//areyou/8 - Case 1: The agent is in the same step as the sender but the position has not been updated in the current step -> wait for updating the position
-+!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG): step(S) & S==STEP & update_position_step(U) & U<S
+//areyou/9 - Case 1: The agent is in the same step as the sender but the position has not been updated in the current step -> wait for updating the position
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId): step(S) & S==STEP & update_position_step(U) & U<S
    <- .wait(update_position_step(UPS)&step(STP)&STP>=UPS); //wait until (i) the perceptions of the map are updated in the current step or (ii) step is higher that updating (stopped to explore or problems in the exploration)
-      !do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG). 
+      !do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId). 
 
-//areyou/8 - Case 2: The agent is in the same step as the sender but the position has been updated in the current step -> proceed to synchronize
-+!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG): step(S) & S==STEP & update_position_step(U) & U==S
-   <- !do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG). 
+//areyou/9 - Case 2: The agent is in the same step as the sender but the position has been updated in the current step -> proceed to synchronize
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId): step(S) & S==STEP & update_position_step(U) & U==S
+   <- !do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId). 
 
-//areyou/8 - Case 3: The agent is not in a different step as the sender or the position updating is ahead the sender's step -> ignore the synchronization
-+!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG).
+//areyou/9 - Case 3: The agent is not in a different step as the sender or the position updating is ahead the sender's step -> ignore the synchronization
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId).
 
 
 //Case 2: the agent is not synchronized: returns an isme achieve message and add the pending_isme belief  
-+!do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG):  
++!do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId):  
         thing(-RX,-RY,entity,TEAM) & team(TEAM)  & 
         checkscene(SCENE) & 
         not (origin(OL) & originlead(OL)) &
@@ -133,7 +136,7 @@ adapt_coordinate_map(A,B) :- B=A.
         .
         
 //Case 3: the agent is already synchronized: returns an isme message to avoid a false positive, but does not add the pending_isme belief to not sync again  
-+!do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG):  
++!do_areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId):  
         thing(-RX,-RY,entity,TEAM) & team(TEAM)  & 
         checkscene(SCENE) &
         step(S)
@@ -143,7 +146,7 @@ adapt_coordinate_map(A,B) :- B=A.
         .         
 
 
-+!do_areyou(_,_,_,_,_,_,_,_).
++!do_areyou(_,_,_,_,_,_,_,_,_).
 
 //Receiving messages of possible neighbours, adding their names to the possible neighbours list 
 //it is atomic to ensure that incoming messages of possible neighbours be processed one at a time, keeping the list of possible neighbours consistent  

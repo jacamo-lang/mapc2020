@@ -21,7 +21,7 @@ inMap(Map) :- mapId(M) & .substring(M,Map).
    <- .print(S,";",M);
       !print_list(T).      
       
-+!areyou(_,_,_,_,_,_,_).      
++!areyou(_,_,_,_,_,_,_,_).      
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
