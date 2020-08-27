@@ -66,6 +66,7 @@ proof(4,-1).
 proof(4,0).
 proof(4,1).
 proof(5,0).
+vision(5).
 
 !execute_test_plans.
 
@@ -103,7 +104,6 @@ proof(5,0).
     ?coord(0,0,20,0,[],L1);
 
     !assert_equals(0,.length(L1));
-    .log(warning,L1);
 .
 
 /**
