@@ -36,7 +36,8 @@ public class MABSimulator {
                 new MABArm("c"),
                 new MABArm("d"),
                 new MABArm("e")));
-        MAB bandit = new MAB(arms, 0.2, 0.1, true, random);
+        //EGreedyMAB bandit = new EGreedyMAB(arms, 0.2, 0.1, true, random);
+        UBCMAB bandit = new UBCMAB(arms);
         armLog = new ArrayList<Integer>(Arrays.asList(0, 0, 0, 0, 0));
         for(int i = 0; i < 100; i++) {
             String armName = bandit.pullArm();
