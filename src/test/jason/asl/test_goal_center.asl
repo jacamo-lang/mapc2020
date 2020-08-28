@@ -13,7 +13,7 @@
  * When the agent knows two edges of the goal area
  * it can tell where is the center
  */
-@[atomic,test] //must be atomic due to abolish ... assert
+@test_goal_center[atomic,test] //must be atomic due to abolish ... assert
 +!test_goal_center
     <-
     .abolish(gps_map(_,_,_,_));
@@ -39,7 +39,7 @@
  * Test get block which request/attach a block
  * It is actually returning error since the simulator is not on
  */
-@[atomic,test]
+@test_add_goal_center[atomic,test]
 +!test_add_goal_center //must be atomic due to abolish ... assert
     <-
     .abolish(gps_map(_,_,_,_));

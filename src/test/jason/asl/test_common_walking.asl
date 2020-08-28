@@ -10,7 +10,7 @@
 /**
  * Test rule that gives euclidean distance between two points
  */
-@[atomic,test]
+@testDistance[atomic,test]
 +!testDistance :
     distance(0,0,3,3,D0) &
     distance(-30,-20,4,4,D1) &
@@ -27,7 +27,7 @@
  * Test nearest rule which uses myposition and gps_map(X,Y,thing,ag)
  * to return the nearest thing regarding the reference (myposition)
  */
-@[atomic,test]
+@testNearest[atomic,test]
 +!testNearest :
     true
     <-
@@ -47,7 +47,7 @@
  * Nearest neighbour is the nearest adjacent position
  * of a given point (X,Y) in relation to myposition(X,Y)
  */
-@[atomic,test]
+@testNearestNeighbour[atomic,test]
 +!testNearestNeighbour :
     true
     <-
@@ -61,7 +61,7 @@
 /**
  * Test shortest path for a task
  */
-@[atomic,test]
+@test_task_shortest_path[atomic,test]
 +!test_task_shortest_path :
     true
     <-

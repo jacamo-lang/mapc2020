@@ -85,7 +85,7 @@ vision(5).
  *     101
  *      0
  */
-@[test]
+@test_coord_same_position[test]
 +!test_coord_same_position
     <-
     ?coord(0,0,0,0,[],L1);
@@ -98,7 +98,7 @@ vision(5).
     !assert_equals([],DIFF);
 .
 
-@[test]
+@test_coord_far_away[test]
 +!test_coord_far_away
     <-
     ?coord(0,0,20,0,[],L1);
@@ -122,7 +122,7 @@ vision(5).
  *     101       BAB
  *      0         A
  */
-@[test]
+@test_coord_sharing_one_square[test]
 +!test_coord_sharing_one_square
     <-
     ?coord(0,0,10,0,[],L1);

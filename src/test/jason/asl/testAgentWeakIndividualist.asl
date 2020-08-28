@@ -10,7 +10,7 @@
 /*
  * Test if the agent got the right rotation
  */
-@[atomic,test]
+@testSetRightPosition[atomic,test]
 +!testSetRightPosition
     <-
     /**
@@ -40,7 +40,7 @@
 /**
  * Test got new task
  */
- //@[test]
+ //@testGotNewTask[test]
  +!testGotNewTask
     <-
     .log(warning,"TODO: Fix testGotNewTask");

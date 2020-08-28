@@ -22,7 +22,7 @@ vision(5).
  * it must be checked if the printed output
  * is correct
  */
-@[test]
+@test_erase_map_view[test]
 +!test_erase_map_view
     <-
     ?vision(S);

@@ -68,7 +68,7 @@ divide(X,Y,R):-R = (X / Y).
 /**
  * Test sum using just equals(EXPECTED,ACTUAL)
  */
-@[atomic,test]
+@test_sum[atomic,test]
 +!test_sum :
     true
     <-
@@ -79,7 +79,7 @@ divide(X,Y,R):-R = (X / Y).
 /**
  * Test div using equals(EXPECTED,ACTUAL,TOLERANCE)
  */
-@[atomic,test]
+@test_divide[atomic,test]
 +!test_divide :
     true
     <-
@@ -90,7 +90,7 @@ divide(X,Y,R):-R = (X / Y).
 /*
  * Test if the agent has added a belief
  */
-@[atomic,test]
+@test_do_something_adding_belief[atomic,test]
 +!test_do_something_adding_belief :
     true
     <-
@@ -104,7 +104,7 @@ divide(X,Y,R):-R = (X / Y).
 /**
  * Test if substring(_,_,0) really works as java startsWith
  */
-@[atomic,test]
+@test_add_to_belief_test[atomic,test]
 +!test_add_to_belief_test :
     true
     <-

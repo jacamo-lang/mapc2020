@@ -10,7 +10,7 @@
  * Tests all interactions with the MAB Jason extension
  * in a "happy path" scenario
 */
-@[test]
+@test_egreedy_bandit_api[test]
 +!test_egreedy_bandit_api :
     true
     <-
@@ -23,7 +23,7 @@
     !assert_equals([0, 0, 0, 0, 1], F);
 .
 
-@[test]
+@test_ubc_bandit_api[test]
 +!test_ubc_bandit_api :
     true
     <-
