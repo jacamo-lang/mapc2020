@@ -24,7 +24,7 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
             unmark(X,Y); 
             ?vision(Vision)
             .concat("",S,Info);
-            mark(X+INCX, Y+INCY, self, Info,Vision);
+            mark(X+INCX, Y+INCY, self, Info,Vision,OL);
         }           
         for (goal(I,J)) {           
             !addMap(I,J,X+INCX,Y+INCY,goal);
