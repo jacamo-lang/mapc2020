@@ -1,10 +1,8 @@
 /**
  * Test multi-armed bandit Jason extension
 */
-
+    
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
-
-!execute_test_plans.
 
 /**
  * Tests all interactions with the MAB Jason extension

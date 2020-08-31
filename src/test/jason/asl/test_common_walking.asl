@@ -5,8 +5,6 @@
 { include("walking/common_walking.asl") }
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 
-!execute_test_plans.
-
 /**
  * Test rule that gives euclidean distance between two points
  */

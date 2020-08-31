@@ -12,11 +12,6 @@
 vision(5).
 
 /**
- * Execute test plans!
- */
-!execute_test_plans.
-
-/**
  * Test the logic behind erase_mapping_view
  * The assertion of this test is visual, i.e.,
  * it must be checked if the printed output

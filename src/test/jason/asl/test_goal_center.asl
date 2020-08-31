@@ -5,8 +5,6 @@
 { include("exploration/goal_center.asl") }
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 
-!execute_test_plans.
-
 /**
  * Considering the goal area has 13 units as a diamond
  * The agent may consider it as a cross with 5 units

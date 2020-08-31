@@ -5,8 +5,6 @@
 { include("agentWeakIndividualist.asl") }
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 
-!execute_test_plans.
-
 /*
  * Test if the agent got the right rotation
  */

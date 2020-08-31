@@ -68,8 +68,6 @@ proof(4,1).
 proof(5,0).
 vision(5).
 
-!execute_test_plans.
-
 /**
  * ?coord/6 is supposed to return a list of 61 coordinates
  * in the format p(X,Y) which represents the agent's view like:
