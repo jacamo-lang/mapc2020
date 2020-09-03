@@ -64,23 +64,22 @@ task run (type: JavaExec, dependsOn: 'classes') {
 }
 
 task testJason {
-    description 'runs Jason unit tests: tests.mas2j'
+    description 'runs JaCaMo unit tests: unit_tests_project.jcm'
     def errorOnTests = false
     outputs.upToDateWhen { false } // disable cache
 
     doFirst {
         try {
             javaexec {
-                main = 'jason.infra.centralised.RunCentralisedMAS'
+                main = 'jacamo.infra.JaCaMoLauncher'
                 if (gradle.startParameter.logLevel.toString().equals("DEBUG")) {
-                    args = ['$jasonJar/test/jason/unit_tests_project.mas2j', '--log-conf', '$jasonJar/templates/console-debug-logging.properties']
+                    args = ['$jacamoJar/test/jacamo/unit_tests_project.jcm', '--log-conf', '$jasonJar/templates/console-debug-logging.properties']
                 } else if (gradle.startParameter.logLevel.toString().equals("INFO")) {
-                    args = ['$jasonJar/test/jason/unit_tests_project.mas2j', '--log-conf', '$jasonJar/templates/console-info-logging.properties']
+                    args = ['$jacamoJar/test/jacamo/unit_tests_project.jcm', '--log-conf', '$jasonJar/templates/console-info-logging.properties']
                 } else {
-                    args = ['$jasonJar/test/jason/unit_tests_project.mas2j', '--log-conf', '$jasonJar/templates/console-lifecycle-logging.properties']
+                    args = ['$jacamoJar/test/jacamo/unit_tests_project.jcm', '--log-conf', '$jasonJar/templates/console-lifecycle-logging.properties']
                 }
                 classpath sourceSets.main.runtimeClasspath
-                sourceSets.test.java.srcDirs += ['src/test/jason/jia']
 
                 errorOutput = new ByteArrayOutputStream()
                 standardOutput = new ByteArrayOutputStream()
