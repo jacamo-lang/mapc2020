@@ -193,7 +193,8 @@ adapt_coordinate_map(A,B) :- B=A.
 @sync_isme[atomic]   //atomic to avoid update the coordinates before (i) finishing the plan and (ii) start a parallel update          
 +!sync_isme(PID)[source(AG)] : pending_isme(PID,MX,MY,AG,RX,RY,AX,AY)  & origin(OL) & not (originlead(OL)) & myposition(Xnow,Ynow)  &  
                                step(Step) & update_position_step(Step) //synchronize only if the agent has updated its position in the current step             
-   <-  .abolish(update_position_step(_));
+   <-  .abolish(pending_isme(_,_,_,_,_,_,_,_)); //discard pending synchronizations after synching
+       .abolish(update_position_step(_));
        .perceive;
        .abolish(goal(_,_)); .abolish(obstacle(_,_)); .abolish(thing(_,_,_,_)); 
       
@@ -243,6 +244,4 @@ adapt_coordinate_map(A,B) :- B=A.
 
 
 //after_sync: if necessary to run something else after sync, add the belief run_after_sinc and implement a plan in the agent
-+!after_sync(PID) :  pending_isme(PID,_,_,_,_,_,_,_) & not(run_after_sync) 
-   <- 
-      -pending_isme(PID,_,_,_,_,_,_,_).
++!after_sync(PID) :  not(run_after_sync).
