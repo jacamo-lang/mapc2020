@@ -372,7 +372,7 @@ routeplan_mindist(0).
     }
 
     .add_plan({
-        +!do(move(DIR),_) :
+        +!do(move(DIR),success) :
             myposition(OX,OY) &
             directionIncrement(DIR,I,J) &
             walked_steps(S)
