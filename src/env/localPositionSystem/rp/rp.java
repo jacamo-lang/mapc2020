@@ -23,7 +23,7 @@ import cartago.*;
  *
  */
 public class rp extends lps {
-    
+
     /**
      * getDirection for MAPC 2020. It uses A* to generate the path to driven an
      * agent 'from' iagx/y 'to' itox/y. The solution should be the next step of the
@@ -49,7 +49,7 @@ public class rp extends lps {
                     map.put((int)op.getValues()[0], (int) op.getValues()[1], ((Atom) op.getValues()[2]).toString());
                 }
             }
-            
+
             Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map));
             /*
             //The view of the agent
@@ -85,4 +85,10 @@ public class rp extends lps {
             e.printStackTrace();
         }
     }
+
+    @OPERATION
+    void setGpsMapForTests(int x, int y, String type, String mapId) {
+        defineObsProperty("gps_map",x,y,new Atom(type),mapId);
+    }
+
 }

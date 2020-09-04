@@ -4,21 +4,11 @@
 
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 { include("walking/goto_A_star.asl") }
+{ include("walking/common_walking.asl") }
 
 step(500).
 gps_map(-12,-6,obstacle,"agenta0").
-gps_map(-10,-48,obstacle,"agenta0").
-gps_map(-10,-36,obstacle,"agenta0").
-gps_map(-10,-35,obstacle,"agenta0").
-gps_map(-9,-40,obstacle,"agenta0").
-gps_map(-9,-37,obstacle,"agenta0").
-gps_map(-9,-36,obstacle,"agenta0").
-gps_map(-9,-35,obstacle,"agenta0").
 gps_map(-9,-20,obstacle,"agenta0").
-gps_map(-8,-41,obstacle,"agenta0").
-gps_map(-8,-37,obstacle,"agenta0").
-gps_map(-8,-36,obstacle,"agenta0").
-gps_map(-7,-59,obstacle,"agenta0").
 gps_map(-7,-18,obstacle,"agenta0").
 gps_map(-7,-17,obstacle,"agenta0").
 gps_map(-6,-24,obstacle,"agenta0").
@@ -30,18 +20,12 @@ gps_map(-5,-19,obstacle,"agenta0").
 gps_map(-5,-18,obstacle,"agenta0").
 gps_map(-5,-17,obstacle,"agenta0").
 gps_map(-5,-16,obstacle,"agenta0").
-gps_map(-4,-63,obstacle,"agenta0").
 gps_map(-4,-29,b2,"agenta0").
 gps_map(-4,-24,obstacle,"agenta0").
 gps_map(-4,-18,obstacle,"agenta0").
 gps_map(-4,-17,obstacle,"agenta0").
-gps_map(-3,-62,obstacle,"agenta0").
 gps_map(-3,6,obstacle,"agenta0").
 gps_map(-3,7,obstacle,"agenta0").
-gps_map(-2,-64,obstacle,"agenta0").
-gps_map(-2,-63,obstacle,"agenta0").
-gps_map(-2,-62,obstacle,"agenta0").
-gps_map(-2,-59,obstacle,"agenta0").
 gps_map(-2,-32,obstacle,"agenta0").
 gps_map(-2,-23,obstacle,"agenta0").
 gps_map(-2,-22,obstacle,"agenta0").
@@ -49,9 +33,6 @@ gps_map(-2,-20,obstacle,"agenta0").
 gps_map(-2,5,obstacle,"agenta0").
 gps_map(-2,6,obstacle,"agenta0").
 gps_map(-2,7,obstacle,"agenta0").
-gps_map(-1,-66,obstacle,"agenta0").
-gps_map(-1,-63,obstacle,"agenta0").
-gps_map(-1,-62,obstacle,"agenta0").
 gps_map(-1,-32,obstacle,"agenta0").
 gps_map(-1,-18,obstacle,"agenta0").
 gps_map(-1,4,obstacle,"agenta0").
@@ -59,28 +40,16 @@ gps_map(-1,5,obstacle,"agenta0").
 gps_map(-1,6,obstacle,"agenta0").
 gps_map(-1,7,obstacle,"agenta0").
 gps_map(-1,8,obstacle,"agenta0").
-gps_map(0,-66,obstacle,"agenta0").
-gps_map(0,-65,obstacle,"agenta0").
-gps_map(0,-63,obstacle,"agenta0").
-gps_map(0,-62,obstacle,"agenta0").
 gps_map(0,4,obstacle,"agenta0").
 gps_map(0,5,obstacle,"agenta0").
 gps_map(0,6,obstacle,"agenta0").
 gps_map(0,7,obstacle,"agenta0").
 gps_map(0,8,obstacle,"agenta0").
-gps_map(1,-66,obstacle,"agenta0").
-gps_map(1,-65,obstacle,"agenta0").
-gps_map(1,-64,obstacle,"agenta0").
-gps_map(1,-63,obstacle,"agenta0").
-gps_map(1,-62,obstacle,"agenta0").
 gps_map(1,4,obstacle,"agenta0").
 gps_map(1,5,obstacle,"agenta0").
 gps_map(1,6,obstacle,"agenta0").
 gps_map(1,7,obstacle,"agenta0").
 gps_map(1,8,obstacle,"agenta0").
-gps_map(2,-65,obstacle,"agenta0").
-gps_map(2,-64,obstacle,"agenta0").
-gps_map(2,-63,obstacle,"agenta0").
 gps_map(2,5,obstacle,"agenta0").
 gps_map(2,6,obstacle,"agenta0").
 gps_map(2,7,obstacle,"agenta0").
@@ -90,14 +59,12 @@ gps_map(4,-16,obstacle,"agenta0").
 gps_map(4,-15,obstacle,"agenta0").
 gps_map(4,-14,obstacle,"agenta0").
 gps_map(4,-13,obstacle,"agenta0").
-gps_map(5,-55,b2,"agenta0").
 gps_map(5,-16,obstacle,"agenta0").
 gps_map(5,-15,obstacle,"agenta0").
 gps_map(5,-14,obstacle,"agenta0").
 gps_map(5,-13,obstacle,"agenta0").
 gps_map(5,2,obstacle,"agenta0").
 gps_map(5,3,obstacle,"agenta0").
-gps_map(6,-66,obstacle,"agenta0").
 gps_map(6,-30,b1,"agenta0").
 gps_map(6,-28,obstacle,"agenta0").
 gps_map(6,-15,obstacle,"agenta0").
@@ -108,43 +75,29 @@ gps_map(6,1,obstacle,"agenta0").
 gps_map(6,2,obstacle,"agenta0").
 gps_map(6,3,obstacle,"agenta0").
 gps_map(6,4,obstacle,"agenta0").
-gps_map(7,-66,obstacle,"agenta0").
-gps_map(7,-44,obstacle,"agenta0").
-gps_map(7,-36,b1,"agenta0").
 gps_map(7,-15,b0,"agenta0").
 gps_map(7,-11,b2,"agenta0").
 gps_map(7,1,obstacle,"agenta0").
 gps_map(7,2,obstacle,"agenta0").
 gps_map(7,3,obstacle,"agenta0").
 gps_map(7,4,obstacle,"agenta0").
-gps_map(8,-66,obstacle,"agenta0").
 gps_map(8,2,obstacle,"agenta0").
 gps_map(8,3,obstacle,"agenta0").
 gps_map(8,4,obstacle,"agenta0").
 gps_map(8,7,obstacle,"agenta0").
-gps_map(9,-57,obstacle,"agenta0").
 gps_map(9,2,obstacle,"agenta0").
 gps_map(9,3,obstacle,"agenta0").
 gps_map(9,4,obstacle,"agenta0").
 gps_map(9,6,obstacle,"agenta0").
 gps_map(9,8,obstacle,"agenta0").
-gps_map(10,-61,obstacle,"agenta0").
 gps_map(10,-32,b0,"agenta0").
 gps_map(10,-6,taskboard,"agenta0").
 gps_map(10,1,obstacle,"agenta0").
 gps_map(10,2,obstacle,"agenta0").
 gps_map(10,7,obstacle,"agenta0").
-gps_map(11,-62,obstacle,"agenta0").
-gps_map(11,-61,obstacle,"agenta0").
-gps_map(11,-60,obstacle,"agenta0").
-gps_map(11,-58,obstacle,"agenta0").
-gps_map(11,-46,obstacle,"agenta0").
 gps_map(11,1,obstacle,"agenta0").
 gps_map(11,2,obstacle,"agenta0").
 gps_map(11,8,obstacle,"agenta0").
-gps_map(12,-62,obstacle,"agenta0").
-gps_map(12,-61,obstacle,"agenta0").
-gps_map(12,-60,obstacle,"agenta0").
 gps_map(12,0,obstacle,"agenta0").
 gps_map(12,1,obstacle,"agenta0").
 gps_map(12,2,obstacle,"agenta0").
@@ -154,11 +107,6 @@ gps_map(12,5,obstacle,"agenta0").
 gps_map(12,7,obstacle,"agenta0").
 gps_map(12,8,obstacle,"agenta0").
 gps_map(12,9,obstacle,"agenta0").
-gps_map(13,-64,obstacle,"agenta0").
-gps_map(13,-63,obstacle,"agenta0").
-gps_map(13,-62,obstacle,"agenta0").
-gps_map(13,-61,obstacle,"agenta0").
-gps_map(13,-60,obstacle,"agenta0").
 gps_map(13,0,obstacle,"agenta0").
 gps_map(13,1,obstacle,"agenta0").
 gps_map(13,2,obstacle,"agenta0").
@@ -170,9 +118,6 @@ gps_map(13,7,obstacle,"agenta0").
 gps_map(13,8,obstacle,"agenta0").
 gps_map(13,9,obstacle,"agenta0").
 gps_map(13,10,obstacle,"agenta0").
-gps_map(14,-64,obstacle,"agenta0").
-gps_map(14,-63,obstacle,"agenta0").
-gps_map(14,-61,obstacle,"agenta0").
 gps_map(14,1,obstacle,"agenta0").
 gps_map(14,2,obstacle,"agenta0").
 gps_map(14,3,obstacle,"agenta0").
@@ -181,10 +126,6 @@ gps_map(14,5,obstacle,"agenta0").
 gps_map(14,6,obstacle,"agenta0").
 gps_map(14,7,obstacle,"agenta0").
 gps_map(14,9,obstacle,"agenta0").
-gps_map(15,-64,obstacle,"agenta0").
-gps_map(15,-62,obstacle,"agenta0").
-gps_map(15,-61,obstacle,"agenta0").
-gps_map(15,-39,obstacle,"agenta0").
 gps_map(15,3,obstacle,"agenta0").
 gps_map(15,4,obstacle,"agenta0").
 gps_map(15,5,obstacle,"agenta0").
@@ -192,43 +133,26 @@ gps_map(15,6,obstacle,"agenta0").
 gps_map(15,7,obstacle,"agenta0").
 gps_map(15,8,obstacle,"agenta0").
 gps_map(15,9,obstacle,"agenta0").
-gps_map(16,-62,obstacle,"agenta0").
-gps_map(16,-61,obstacle,"agenta0").
-gps_map(16,-57,obstacle,"agenta0").
 gps_map(16,5,obstacle,"agenta0").
 gps_map(16,6,obstacle,"agenta0").
 gps_map(16,7,obstacle,"agenta0").
 gps_map(16,8,obstacle,"agenta0").
 gps_map(16,9,obstacle,"agenta0").
-gps_map(17,-60,obstacle,"agenta0").
-gps_map(17,-52,obstacle,"agenta0").
 gps_map(17,2,obstacle,"agenta0").
 gps_map(17,3,obstacle,"agenta0").
 gps_map(17,5,obstacle,"agenta0").
 gps_map(17,10,obstacle,"agenta0").
-gps_map(18,-64,obstacle,"agenta0").
-gps_map(18,-62,obstacle,"agenta0").
-gps_map(18,-60,obstacle,"agenta0").
-gps_map(18,-58,obstacle,"agenta0").
-gps_map(18,-56,obstacle,"agenta0").
 gps_map(18,-26,goal,"agenta0").
 gps_map(18,2,obstacle,"agenta0").
 gps_map(18,6,obstacle,"agenta0").
 gps_map(18,8,obstacle,"agenta0").
 gps_map(18,10,obstacle,"agenta0").
-gps_map(19,-60,obstacle,"agenta0").
-gps_map(19,-59,obstacle,"agenta0").
-gps_map(19,-57,obstacle,"agenta0").
-gps_map(19,-55,obstacle,"agenta0").
 gps_map(19,-27,goal,"agenta0").
 gps_map(19,-26,goal,"agenta0").
 gps_map(19,-25,goal,"agenta0").
 gps_map(19,-4,goal,"agenta0").
 gps_map(19,6,obstacle,"agenta0").
 gps_map(19,11,obstacle,"agenta0").
-gps_map(20,-61,obstacle,"agenta0").
-gps_map(20,-60,obstacle,"agenta0").
-gps_map(20,-58,obstacle,"agenta0").
 gps_map(20,-28,goal,"agenta0").
 gps_map(20,-27,goal,"agenta0").
 gps_map(20,-26,goal,"agenta0").
@@ -239,10 +163,6 @@ gps_map(20,-4,goal,"agenta0").
 gps_map(20,-3,goal,"agenta0").
 gps_map(20,10,obstacle,"agenta0").
 gps_map(20,12,obstacle,"agenta0").
-gps_map(21,-62,obstacle,"agenta0").
-gps_map(21,-61,obstacle,"agenta0").
-gps_map(21,-60,obstacle,"agenta0").
-gps_map(21,-58,obstacle,"agenta0").
 gps_map(21,-27,goal,"agenta0").
 gps_map(21,-26,goal,"agenta0").
 gps_map(21,-25,goal,"agenta0").
@@ -254,8 +174,6 @@ gps_map(21,-2,goal,"agenta0").
 gps_map(21,8,obstacle,"agenta0").
 gps_map(21,10,obstacle,"agenta0").
 gps_map(21,12,obstacle,"agenta0").
-gps_map(22,-61,obstacle,"agenta0").
-gps_map(22,-60,obstacle,"agenta0").
 gps_map(22,-26,goal,"agenta0").
 gps_map(22,-5,goal,"agenta0").
 gps_map(22,-4,goal,"agenta0").
@@ -263,67 +181,35 @@ gps_map(22,-3,goal,"agenta0").
 gps_map(22,5,obstacle,"agenta0").
 gps_map(22,9,obstacle,"agenta0").
 gps_map(22,10,obstacle,"agenta0").
-gps_map(23,-62,obstacle,"agenta0").
-gps_map(23,-61,obstacle,"agenta0").
-gps_map(23,-60,obstacle,"agenta0").
-gps_map(23,-59,obstacle,"agenta0").
-gps_map(23,-56,obstacle,"agenta0").
 gps_map(23,-4,goal,"agenta0").
 gps_map(23,9,obstacle,"agenta0").
 gps_map(23,10,obstacle,"agenta0").
 gps_map(23,11,obstacle,"agenta0").
-gps_map(24,-63,obstacle,"agenta0").
-gps_map(24,-62,obstacle,"agenta0").
-gps_map(24,-61,obstacle,"agenta0").
-gps_map(24,-60,obstacle,"agenta0").
-gps_map(24,-59,obstacle,"agenta0").
-gps_map(24,-57,obstacle,"agenta0").
-gps_map(24,-56,obstacle,"agenta0").
 gps_map(24,-4,b1,"agenta0").
 gps_map(24,7,obstacle,"agenta0").
 gps_map(24,8,obstacle,"agenta0").
 gps_map(24,9,obstacle,"agenta0").
 gps_map(24,10,obstacle,"agenta0").
 gps_map(24,11,obstacle,"agenta0").
-gps_map(25,-63,obstacle,"agenta0").
-gps_map(25,-62,obstacle,"agenta0").
-gps_map(25,-61,obstacle,"agenta0").
-gps_map(25,-60,obstacle,"agenta0").
-gps_map(25,-58,obstacle,"agenta0").
 gps_map(25,7,obstacle,"agenta0").
 gps_map(25,8,obstacle,"agenta0").
 gps_map(25,9,obstacle,"agenta0").
 gps_map(25,10,obstacle,"agenta0").
-gps_map(26,-62,obstacle,"agenta0").
-gps_map(27,-63,obstacle,"agenta0").
-gps_map(27,-62,obstacle,"agenta0").
 gps_map(27,4,obstacle,"agenta0").
 gps_map(27,7,obstacle,"agenta0").
 gps_map(27,8,obstacle,"agenta0").
-gps_map(28,-64,obstacle,"agenta0").
-gps_map(28,-63,obstacle,"agenta0").
-gps_map(28,-62,obstacle,"agenta0").
 gps_map(28,6,obstacle,"agenta0").
 gps_map(28,7,obstacle,"agenta0").
-gps_map(29,-66,b2,"agenta0").
-gps_map(29,-64,obstacle,"agenta0").
-gps_map(29,-63,obstacle,"agenta0").
 gps_map(29,-25,obstacle,"agenta0").
 gps_map(29,-24,obstacle,"agenta0").
 gps_map(29,4,b2,"agenta0").
 gps_map(29,5,obstacle,"agenta0").
 gps_map(29,6,obstacle,"agenta0").
-gps_map(30,-64,obstacle,"agenta0").
-gps_map(30,-60,obstacle,"agenta0").
 gps_map(30,-25,obstacle,"agenta0").
 gps_map(30,-24,obstacle,"agenta0").
 gps_map(30,-23,obstacle,"agenta0").
 gps_map(30,6,obstacle,"agenta0").
 gps_map(30,7,obstacle,"agenta0").
-gps_map(31,-64,taskboard,"agenta0").
-gps_map(31,-59,obstacle,"agenta0").
-gps_map(31,-58,obstacle,"agenta0").
-gps_map(31,-56,obstacle,"agenta0").
 gps_map(31,-25,obstacle,"agenta0").
 gps_map(31,-24,obstacle,"agenta0").
 gps_map(31,-23,obstacle,"agenta0").
@@ -339,31 +225,18 @@ gps_map(33,-32,b2,"agenta0").
 gps_map(33,-25,obstacle,"agenta0").
 gps_map(33,-24,obstacle,"agenta0").
 gps_map(33,-23,obstacle,"agenta0").
-gps_map(34,-64,obstacle,"agenta0").
 gps_map(34,-25,obstacle,"agenta0").
 gps_map(34,-24,obstacle,"agenta0").
 gps_map(34,-23,obstacle,"agenta0").
 gps_map(34,6,obstacle,"agenta0").
-gps_map(36,-61,obstacle,"agenta0").
 gps_map(36,9,obstacle,"agenta0").
-gps_map(37,-61,taskboard,"agenta0").
-gps_map(37,-60,obstacle,"agenta0").
 gps_map(37,9,taskboard,"agenta0").
 gps_map(37,10,obstacle,"agenta0").
-gps_map(38,-42,b1,"agenta0").
-gps_map(38,-41,b1,"agenta0").
 gps_map(38,3,obstacle,"agenta0").
-gps_map(38,28,b1,"agenta0").
-gps_map(39,-62,obstacle,"agenta0").
-gps_map(39,-55,obstacle,"agenta0").
 gps_map(39,8,obstacle,"agenta0").
 gps_map(39,15,obstacle,"agenta0").
-gps_map(40,-64,obstacle,"agenta0").
-gps_map(40,-57,b0,"agenta0").
 gps_map(40,6,obstacle,"agenta0").
 gps_map(40,13,b0,"agenta0").
-gps_map(41,-39,obstacle,"agenta0").
-gps_map(42,-66,b0,"agenta0").
 gps_map(42,4,b0,"agenta0").
 gps_map(43,-22,obstacle,"agenta0").
 gps_map(43,-8,goal,"agenta0").
@@ -373,13 +246,6 @@ gps_map(44,-9,goal,"agenta0").
 gps_map(44,-8,goal,"agenta0").
 gps_map(44,-7,goal,"agenta0").
 gps_map(44,-6,b1,"agenta0").
-gps_map(45,-59,obstacle,"agenta0").
-gps_map(45,-55,obstacle,"agenta0").
-gps_map(45,-54,obstacle,"agenta0").
-gps_map(45,-50,obstacle,"agenta0").
-gps_map(45,-49,obstacle,"agenta0").
-gps_map(45,-40,obstacle,"agenta0").
-gps_map(45,-38,b1,"agenta0").
 gps_map(45,-33,b1,"agenta0").
 gps_map(45,-31,obstacle,"agenta0").
 gps_map(45,-30,obstacle,"agenta0").
@@ -390,15 +256,6 @@ gps_map(45,-7,goal,"agenta0").
 gps_map(45,-6,goal,"agenta0").
 gps_map(45,11,obstacle,"agenta0").
 gps_map(45,15,obstacle,"agenta0").
-gps_map(46,-56,obstacle,"agenta0").
-gps_map(46,-55,obstacle,"agenta0").
-gps_map(46,-54,obstacle,"agenta0").
-gps_map(46,-53,obstacle,"agenta0").
-gps_map(46,-52,obstacle,"agenta0").
-gps_map(46,-51,obstacle,"agenta0").
-gps_map(46,-50,obstacle,"agenta0").
-gps_map(46,-49,obstacle,"agenta0").
-gps_map(46,-48,obstacle,"agenta0").
 gps_map(46,-32,obstacle,"agenta0").
 gps_map(46,-31,obstacle,"agenta0").
 gps_map(46,-30,obstacle,"agenta0").
@@ -409,18 +266,6 @@ gps_map(46,-8,goal,"agenta0").
 gps_map(46,-7,goal,"agenta0").
 gps_map(46,14,obstacle,"agenta0").
 gps_map(46,15,obstacle,"agenta0").
-gps_map(47,-56,obstacle,"agenta0").
-gps_map(47,-55,obstacle,"agenta0").
-gps_map(47,-54,obstacle,"agenta0").
-gps_map(47,-53,obstacle,"agenta0").
-gps_map(47,-52,obstacle,"agenta0").
-gps_map(47,-51,obstacle,"agenta0").
-gps_map(47,-50,obstacle,"agenta0").
-gps_map(47,-49,obstacle,"agenta0").
-gps_map(47,-48,obstacle,"agenta0").
-gps_map(47,-40,obstacle,"agenta0").
-gps_map(47,-38,obstacle,"agenta0").
-gps_map(47,-35,obstacle,"agenta0").
 gps_map(47,-32,obstacle,"agenta0").
 gps_map(47,-31,obstacle,"agenta0").
 gps_map(47,-30,obstacle,"agenta0").
@@ -428,22 +273,14 @@ gps_map(47,-29,obstacle,"agenta0").
 gps_map(47,-8,goal,"agenta0").
 gps_map(47,14,obstacle,"agenta0").
 gps_map(47,15,obstacle,"agenta0").
-gps_map(48,-55,obstacle,"agenta0").
-gps_map(48,-54,obstacle,"agenta0").
-gps_map(48,-53,obstacle,"agenta0").
-gps_map(48,-50,obstacle,"agenta0").
-gps_map(48,-49,obstacle,"agenta0").
 gps_map(48,-33,obstacle,"agenta0").
 gps_map(48,-31,obstacle,"agenta0").
 gps_map(48,-30,obstacle,"agenta0").
 gps_map(48,-28,obstacle,"agenta0").
 gps_map(48,15,obstacle,"agenta0").
-gps_map(49,-57,b1,"agenta0").
-gps_map(49,-37,obstacle,"agenta0").
 gps_map(49,-28,obstacle,"agenta0").
 gps_map(49,13,b1,"agenta0").
 gps_map(50,-8,b1,"agenta0").
-gps_map(51,-41,obstacle,"agenta0").
 gps_map(51,-1,obstacle,"agenta0").
 gps_map(51,3,obstacle,"agenta0").
 gps_map(52,-23,obstacle,"agenta0").
@@ -451,7 +288,6 @@ gps_map(52,3,obstacle,"agenta0").
 gps_map(52,4,obstacle,"agenta0").
 gps_map(52,5,obstacle,"agenta0").
 gps_map(52,6,obstacle,"agenta0").
-gps_map(53,-42,obstacle,"agenta0").
 gps_map(53,-2,obstacle,"agenta0").
 gps_map(53,2,obstacle,"agenta0").
 gps_map(53,3,obstacle,"agenta0").
@@ -461,7 +297,6 @@ gps_map(53,6,obstacle,"agenta0").
 gps_map(53,11,obstacle,"agenta0").
 gps_map(53,12,obstacle,"agenta0").
 gps_map(53,14,obstacle,"agenta0").
-gps_map(54,-36,obstacle,"agenta0").
 gps_map(54,-2,obstacle,"agenta0").
 gps_map(54,2,obstacle,"agenta0").
 gps_map(54,3,obstacle,"agenta0").
@@ -470,16 +305,12 @@ gps_map(54,5,obstacle,"agenta0").
 gps_map(54,11,obstacle,"agenta0").
 gps_map(54,12,obstacle,"agenta0").
 gps_map(54,14,obstacle,"agenta0").
-gps_map(55,-48,obstacle,"agenta0").
-gps_map(55,-44,obstacle,"agenta0").
 gps_map(55,1,obstacle,"agenta0").
 gps_map(55,2,obstacle,"agenta0").
 gps_map(55,3,obstacle,"agenta0").
 gps_map(55,11,obstacle,"agenta0").
 gps_map(55,13,obstacle,"agenta0").
 gps_map(55,15,b0,"agenta0").
-gps_map(56,-48,obstacle,"agenta0").
-gps_map(56,-35,obstacle,"agenta0").
 gps_map(56,-31,obstacle,"agenta0").
 gps_map(56,0,obstacle,"agenta0").
 gps_map(56,1,obstacle,"agenta0").
@@ -495,26 +326,13 @@ gps_map(58,-22,obstacle,"agenta0").
 gps_map(58,-6,obstacle,"agenta0").
 gps_map(58,-3,obstacle,"agenta0").
 gps_map(58,9,obstacle,"agenta0").
-gps_map(59,-37,obstacle,"agenta0").
-gps_map(59,-36,obstacle,"agenta0").
 gps_map(59,-1,obstacle,"agenta0").
-gps_map(60,-38,obstacle,"agenta0").
-gps_map(60,-37,obstacle,"agenta0").
-gps_map(60,-36,obstacle,"agenta0").
-gps_map(60,-35,obstacle,"agenta0").
 gps_map(60,-18,obstacle,"agenta0").
 gps_map(60,1,obstacle,"agenta0").
 gps_map(60,5,obstacle,"agenta0").
 gps_map(60,13,obstacle,"agenta0").
-gps_map(61,-40,obstacle,"agenta0").
-gps_map(61,-38,obstacle,"agenta0").
-gps_map(61,-37,obstacle,"agenta0").
-gps_map(61,-36,obstacle,"agenta0").
-gps_map(61,-35,obstacle,"agenta0").
 gps_map(61,-20,obstacle,"agenta0").
 gps_map(61,-16,obstacle,"agenta0").
-gps_map(62,-37,obstacle,"agenta0").
-gps_map(62,-36,obstacle,"agenta0").
 gps_map(63,-18,obstacle,"agenta0").
 gps_map(63,-17,obstacle,"agenta0").
 gps_map(64,-24,obstacle,"agenta0").
@@ -542,77 +360,142 @@ gps_map(76,-30,b1,"agenta0").
 gps_map(76,-28,obstacle,"agenta0").
 vision(5).
 
-/*
- * Test if the agent got the right rotation
- */
-//@test_print_environment[test]
-+!test_print_environment
+@test_goto[test]
++!test_goto
     <-
-    //!check_performance(print_environment1,1,R0);
-    !check_performance(print_environment2,1,R1);
-    //!assert_greater_than(R0,R1);
-    //.log(warning,"Performance R0: ", R0/1000000, " ms");
-    .log(warning,"Performance R1: ", R1/1000000, " ms");
+    makeArtifact("rp", "localPositionSystem.rp.rp", [70,0], RpId);
+    focus(RpId);
+    for ( gps_map(I,J,O,MapId) ) {
+        setGpsMapForTests(I,J,O,MapId)[artifact_id(RpId)];
+    }
+
+    !test_goto_surrounding_objects;
+    !test_goto_nearest_objects;
 .
 
 /*
- * Test if the agent got the right rotation
+ * Test goto(X,Y)
+ * Expected result:
+ [test_goto]                   2            gg@gg1                                                     -4
+ [test_goto]                                 g^g                                  ##                   -3
+ [test_goto]                                  ^          #                    ##                       -2
+ [test_goto]                                  ^         ##                  #       #                  -1
+ [test_goto]             >>>v        ##       ^          #                       #                     0
+ [test_goto]                v  ##  #####      ^                                 ###  #   #  #          1
+ [test_goto]                >v##########  ##  ^                               #####                    2
+ [test_goto]                 v#####  #### #   ^                #            ######                     3
+ [test_goto]            ###  >v####  ####     ^     # 2            0         ###                       4
+ [test_goto]           #####  v      ######   ^#      #                      ### #   #                 5
+ [test_goto]          ######  v   #   #### ## @<<<<< ###t  #     #           ##                        6
+ [test_goto]          ######  >>v# # #####       ##^## #                                  #            7
+ [test_goto]            ###     >v# ### ## #  #  ##^#           #                                      8
+ [test_goto]                     >>>v#####     ####^         #t                    #                   9
+ [test_goto]                        >v#   ## ######^          #                                        10
+ [test_goto]                         >>>>>>v#   ##>^                  #       ###                      11
+ [test_goto]                               >v##>>>^                           ##                       12
+ [test_goto]                                @>>^                 0        1     #    #                 13
+
  */
-@test_goto[test]
-+!test_goto :
+@test_goto_surrounding_objects[atomic]
++!test_goto_surrounding_objects
+    <-
+    !build_map;
+
+    +routeplan_mindist(0);
+
+    // Test a simple path in which the euclidean distance can be achieved just avoiding obstacles
+    !check_performance(test_goto(0,0,19,13,R0_1,R1_1),1,_);
+    !assert_equals(32,R0_1);
+    !assert_equals(32,R1_1);
+
+    // Test a path in which there the euclidean distance cannot be achieved
+    !check_performance(test_goto(20,13,21,6,R0_2,R1_2),1,_);
+    !assert_equals(8,R0_2);
+    !assert_equals(18,R1_2);
+
+    // Test a straight line path occupying a goal terrain
+    !check_performance(test_goto(21,5,21,-4,R0_3,R1_3),1,_);
+    !assert_equals(9,R0_3);
+    !assert_equals(9,R1_3);
+
+    //!print_map;
+.
+
+/*
+ * Test goto(X,Y)
+ * Expected result:
+ [test_goto] #                    @>>>>>>>>>>>>>v                    1g            #                   -6
+ [test_goto]                      ^          gggv                                                      -5
+ [test_goto]                   >>>^         gggg@>>v                                                   -4
+ [test_goto]               >>>>^             ggg   v                              ##                   -3
+ [test_goto]               ^                  @    v     #                    ##                       -2
+ [test_goto]               ^                  ^    v    ##                  #       #                  -1
+ [test_goto]             >>^         ##       ^<<< >>v   #                       #                     0
+ [test_goto]                   ##  #####         ^   v                          ###  #   #  #          1
+ [test_goto]                  ##########  ##     ^<< v                        #####                    2
+ [test_goto]                  #####  #### #        ^<<         #            ######                     3
+ [test_goto]            ###    ####  ####           #^<            0         ###                       4
+ */
+@test_goto_nearest_objects[atomic]
++!test_goto_nearest_objects
+    <-
+    !build_map;
+
+    +routeplan_mindist(0);
+
+    // Go from 0,0 to 20,12: min_distance = 32 steps
+    -+myposition(0,0);
+    ?nearest(taskboard,X1,Y1);
+    ?nearest_neighbour(X1,Y1,X_1,Y_1);
+    !check_performance(test_goto(0,0,X_1,Y_1,R0_1,R1_1),1,_);
+    !assert_equals(15,R0_1);
+    !assert_equals(15,R1_1);
+
+    ?nearest(b1,X2,Y2);
+    ?nearest_neighbour(X2,Y2,X_2,Y_2);
+    !check_performance(test_goto(X_1+1,Y_1,X_2,Y_2,R0_2,R1_2),1,_);
+    !assert_equals(15,R0_2);
+    !assert_equals(15,R1_2);
+
+    ?nearest(b2,X3,Y3);
+    ?nearest_neighbour(X3,Y3,X_3,Y_3);
+    !check_performance(test_goto(X_2+1,Y_2,X_3,Y_3,R0_3,R1_3),1,_);
+    !assert_equals(12,R0_3);
+    !assert_equals(12,R1_3);
+
+    ?nearest(goal,X_4,Y_4);
+    !check_performance(test_goto(X_3+1,Y_3,X_4,Y_4,R0_4,R1_4),1,_);
+    !assert_equals(14,R0_4);
+    !assert_equals(14,R1_4);
+
+    //!print_map;
+.
+
+
++!test_goto(X0,Y0,X1,Y1,R0,R1) :
     .findall(I,gps_map(I,J,O,_),LI) &
     .min(LI,MIN_I)
     <-
-    !build_map;
-    +myposition(0,0);
-    !update_line(0,0,MIN_I,horigin);
+    +myposition(X0,Y0);
+    !update_line(X0,Y0,MIN_I,"H");
+    -+walked_steps(0);
     .add_plan({
         +!do(move(DIR),_) :
             myposition(OX,OY) &
-            directionIncrement(DIR,I,J)
+            directionIncrement(DIR,I,J) &
+            walked_steps(S)
             <-
-            //-+myposition(OX+I,OY+J);
-            .log(warning,"pos ",OX," ",OY," : I=",I," : J=",J);
+            //.log(warning,"pos ",OX," ",OY," : I=",I," : J=",J);
+            -+walked_steps(S+1);
             !update_line(OX,OY,MIN_I,DIR);
         }, self, begin);
-    !goto(20,12);
-    !update_line(20,12,MIN_I,xtarget);
-    !print_map;
+    !goto(X1,Y1);
+    !update_line(X1,Y1,MIN_I,"@");
+    ?distance(X0,Y0,X1,Y1,R0);
+    ?walked_steps(R1);
 .
 
-+!print_environment1
-    <-
-    .findall(I,gps_map(I,J,O,_),LI);
-    .min(LI,MIN_I);
-    .max(LI,MAX_I);
-    .findall(J,gps_map(I,J,O,_),LJ);
-    .min(LJ,MIN_J);
-    .max(LJ,MAX_J);
-    for ( .range(J,MIN_J,MAX_J) ) {
-        +line(J,"");
-        for ( .range(I,MIN_I,MAX_I) ) {
-            ?line(J,L);
-            if (gps_map(I,J,O,_)) {
-                if (.member(O,[b0,b1,b2])) {
-                    // If it is a dispenser just print the block identification
-                    .substring(O,R,1,2);
-                    .concat(L,R,LL);
-                } else {
-                    // For other objects print the first letter
-                    .substring(O,R,0,1);
-                    .concat(L,R,LL);
-                }
-            } else {
-                .concat(L," ",LL);
-            }
-            -+line(J,LL);
-        }
-        ?line(J,LLL);
-        .log(warning,LLL);
-    }
-.
-
-+!print_environment2
++!print_environment
     <-
     !build_map;
     !print_map;
@@ -653,9 +536,7 @@ vision(5).
 
     } else {
         if (O == obstacle) {
-            .concat(R0,"'",R1,RF);
-        } elif (O == goal) {
-            .concat(R0,"°",R1,RF);
+            .concat(R0,"#",R1,RF);
         } elif (O == s) {
             .concat(R0,"v",R1,RF);
         } elif (O == n) {
@@ -682,34 +563,4 @@ vision(5).
         ?line(J,RF);
         .log(warning,RF);
     }
-.
-
-//@clean[test]
-+!clean
-    <-
-    /*
-    .findall(duplicated(A,B,C,D,E),gps_map(A,B,C,D) & gps_map(A,B,C,E) & D \== E,L);
-    for (.member(duplicated(A,B,C,D,E),L) & .count(gps_map(A,B,C,_),N) & N > 1) {
-        .log(warning,duplicated(A,B,C,D,E));
-        .abolish(gps_map(A,B,C,E));
-    }
-
-    .abolish(gps_map(A,B,C,D & D \== "agenta0"));
-    .findall(gps_map(A,B,C,D),gps_map(A,B,C,D) & D \== "agenta0",L);
-    for (.member(gps_map(A,B,C,D),L)) {
-        .abolish(gps_map(A,B,C,D));
-    }
-    .findall(gps_map(A,B,C,D),gps_map(A,B,C,D) & D \== "agenta0",L1);
-    .log(warning,"TODO TODO",L1);
-    */
-    .findall(gps_map(A,B,C,D),gps_map(A,B,C,D),L0);
-    .length(L0,LL0);
-    .log(warning,"TODO TODO",LL0);
-    .abolish(gps_map(A,B,C,D) & A == 24);
-    .findall(gps_map(A,B,C,D),gps_map(A,B,C,D),L1);
-    .length(L1,LL1);
-    .log(warning,"TODO TODO",LL1);
-    .wait(5000);
-
-    +finished;
 .
