@@ -358,7 +358,6 @@ gps_map(69,-32,obstacle,"agenta0").
 gps_map(76,-30,b1,"agenta0").
 gps_map(76,-28,obstacle,"agenta0").
 vision(5).
-routeplan_mindist(0).
 
 @test_goto[test]
 +!test_goto :
@@ -377,10 +376,11 @@ routeplan_mindist(0).
             directionIncrement(DIR,I,J) &
             walked_steps(S)
             <-
-            //.log(warning,"pos ",OX," ",OY," : I=",I," : J=",J);
             -+walked_steps(S+1);
             !update_line(OX,OY,MIN_I,DIR);
-        }, self, begin);
+    }, self, begin);
+
+    !build_map;
 
     !test_goto_surrounding_objects(MIN_I);
     !test_goto_nearest_objects(MIN_I);
@@ -411,8 +411,6 @@ routeplan_mindist(0).
  */
 +!test_goto_surrounding_objects(MIN_I)
     <-
-    !build_map;
-
     // Test a simple path in which the euclidean distance can be achieved just avoiding obstacles
     !check_performance(test_goto(0,0,19,13,MIN_I,R0_1,R1_1),1,_);
     !assert_equals(32,R0_1);
@@ -448,8 +446,6 @@ routeplan_mindist(0).
  */
 +!test_goto_nearest_objects(MIN_I)
     <-
-    !build_map;
-
     // Go from 0,0 to 20,12: min_distance = 32 steps
     -+myposition(0,0);
     ?nearest(taskboard,X1,Y1);
@@ -475,7 +471,7 @@ routeplan_mindist(0).
     !assert_equals(14,R0_4);
     !assert_equals(14,R1_4);
 
-    !print_map;
+    //!print_map;
 .
 
 +!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1)
