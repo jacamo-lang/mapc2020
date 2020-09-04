@@ -4,7 +4,6 @@
 
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 { include("walking/goto_A_star.asl") }
-{ include("walking/common_walking.asl") }
 
 step(500).
 gps_map(-12,-6,obstacle,"agenta0").
@@ -359,9 +358,12 @@ gps_map(69,-32,obstacle,"agenta0").
 gps_map(76,-30,b1,"agenta0").
 gps_map(76,-28,obstacle,"agenta0").
 vision(5).
+routeplan_mindist(0).
 
 @test_goto[test]
-+!test_goto
++!test_goto :
+    .findall(I,gps_map(I,J,O,_),LI) &
+    .min(LI,MIN_I)
     <-
     makeArtifact("rp", "localPositionSystem.rp.rp", [70,0], RpId);
     focus(RpId);
@@ -369,8 +371,19 @@ vision(5).
         setGpsMapForTests(I,J,O,MapId)[artifact_id(RpId)];
     }
 
-    !test_goto_surrounding_objects;
-    !test_goto_nearest_objects;
+    .add_plan({
+        +!do(move(DIR),_) :
+            myposition(OX,OY) &
+            directionIncrement(DIR,I,J) &
+            walked_steps(S)
+            <-
+            //.log(warning,"pos ",OX," ",OY," : I=",I," : J=",J);
+            -+walked_steps(S+1);
+            !update_line(OX,OY,MIN_I,DIR);
+        }, self, begin);
+
+    !test_goto_surrounding_objects(MIN_I);
+    !test_goto_nearest_objects(MIN_I);
 .
 
 /*
@@ -396,25 +409,22 @@ vision(5).
  [test_goto]                                @>>^                 0        1     #    #                 13
 
  */
-@test_goto_surrounding_objects[atomic]
-+!test_goto_surrounding_objects
++!test_goto_surrounding_objects(MIN_I)
     <-
     !build_map;
 
-    +routeplan_mindist(0);
-
     // Test a simple path in which the euclidean distance can be achieved just avoiding obstacles
-    !check_performance(test_goto(0,0,19,13,R0_1,R1_1),1,_);
+    !check_performance(test_goto(0,0,19,13,MIN_I,R0_1,R1_1),1,_);
     !assert_equals(32,R0_1);
     !assert_equals(32,R1_1);
 
     // Test a path in which there the euclidean distance cannot be achieved
-    !check_performance(test_goto(20,13,21,6,R0_2,R1_2),1,_);
+    !check_performance(test_goto(20,13,21,6,MIN_I,R0_2,R1_2),1,_);
     !assert_equals(8,R0_2);
     !assert_equals(18,R1_2);
 
     // Test a straight line path occupying a goal terrain
-    !check_performance(test_goto(21,5,21,-4,R0_3,R1_3),1,_);
+    !check_performance(test_goto(21,5,21,-4,MIN_I,R0_3,R1_3),1,_);
     !assert_equals(9,R0_3);
     !assert_equals(9,R1_3);
 
@@ -436,59 +446,43 @@ vision(5).
  [test_goto]                  #####  #### #        ^<<         #            ######                     3
  [test_goto]            ###    ####  ####           #^<            0         ###                       4
  */
-@test_goto_nearest_objects[atomic]
-+!test_goto_nearest_objects
++!test_goto_nearest_objects(MIN_I)
     <-
     !build_map;
-
-    +routeplan_mindist(0);
 
     // Go from 0,0 to 20,12: min_distance = 32 steps
     -+myposition(0,0);
     ?nearest(taskboard,X1,Y1);
     ?nearest_neighbour(X1,Y1,X_1,Y_1);
-    !check_performance(test_goto(0,0,X_1,Y_1,R0_1,R1_1),1,_);
+    !check_performance(test_goto(0,0,X_1,Y_1,MIN_I,R0_1,R1_1),1,_);
     !assert_equals(15,R0_1);
     !assert_equals(15,R1_1);
 
     ?nearest(b1,X2,Y2);
     ?nearest_neighbour(X2,Y2,X_2,Y_2);
-    !check_performance(test_goto(X_1+1,Y_1,X_2,Y_2,R0_2,R1_2),1,_);
+    !check_performance(test_goto(X_1+1,Y_1,X_2,Y_2,MIN_I,R0_2,R1_2),1,_);
     !assert_equals(15,R0_2);
     !assert_equals(15,R1_2);
 
     ?nearest(b2,X3,Y3);
     ?nearest_neighbour(X3,Y3,X_3,Y_3);
-    !check_performance(test_goto(X_2+1,Y_2,X_3,Y_3,R0_3,R1_3),1,_);
+    !check_performance(test_goto(X_2+1,Y_2,X_3,Y_3,MIN_I,R0_3,R1_3),1,_);
     !assert_equals(12,R0_3);
     !assert_equals(12,R1_3);
 
     ?nearest(goal,X_4,Y_4);
-    !check_performance(test_goto(X_3+1,Y_3,X_4,Y_4,R0_4,R1_4),1,_);
+    !check_performance(test_goto(X_3+1,Y_3,X_4,Y_4,MIN_I,R0_4,R1_4),1,_);
     !assert_equals(14,R0_4);
     !assert_equals(14,R1_4);
 
-    //!print_map;
+    !print_map;
 .
 
-
-+!test_goto(X0,Y0,X1,Y1,R0,R1) :
-    .findall(I,gps_map(I,J,O,_),LI) &
-    .min(LI,MIN_I)
++!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1)
     <-
     +myposition(X0,Y0);
     !update_line(X0,Y0,MIN_I,"H");
     -+walked_steps(0);
-    .add_plan({
-        +!do(move(DIR),_) :
-            myposition(OX,OY) &
-            directionIncrement(DIR,I,J) &
-            walked_steps(S)
-            <-
-            //.log(warning,"pos ",OX," ",OY," : I=",I," : J=",J);
-            -+walked_steps(S+1);
-            !update_line(OX,OY,MIN_I,DIR);
-        }, self, begin);
     !goto(X1,Y1);
     !update_line(X1,Y1,MIN_I,"@");
     ?distance(X0,Y0,X1,Y1,R0);
