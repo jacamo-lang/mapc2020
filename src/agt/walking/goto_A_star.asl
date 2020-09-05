@@ -32,14 +32,7 @@ myposition(0,0).
     <-
     getDirection(OX,OY,X,Y,DIRECTION);
     if (DIRECTION == error) {
-        ?directions(LDIRECTIONS);
-        .nth(math.floor(math.random(4)),LDIRECTIONS,DR);
-        !do(move(DR),R);
-        if (R == success) {
-            !mapping(success,_,DR);
-        } else {
-            .print("Fail on random to x: ",X," y: ",Y," act: ",DR);
-        }
+        .print("Fail on random to x: ",X," y: ",Y," act: ",DR);
     } else {
         !do(move(DIRECTION),R);
         if (R == success) {
@@ -47,6 +40,6 @@ myposition(0,0).
         } else {
             .print("Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);
         }
+        !goto(X,Y);
     }
-    !goto(X,Y);
 .

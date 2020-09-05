@@ -384,6 +384,7 @@ vision(5).
 
     !test_goto_surrounding_objects(MIN_I);
     !test_goto_nearest_objects(MIN_I);
+    //!test_goto_obstacle(MIN_I);
 .
 
 /*
@@ -448,6 +449,8 @@ vision(5).
     <-
     // Go from 0,0 to 20,12: min_distance = 32 steps
     -+myposition(0,0);
+    !build_map;
+
     ?nearest(taskboard,X1,Y1);
     ?nearest_neighbour(X1,Y1,X_1,Y_1);
     !check_performance(test_goto(0,0,X_1,Y_1,MIN_I,R0_1,R1_1),1,_);
@@ -474,6 +477,22 @@ vision(5).
     //!print_map;
 .
 
+@[atomic]
++!test_goto_obstacle(MIN_I)
+    <-
+    !build_map;
+
+    .add_plan({
+        -!goto(X,Y)
+            <-
+            +failed_goto(X,Y);
+    }, self, begin);
+
+    !goto(10,1);
+
+    !assert_true(failed_goto(10,1));
+.
+
 +!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1)
     <-
     +myposition(X0,Y0);
@@ -483,12 +502,6 @@ vision(5).
     !update_line(X1,Y1,MIN_I,"@");
     ?distance(X0,Y0,X1,Y1,R0);
     ?walked_steps(R1);
-.
-
-+!print_environment
-    <-
-    !build_map;
-    !print_map;
 .
 
 +!build_map
