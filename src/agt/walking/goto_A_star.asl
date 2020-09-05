@@ -19,27 +19,29 @@ directionIncrement(w,-1,  0).
 directionIncrement(e, 1,  0).
 myposition(0,0).
 
-+!goto(X,Y):
++!goto(X,Y,RET):
     myposition(X,Y)
     <-
     .print("-------> " ,arrived_at(X,Y));
+    RET = success;
 .
 
-// Use route planer if distance (steps) is greater than D
-+!goto(X,Y):
++!goto(X,Y,RET):
     myposition(OX,OY) &
     (OX \== X | OY \== Y)
     <-
     getDirection(OX,OY,X,Y,DIRECTION);
     if (DIRECTION == error) {
-        .print("Fail on random to x: ",X," y: ",Y," act: ",DR);
+        RET = no_route;
     } else {
         !do(move(DIRECTION),R);
         if (R == success) {
             !mapping(success,_,DIRECTION);
+            !goto(X,Y,_);
+            //RET = success;
         } else {
             .print("Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);
+            RET = error;
         }
-        !goto(X,Y);
     }
 .

@@ -385,7 +385,7 @@ vision(5).
     !test_goto_surrounding_objects(MIN_I);
     !test_goto_nearest_objects(MIN_I);
     !test_goto_far_position(MIN_I);
-    //!test_goto_obstacle(MIN_I);
+    !test_goto_obstacle(MIN_I);
 .
 
 /*
@@ -550,29 +550,20 @@ vision(5).
     <-
     !build_map;
 
-    .add_plan({
-        -!goto(X,Y)
-            <-
-            +failed_goto(X,Y);
-    }, self, begin);
+    !goto(10,1,RET);
 
-    !goto(10,1);
-
-    !assert_true(failed_goto(10,1));
+    !assert_equals(no_route,RET);
 .
 
 +!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1)
     <-
-    .nano_time(T0);
     -+myposition(X0,Y0);
     !update_line(X0,Y0,MIN_I,"H");
     -+walked_steps(0);
-    !goto(X1,Y1);
+    !goto(X1,Y1,RET);
     !update_line(X1,Y1,MIN_I,"@");
     ?distance(X0,Y0,X1,Y1,R0);
     ?walked_steps(R1);
-    .nano_time(T1);
-    .log(info,test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1)," : ",math.round((T1-T0)/1000)," microseconds");
 .
 
 +!build_map

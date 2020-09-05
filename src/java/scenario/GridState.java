@@ -18,6 +18,13 @@ public class GridState implements Estado, Heuristica {
     private int custoAcumulado;
 
     /**
+     * It is used to allow path costs until a certain tolerance comparing to
+     * a "straight line" (euclidean distance). At least empirically, 4 times
+     * was enough for the tests we have created so far.
+     */
+    private final double SOLVABILITY_THRESHOLD = 4.0;
+
+    /**
      *
      * @param l
      * @param from
@@ -75,7 +82,9 @@ public class GridState implements Estado, Heuristica {
                 )) {
             GridState newState = new GridState(newl, from, to, direction, map);
             newState.setCustoAcumulado(this.custoAcumulado() + this.custo());
-            s.add(newState);
+            if (newState.custoAcumulado <= from.distance(to) * SOLVABILITY_THRESHOLD ) {
+                s.add(newState);
+            }
         }
     }
 
