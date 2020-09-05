@@ -359,7 +359,7 @@ gps_map(76,-30,b1,"agenta0").
 gps_map(76,-28,obstacle,"agenta0").
 vision(5).
 
-@test_goto[test]
+@test_goto[test,atomic]
 +!test_goto :
     .findall(I,gps_map(I,J,O,_),LI) &
     .min(LI,MIN_I)
@@ -384,6 +384,7 @@ vision(5).
 
     !test_goto_surrounding_objects(MIN_I);
     !test_goto_nearest_objects(MIN_I);
+    !test_goto_far_position(MIN_I);
     //!test_goto_obstacle(MIN_I);
 .
 
@@ -408,8 +409,8 @@ vision(5).
  [test_goto]                         >>>>>>v#   ##>^                  #       ###                      11
  [test_goto]                               >v##>>>^                           ##                       12
  [test_goto]                                @>>^                 0        1     #    #                 13
-
- */
+*/
+@[atomic]
 +!test_goto_surrounding_objects(MIN_I)
     <-
     // Test a simple path in which the euclidean distance can be achieved just avoiding obstacles
@@ -427,7 +428,7 @@ vision(5).
     !assert_equals(9,R0_3);
     !assert_equals(9,R1_3);
 
-    //!print_map;
+    !print_map;
 .
 
 /*
@@ -444,12 +445,12 @@ vision(5).
  [test_goto]                  ##########  ##     ^<< v                        #####                    2
  [test_goto]                  #####  #### #        ^<<         #            ######                     3
  [test_goto]            ###    ####  ####           #^<            0         ###                       4
- */
+*/
+@[atomic]
 +!test_goto_nearest_objects(MIN_I)
     <-
     // Go from 0,0 to 20,12: min_distance = 32 steps
-    -+myposition(0,0);
-    !build_map;
+    //!build_map;
 
     ?nearest(taskboard,X1,Y1);
     ?nearest_neighbour(X1,Y1,X_1,Y_1);
@@ -460,8 +461,8 @@ vision(5).
     ?nearest(b1,X2,Y2);
     ?nearest_neighbour(X2,Y2,X_2,Y_2);
     !check_performance(test_goto(X_1+1,Y_1,X_2,Y_2,MIN_I,R0_2,R1_2),1,_);
-    !assert_equals(15,R0_2);
-    !assert_equals(15,R1_2);
+    !assert_equals(13,R0_2);
+    !assert_equals(13,R1_2);
 
     ?nearest(b2,X3,Y3);
     ?nearest_neighbour(X3,Y3,X_3,Y_3);
@@ -478,6 +479,24 @@ vision(5).
 .
 
 @[atomic]
++!test_goto_far_position(MIN_I)
+    <-
+    // Test a simple path in which the euclidean distance can be achieved just avoiding obstacles
+    !check_performance(test_goto(0,0,48,-32,MIN_I,R0_1,R1_1),1,_);
+    !assert_equals(80,R0_1);
+    !assert_equals(84,R1_1);
+
+    !check_performance(test_goto(49,-32,60,15,MIN_I,R0_2,R1_2),1,_);
+    !assert_equals(58,R0_2);
+    !assert_equals(58,R1_2);
+
+    !check_performance(test_goto(59,15,12,6,MIN_I,R0_3,R1_3),1,_);
+    !assert_equals(56,R0_3);
+    !assert_equals(68,R1_3);
+
+    !print_map;
+.
+
 +!test_goto_obstacle(MIN_I)
     <-
     !build_map;
@@ -495,7 +514,7 @@ vision(5).
 
 +!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1)
     <-
-    +myposition(X0,Y0);
+    -+myposition(X0,Y0);
     !update_line(X0,Y0,MIN_I,"H");
     -+walked_steps(0);
     !goto(X1,Y1);
