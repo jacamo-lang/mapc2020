@@ -359,7 +359,7 @@ gps_map(76,-30,b1,"agenta0").
 gps_map(76,-28,obstacle,"agenta0").
 vision(5).
 
-@test_goto[test,atomic]
+@test_goto[test]
 +!test_goto :
     .findall(I,gps_map(I,J,O,_),LI) &
     .min(LI,MIN_I)
@@ -410,7 +410,6 @@ vision(5).
  [test_goto]                               >v##>>>^                           ##                       12
  [test_goto]                                @>>^                 0        1     #    #                 13
 */
-@[atomic]
 +!test_goto_surrounding_objects(MIN_I)
     <-
     // Test a simple path in which the euclidean distance can be achieved just avoiding obstacles
@@ -446,7 +445,6 @@ vision(5).
  [test_goto]                  #####  #### #        ^<<         #            ######                     3
  [test_goto]            ###    ####  ####           #^<            0         ###                       4
 */
-@[atomic]
 +!test_goto_nearest_objects(MIN_I)
     <-
     // Go from 0,0 to 20,12: min_distance = 32 steps
@@ -478,7 +476,58 @@ vision(5).
     //!print_map;
 .
 
-@[atomic]
+/*
+* Test goto(X,Y)
+* Expected result:
+ [test_goto]           ##          0                      2          # ##@>v                 ##        -32
+ [test_goto]                                                          ####^>>v   #                     -31
+ [test_goto]                   1                                     #####^< v                       1 -30
+ [test_goto]         2                                                 ##  ^ >>v           2           -29
+ [test_goto]                   #             g                           ##^   v                     # -28
+ [test_goto]                                ggg                          >>^   v                       -27
+ [test_goto]                               ggggg                         ^     >v                      -26
+ [test_goto]                                ggg       ######          >>>^      v                      -25
+ [test_goto]       # #                       g        ######      >>>>^#        v        # #           -24
+ [test_goto]           #                               #####    >>^          #  v            #         -23
+ [test_goto]           #                                     >>>^   #           v  #         #         -22
+ [test_goto]                                                 ^                  v                      -21
+ [test_goto]    #      #                              >>>>>>>^                  v     #      #         -20
+ [test_goto]       ##                                 ^                         v        ##            -19
+ [test_goto]      ####  #                         >>>>^                         v    #  ####           -18
+ [test_goto]      ####                            ^                             v       ####           -17
+ [test_goto]       ##        ##             >>>>>>^                             v     #  ##            -16
+ [test_goto]                ####0          >^                                   v                      -15
+ [test_goto]                ####           ^                                    v                      -14
+ [test_goto]                 ##        >>>>^                                    v                      -13
+ [test_goto]                           ^                                        v                      -12
+ [test_goto]                    2      ^                                        v                      -11
+ [test_goto]                           ^                              g         v #                    -10
+ [test_goto]                           ^                             ggg        v                      -9
+ [test_goto]                           ^                            ggggg  1    v                      -8
+ [test_goto]                   #       ^                             ggg        v                      -7
+ [test_goto] #                     t   ^      g                      1g         v  #                   -6
+ [test_goto]                           ^     ggg                                v                      -5
+ [test_goto]                   2       ^    ggggg1                              v                      -4
+ [test_goto]                           ^     ggg                                >v##                   -3
+ [test_goto]                           ^      g          #                    ## >>v                   -2
+ [test_goto]                     >>>>>>^                ##                  #      v#                  -1
+ [test_goto]             >>>>>>>>^   ##                  #                       # v                   0
+ [test_goto]                   ##  #####                                        ###v #   #  #          1
+ [test_goto]                  ##########  ##                                  #####v                   2
+ [test_goto]                  #####  #### #                    #            ###### v                   3
+ [test_goto]            ###    ####  ####           # 2            0         ###   v                   4
+ [test_goto]           #####     >>>v######    #      #                      ### # >v#                 5
+ [test_goto]          ######    >^# >@#### ##        ###t  #     #           ##     v                  6
+ [test_goto]          ######    ^# # #####       ## ## #                            v     #            7
+ [test_goto]            ###     ^<# ### ## #  #  ## #           #                   v                  8
+ [test_goto]                     ^<<<#####     ####          #t                    #v                  9
+ [test_goto]                        ^<#   ## ######           #                     v                  10
+ [test_goto]                         ^      #   ##                    #       ###   v                  11
+ [test_goto]                         ^       ##                               ##    v                  12
+ [test_goto]                         ^<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<1     #   v#                 13
+ [test_goto]                                                           ##^<   ##    >v                 14
+ [test_goto]                                                    #     ####^<<<<<<<<<<@                 15
+*/
 +!test_goto_far_position(MIN_I)
     <-
     // Test a simple path in which the euclidean distance can be achieved just avoiding obstacles
@@ -514,6 +563,7 @@ vision(5).
 
 +!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1)
     <-
+    .nano_time(T0);
     -+myposition(X0,Y0);
     !update_line(X0,Y0,MIN_I,"H");
     -+walked_steps(0);
@@ -521,6 +571,8 @@ vision(5).
     !update_line(X1,Y1,MIN_I,"@");
     ?distance(X0,Y0,X1,Y1,R0);
     ?walked_steps(R1);
+    .nano_time(T1);
+    .log(info,test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1)," : ",math.round((T1-T0)/1000)," microseconds");
 .
 
 +!build_map
@@ -531,8 +583,8 @@ vision(5).
     .findall(J,gps_map(I,J,O,_),LJ);
     .min(LJ,MIN_J);
     .max(LJ,MAX_J);
-    //.log(warning,"i:",MIN_I,":",MAX_I);
-    //.log(warning,"j:",MIN_J,":",MAX_J);
+    //.log(info,"i:",MIN_I,":",MAX_I);
+    //.log(info,"j:",MIN_J,":",MAX_J);
     for ( .range(J,MIN_J,MAX_J) ) {
         .concat("                                                                                          ",J,C);
         +line(J,C);
@@ -547,10 +599,10 @@ vision(5).
     <-
     -line(J,L);
     .substring( L, R0, 0, I - MIN_I);
-    //.log(warning,gps_map(I,J,O,_),":",I - MIN_I,":'",R0,"'");
+    //.log(info,gps_map(I,J,O,_),":",I - MIN_I,":'",R0,"'");
     .length(L,LL);
     .substring( L, R1, I - MIN_I + 1, LL);
-    //.log(warning,gps_map(I,J,O,_),":",I + 1 - MIN_I,":",LL,":",R1);
+    //.log(info,gps_map(I,J,O,_),":",I + 1 - MIN_I,":",LL,":",R1);
     if (.member(O,[b0,b1,b2])) {
         // If it is a dispenser just print the block identification
         .substring(O,R,1,2);
@@ -583,6 +635,6 @@ vision(5).
     <-
     for ( .range(J,MIN_J,MAX_J) ) {
         ?line(J,RF);
-        .log(warning,RF);
+        .log(info,RF);
     }
 .
