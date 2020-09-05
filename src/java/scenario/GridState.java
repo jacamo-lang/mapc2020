@@ -15,6 +15,7 @@ public class GridState implements Estado, Heuristica {
     private Location from,to;
     private String direction; //can be one of the following: [n,s,e,w]
     private Table<Integer, Integer, String> map;
+    private int custoAcumulado;
 
     /**
      *
@@ -33,6 +34,14 @@ public class GridState implements Estado, Heuristica {
 
     public int custo() {
         return 1;
+    }
+
+    public void setCustoAcumulado(int custoAcumulado) {
+        this.custoAcumulado = custoAcumulado;
+    }
+
+    public int custoAcumulado() {
+        return this.custoAcumulado;
     }
 
     public boolean ehMeta() {
@@ -64,7 +73,9 @@ public class GridState implements Estado, Heuristica {
                 (!map.get(newl.x, newl.y).equals("b") || from.distance(newl) > 3) && // an agent of team b
                 (!map.get(newl.x, newl.y).equals("obstacle"))
                 )) {
-            s.add(new GridState(newl, from, to, direction, map));
+            GridState newState = new GridState(newl, from, to, direction, map);
+            newState.setCustoAcumulado(this.custoAcumulado() + this.custo());
+            s.add(newState);
         }
     }
 
