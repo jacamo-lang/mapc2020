@@ -169,6 +169,13 @@ adapt_coordinate_map(A,B) :- B=A.
    <-  .wait(step(SNext) & SNext>Step);
        !!sync_areyou(PID).
        
+//Case 1.1: the minimum number of steps has not been achieved but the position has not been updated in the current step
++!sync_areyou(PID) : pending_areyou(PID,S,L)  &
+                     step(Step) & steps_for_sync(SS) & Step-S > SS & //the minimum number of steps has been achieved 
+                     not(update_position_step(Step)) //the position has not been updated in the current step
+   <-  .wait(step(Current)&update_position_step(Supdate)&Supdate>=Current);
+       !!sync_areyou(PID).        
+       
 //Case 2: the minimum number of steps has been achieved and there is a potential neighbour - the neighbour is achieved and must sync  
 +!sync_areyou(PID) : pending_areyou(PID,S,L)  &
                      step(Step) & steps_for_sync(SS) & Step-S > SS & //the minimum number of steps has been achieved
