@@ -9,6 +9,7 @@ directionIncrement(n, 0, -1).
 directionIncrement(s, 0,  1).
 directionIncrement(w,-1,  0).
 directionIncrement(e, 1,  0).
+directions([n,s,w,e]).
 
 /**
  * Return on D euclidean distance between (X1,Y1) and (X2,Y2)

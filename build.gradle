@@ -63,6 +63,19 @@ task run (type: JavaExec, dependsOn: 'classes') {
     classpath sourceSets.main.runtimeClasspath
 }
 
+task playground (type: JavaExec, dependsOn: 'classes') {
+    group      ' MAPC'
+    description 'run teams'
+    doFirst {
+        mkdir 'log'
+    }
+    standardInput = System.in
+    standardOutput = System.out
+    main 'jacamo.infra.JaCaMoLauncher'
+    args = ['src/jcm/playground.jcm','browser']
+    classpath sourceSets.main.runtimeClasspath
+}
+
 task testJason {
     description 'runs JaCaMo unit tests: unit_tests_project.jcm'
     def errorOnTests = false
