@@ -2,7 +2,7 @@
  * Get the next direction \in [n,s,e,w] from origin OX,OY to a target X,Y
  * ?get_direction(0,0,1,2,DIR);
  */
-get_direction(OX,OY,X,Y,DIR) :- search( [p(0,[s(OX,OY)],Actions)], s(X,Y), Solution) & Solution = [DIR|T]
+get_direction(OX,OY,X,Y,DIR) :- search( [p([s(OX,OY)],Actions)], s(X,Y), Solution) & Solution = [DIR|T]
     //& .log(warning,"Next direction: ",DIR)
 .
 
@@ -12,13 +12,13 @@ get_direction(OX,OY,X,Y,DIR) :- search( [p(0,[s(OX,OY)],Actions)], s(X,Y), Solut
  * It is asking a path to go from X,Y = 0,0 to X,Y = 3,3, considering X increases to east (e) and Y increases to north (n)
  * Expected result: Sorted actions: [e,e,e,n,n,n|_1981] Path:[s(0,0),s(1,0),s(2,0),s(3,0),s(3,1),s(3,2)]
  */
-search( [p(0,[GoalState|Path],Actions) | _], GoalState, RevActions) :-
+search( [p([GoalState|Path],Actions) | _], GoalState, RevActions) :-
     true & .reverse(Actions, RevActions) //& .reverse(Path, RevPath) & .log(warning,"Sorted actions: ",RevActions," Path:",RevPath)
 .
-search( [p(0,[State|Path],PrevActions)|Open], GoalState, Solution) :-
+search( [p([State|Path],PrevActions)|Open], GoalState, Solution) :-
     State \== GoalState & //.log(warning,"  ** ",State," ",PrevActions) &
     .findall(
-        p(0,[NewState,State|Path],[Action|PrevActions]),
+        p([NewState,State|Path],[Action|PrevActions]),
         (transition(State,Action,NewState) & not .member(NewState, [State|Path])),
         Sucs) &
     .concat(Open,Sucs,LT) &
