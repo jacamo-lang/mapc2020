@@ -33,8 +33,9 @@ nearest(T,X,Y) :-
 .
 
 /**
- * Return the nearest adjacent position of a thing which is 
- * useful for an approach. The usage is similar to nearest(T,X,Y).
+ * Return the nearest adjacent position of a thing which is
+ * useful for an approach. To use it, give the point XP,YP in which
+ * it is needed the nearest neighbour X,Y
  *
  * It is based on agent's gps_map(_,_,_,_) and myposition(_,_) beliefs
  */
@@ -42,6 +43,7 @@ nearest_neighbour(XP,YP,X,Y) :-
     myposition(X1,Y1) &
     .findall(p(D,X2,Y2),
       directionIncrement(_,I,J) & X2 = XP+I & Y2 = YP + J &
+      not gps_map(X2,Y2,obstacle,_) &
       distance(X1,Y1,X2,Y2,D), FL
     ) & .min(FL,p(_,X,Y))
 .

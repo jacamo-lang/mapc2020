@@ -386,6 +386,7 @@ vision(5).
     !test_goto_nearest_objects(MIN_I);
     !test_goto_far_position(MIN_I);
     !test_goto_obstacle(MIN_I);
+    !test_goto_nearest_blocked_neighbour(MIN_I);
 .
 
 /*
@@ -568,6 +569,17 @@ vision(5).
     !assert_equals(no_route,R2_4);
 
     //!print_map;
+.
+
++!test_goto_nearest_blocked_neighbour(MIN_I)
+    <-
+    ?nearest(b0,X2,Y2);
+    ?nearest_neighbour(X2,Y2,X_2,Y_2);
+    !check_performance(test_goto(0,-15,X_2,Y_2,MIN_I,R0_2,R1_2,_),1,_);
+    !assert_equals(8,R0_2);
+    !assert_equals(12,R1_2);
+
+    !print_map;
 .
 
 +!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1,R2)
