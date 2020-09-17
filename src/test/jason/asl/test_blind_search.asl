@@ -389,7 +389,7 @@ vision(5).
     !assert_equals(5,R0_3);
     !assert_equals(5,R1_3);
 
-    !print_map;
+    //!print_map;
 .
 
 +!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1,R2)

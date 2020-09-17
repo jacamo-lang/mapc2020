@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
 	implementation 'org.jacamo:jacamo:0.10-SNAPSHOT'
-	implementation 'org.jacamo:jacamo-web:0.5-SNAPSHOT'
+    implementation 'org.jacamo:jacamo-web:0.6-SNAPSHOT'
     implementation name: 'search'
     implementation name: 'eismassim-4.2-jar-with-dependencies'
     implementation name: 'server-2020-1.0-jar-with-dependencies'

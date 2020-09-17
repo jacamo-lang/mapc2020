@@ -22,7 +22,7 @@ myposition(0,0).
 +!goto(X,Y,RET):
     myposition(X,Y)
     <-
-    .print("-------> " ,arrived_at(X,Y));
+    .log(warning,"-------> " ,arrived_at(X,Y));
     RET = success;
 .
 
@@ -40,7 +40,7 @@ myposition(0,0).
             !goto(X,Y,_);
             //RET = success;
         } else {
-            .print("Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);
+            .log(warning,"Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);
             RET = error;
         }
     }

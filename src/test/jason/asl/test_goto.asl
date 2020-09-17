@@ -427,7 +427,7 @@ vision(5).
     !assert_equals(9,R0_3);
     !assert_equals(9,R1_3);
 
-    !print_map;
+    //!print_map;
 .
 
 /*
@@ -543,7 +543,7 @@ vision(5).
     !assert_equals(56,R0_3);
     !assert_equals(68,R1_3);
 
-    !print_map;
+    //!print_map;
 .
 
 +!test_goto_obstacle(MIN_I)
@@ -567,7 +567,7 @@ vision(5).
     !check_performance(test_goto(1,11,9,7,MIN_I,R0_4,R1_4,R2_4),1,_);
     !assert_equals(no_route,R2_4);
 
-    !print_map;
+    //!print_map;
 .
 
 +!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1,R2)
