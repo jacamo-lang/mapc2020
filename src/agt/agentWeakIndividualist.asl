@@ -58,7 +58,7 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     task_shortest_path(BB,D) &
     step(S) & DL > (S + D)                // deadline must be greater than step + shortest path
     <-
-    .print("Performing task ",T);
+    .log(warning,"Performing task ",T);
     -exploring;
     !performTask(T);
 .
@@ -72,9 +72,9 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     <-
     !do(accept(T),R0);
     if (R0 == success) {
-      .print("Task ",T," accepted!");
+      .log(warning,"Task ",T," accepted!");
     } else {
-      .print("Could not accept task ",T);
+      .log(warning,"Could not accept task ",T);
     }
 .
 +!acceptTask(T) : // If somehow the taskboard is far away
@@ -95,8 +95,9 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     gps_map(_,_,B,_) &
     nearest(B,XN,YN)
     <-
-    .print("Going to nearest ",B," from (",X,",",Y,") to (",XN,",",YN,")");
-    !goto(XN,YN);
+    .log(warning,"Going to nearest ",B," from (",X,",",Y,") to (",XN,",",YN,")");
+    !goto(XN,YN,RET);
+    .log(warning,goto(XN,YN,RET));
 .
 
 /**
@@ -109,8 +110,9 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     nearest(B,XN,YN) &
     nearest_neighbour(XN,YN,XT,YT)
     <-
-    .print("Going to nearest neighbour of ",B,"(",XN,",",YN,") from (",X,",",Y,") to (",XT,",",YT,")");
-    !goto(XT,YT);
+    .log(warning,"Going to nearest neighbour of ",B,"(",XN,",",YN,") from (",X,",",Y,") to (",XT,",",YT,")");
+    !goto(XT,YT,RET);
+    .log(warning,goto(XT,YT,RET));
 .
 
 +!getBlock(B) :
@@ -121,9 +123,9 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     !do(request(D),R0);
     !do(attach(D),R1);
     if ((R0 == success) & (R1 == success)) {
-      .print("I have attached a block ",B);
+      .log(warning,"I have attached a block ",B);
     } else {
-      .print("Could not request/attach block ",B, "::",R0,"/",R1," my position: (",X,",",Y,"), target (",I,",",J,")");
+      .log(warning,"Could not request/attach block ",B, "::",R0,"/",R1," my position: (",X,",",Y,"), target (",I,",",J,")");
     }
 .
 +!getBlock(B) :  // In case the agent is far away from B
@@ -149,9 +151,9 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     <-
     !do(rotate(cw),R);
     if (R == success) {
-      .print("Rotated ",B," (",I,",",J,") to (",RI,",",RJ,") dir: cw");
+      .log(warning,"Rotated ",B," (",I,",",J,") to (",RI,",",RJ,") dir: cw");
     } else {
-      .print("Could not rotate ",B," (",I,",",J,") to (",RI,",",RJ,") dir: cw");
+      .log(warning,"Could not rotate ",B," (",I,",",J,") to (",RI,",",RJ,") dir: cw");
     }
     !setRightPosition(REQ);
 .
@@ -163,9 +165,9 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     <-
     !do(rotate(cw),R);
     if (R == success) {
-      .print("Rotated ",B," (",I,",",J,") to (",RI,",",RJ,") dir: cw");
+      .log(warning,"Rotated ",B," (",I,",",J,") to (",RI,",",RJ,") dir: cw");
     } else {
-      .print("Could not rotate ",B," (",I,",",J,") to (",RI,",",RJ,") dir: cw");
+      .log(warning,"Could not rotate ",B," (",I,",",J,") to (",RI,",",RJ,") dir: cw");
     }
     !setRightPosition(REQ);
 .
@@ -178,15 +180,15 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     <-
     !do(rotate(ccw),R0);
     if (R0 == success) {
-        .print("Rotated ",B," (",I,",",J,") to (",NI,",",NJ,") dir: ccw");
+        .log(warning,"Rotated ",B," (",I,",",J,") to (",NI,",",NJ,") dir: ccw");
     } else {
-        .print("Could not rotate ",B," (",I,",",J,") to (",NI,",",NJ,") dir: ccw");
+        .log(warning,"Could not rotate ",B," (",I,",",J,") to (",NI,",",NJ,") dir: ccw");
         .wait(step(Step) & Step > S); //wait for the next step to continue
         !do(rotate(cw),R1);
         if (R1 == success) {
-          .print("Rotated ",B," (",I,",",J,") to (",NI,",",NJ,") dir: cw");
+          .log(warning,"Rotated ",B," (",I,",",J,") to (",NI,",",NJ,") dir: cw");
         } else {
-          .print("Could not rotate ",B," (",I,",",J,") to (",NI,",",NJ,") dir: cw");
+          .log(warning,"Could not rotate ",B," (",I,",",J,") to (",NI,",",NJ,") dir: cw");
         }
     }
     !setRightPosition(REQ);
@@ -195,7 +197,7 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
 +!setRightPosition(REQ) : // If other plans fail
     REQ = req(_,_,B)
     <-
-    .print("No plans to rotate ",B," : ",REQ);
+    .log(warning,"No plans to rotate ",B," : ",REQ);
 .
 
 +!submitTask(T) : //thing(0,1,block,b1)
@@ -207,7 +209,7 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     .abolish(accepted(_));
     !do(submit(T),R0);
     if (R0 == success) {
-      .print("I've submitted task ",T);
+      .log(warning,"I've submitted task ",T);
       +exploring;
     } else {
       .fail;
@@ -225,10 +227,10 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     attached(I,J) &
     directionIncrement(D,I,J)
     <-
-    .print("Fail on submitting block on (",I,",",J,") task ",T," : ",REQs," : ",R0);
+    .log(warning,"Fail on submitting block on (",I,",",J,") task ",T," : ",REQs," : ",R0);
     !do(detach(D),R1);
     if (R1 \== success) {
-      .print("Fail on detaching block on ",D);
+      .log(warning,"Fail on detaching block on ",D);
     }
 .
 
@@ -238,10 +240,10 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
 -!P[code(C),code_src(S),code_line(L),error_msg(M)] :
     disabled //true
     <-
-    .print("...");
-    .print("...");
+    .log(warning,"...");
+    .log(warning,"...");
     .log(severe,"Fail on event '",C,"' of '",S,"' at line ",L,", Message: ",M);
-    .print("...");
-    .print("...");
+    .log(warning,"...");
+    .log(warning,"...");
     .stopMAS(0,1);
 .

@@ -20,13 +20,12 @@
 { include("exploration/common_exploration.asl") } //common beliefs, rules and plans for all the exploration strategies
 { include("exploration/randomExplorationStrategy.asl") } //random exploration strategy
 { include("exploration/spiralExplorationStrategy.asl") } //spiral exploration strategy
-{ include("exploration/spiral2ExplorationStrategy.asl") } //spirals exploration strategy
 { include("exploration/stcExplorationStrategy.asl") } //stc exploration strategy - 
 { include("meeting.asl") } //TODO: move to the /exploration folder 
 
 
 exploring. //The agent keep exploring explore when the belief "explore" is true.
-exploration_strategy(spiral2). //Current exploration strategy. Possible strategies: random, spiral, spiral2, stc
+exploration_strategy(spiral). //Current exploration strategy. Possible strategies: random, spiral, stc
 
 
 
@@ -93,8 +92,6 @@ exploration_strategy(spiral2). //Current exploration strategy. Possible strategi
 +!check_direction : exploration_strategy(spiral)
    <- !update_direction_spiral.  
    
-+!check_direction : exploration_strategy(spiral2)
-   <- !update_direction_spiral2.  
 
 +!check_direction : exploration_strategy(stc)
    <- !update_direction_stc.     
