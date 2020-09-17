@@ -578,6 +578,7 @@ vision(5).
     !check_performance(test_goto(0,-15,X_2,Y_2,MIN_I,R0_2,R1_2,_),1,_);
     !assert_equals(8,R0_2);
     !assert_equals(12,R1_2);
+    .log(warning,"TODO: Replace heuristic on nearest_neighbour/4 from euclidean distance to A* solution - see common_walking.asl");
 
     !print_map;
 .

@@ -38,6 +38,11 @@ nearest(T,X,Y) :-
  * it is needed the nearest neighbour X,Y
  *
  * It is based on agent's gps_map(_,_,_,_) and myposition(_,_) beliefs
+ * TODO: The used heuristic is a straight line which may give bad solutions in
+ * many situations. For instance, if the target nearest neighbour is an obstacle
+ * and there are 2 adjacents in which euclidean distance is equal, it is not
+ * guaranteed that the best solution will be chosen. Ideally, the euclidean
+ * distance should be replaced by A* solution.
  */
 nearest_neighbour(XP,YP,X,Y) :-
     myposition(X1,Y1) &
