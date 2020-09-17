@@ -5,6 +5,10 @@
  */
 
 { include("walking/common_walking.asl") }
+{ include("tasks/accept_task.asl") }
+{ include("tasks/get_block.asl") }
+{ include("tasks/drop_block.asl") }
+{ include("tasks/submit_task.asl") }
 { include("walking/goto_A_star.asl") }
 { include("agentBase.asl") }
 //{ include("exploration/goal_center.asl") }
@@ -42,6 +46,12 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     !getBlock(B);
     !setRightPosition(REQ);
     !submitTask(T);
+
+    // In case the submition did not succeed
+    !drop_all_blocks;
+
+    //No matter if it succeed or failed, it is supposed to be ready for another task
+    +exploring;
 .
 
 // I've found a single block task
@@ -62,81 +72,6 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     -exploring;
     !performTask(T);
 .
-
-/**
- * Accept a task (need to be close to a taskboard)
- */
-+!acceptTask(T) :
-    not accepted(_) &
-    thing(_,_,taskboard,_)
-    <-
-    !do(accept(T),R0);
-    if (R0 == success) {
-      .log(warning,"Task ",T," accepted!");
-    } else {
-      .log(warning,"Could not accept task ",T);
-    }
-.
-+!acceptTask(T) : // If somehow the taskboard is far away
-    step(S) &
-    not accepted(_)
-    <-
-    !gotoNearestNeighbour(taskboard);
-    .wait(step(Step) & Step > S); //wait for the next step to continue
-    !acceptTask(T);
-.
-+!acceptTask(T) : accepted(T). // If this task was already accepted, just skip.
-
-/**
- * If I know the position of at least B, find the nearest and go there!
- */
-+!gotoNearest(B) :
-    myposition(X,Y) &
-    gps_map(_,_,B,_) &
-    nearest(B,XN,YN)
-    <-
-    .log(warning,"Going to nearest ",B," from (",X,",",Y,") to (",XN,",",YN,")");
-    !goto(XN,YN,RET);
-    .log(warning,goto(XN,YN,RET));
-.
-
-/**
- * If I know the position of at least B, find the nearest neighbour
- * point and go there!
- */
-+!gotoNearestNeighbour(B) :
-    myposition(X,Y) &
-    gps_map(_,_,B,_) &
-    nearest(B,XN,YN) &
-    nearest_neighbour(XN,YN,XT,YT)
-    <-
-    .log(warning,"Going to nearest neighbour of ",B,"(",XN,",",YN,") from (",X,",",Y,") to (",XT,",",YT,")");
-    !goto(XT,YT,RET);
-    .log(warning,goto(XT,YT,RET));
-.
-
-+!getBlock(B) :
-    myposition(X,Y) &
-    not attached(_,_) &
-    ((thing(I,J,dispenser,B) & directionIncrement(D,I,J)) | (thing(0,0,dispenser,B) & D = e))
-    <-
-    !do(request(D),R0);
-    !do(attach(D),R1);
-    if ((R0 == success) & (R1 == success)) {
-      .log(warning,"I have attached a block ",B);
-    } else {
-      .log(warning,"Could not request/attach block ",B, "::",R0,"/",R1," my position: (",X,",",Y,"), target (",I,",",J,")");
-    }
-.
-+!getBlock(B) :  // In case the agent is far away from B
-    step(S) &
-    not attached(_,_)
-    <-
-    !gotoNearestNeighbour(B);
-    .wait(step(Step) & Step > S); //wait for the next step to continue
-    !getBlock(B);
-.
-+!getBlock(B) : attached(_,_). // If I am already carrying a block B
 
 @setRightPositionNoRotate[atomic]
 +!setRightPosition(REQ) :
@@ -198,40 +133,6 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     REQ = req(_,_,B)
     <-
     .log(warning,"No plans to rotate ",B," : ",REQ);
-.
-
-+!submitTask(T) : //thing(0,1,block,b1)
-    attached(I,J) &
-    directionIncrement(D,I,J) &
-    task(T,DL,Y,REQs) &
-    goal(0,0)         // I am over a goal
-    <-
-    .abolish(accepted(_));
-    !do(submit(T),R0);
-    if (R0 == success) {
-      .log(warning,"I've submitted task ",T);
-      +exploring;
-    } else {
-      .fail;
-    }
-.
-+!submitTask(T) :  // In case the agent is far away from goal area
-    step(S) &
-    not goal(0,0)
-    <-
-    !gotoNearest(goal);
-    .wait(step(Step) & Step > S); //wait for the next step to continue
-    !submitTask(T);
-.
--!submitTask(T) : // Fail on submitting task
-    attached(I,J) &
-    directionIncrement(D,I,J)
-    <-
-    .log(warning,"Fail on submitting block on (",I,",",J,") task ",T," : ",REQs," : ",R0);
-    !do(detach(D),R1);
-    if (R1 \== success) {
-      .log(warning,"Fail on detaching block on ",D);
-    }
 .
 
 /**

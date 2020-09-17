@@ -63,3 +63,41 @@ task_shortest_path(B,D) :-
     (gps_map(_,_,goal,_) & nearest(goal,X4,Y4) & distance(X3,Y3,X4,Y4,D34)) &
     D = D12 + D23 + D34
 .
+
+/**
+ * If I know the position of at least B, find the nearest and go there!
+ */
++!gotoNearest(B) :
+    myposition(X,Y) &
+    gps_map(_,_,B,_) &
+    nearest(B,XN,YN)
+    <-
+    .log(warning,"Going to ",nearest(B,XN,YN)," from ",myposition(X,Y));
+    !goto(XN,YN,RET);
+    .log(warning,goto(XN,YN,RET));
+.
+
+/**
+ * If I know the position of at least B, find the nearest neighbour
+ * point and go there!
+ */
++!gotoNearestNeighbour(B) :
+    myposition(X,Y) &
+    gps_map(_,_,B,_) &
+    nearest(B,XN,YN) &
+    nearest_neighbour(XN,YN,XT,YT) &
+    distance(X,Y,XT,YT,DIST) & DIST > 1
+    <-
+    .log(warning,"Going to neighbour of ",nearest(B,XN,YN)," : ",distance(X,Y,XT,YT,DIST));
+    !goto(XT,YT,RET);
+.
+
++!gotoNearestNeighbour(B) :
+    myposition(X,Y) &
+    gps_map(_,_,B,_) &
+    nearest(B,XN,YN) &
+    nearest_neighbour(XN,YN,XT,YT) &
+    distance(X,Y,XN,YN,DIST) & DIST == 1
+    <-
+    .log(warning,"I am already in a neighbour of ",B," : ",distance(X,Y,XN,YN,DIST));
+.
