@@ -621,6 +621,7 @@ vision(5).
     //.log(info,gps_map(I,J,O,_),":",I - MIN_I,":'",R0,"'");
     .length(L,LL);
     .substring( L, R1, I - MIN_I + 1, LL);
+    .substring( L, OLD, I - MIN_I, I - MIN_I + 1);
     //.log(info,gps_map(I,J,O,_),":",I + 1 - MIN_I,":",LL,":",R1);
     if (.member(O,[b0,b1,b2])) {
         // If it is a dispenser just print the block identification
@@ -631,13 +632,29 @@ vision(5).
         if (O == obstacle) {
             .concat(R0,"#",R1,RF);
         } elif (O == s) {
-            .concat(R0,"v",R1,RF);
+            if (OLD \== "@" & OLD \== "H") {
+                .concat(R0,"v",R1,RF);
+            } else {
+                .concat(R0,"D",R1,RF);
+            }
         } elif (O == n) {
-            .concat(R0,"^",R1,RF);
+            if (OLD \== "@" & OLD \== "H") {
+                .concat(R0,"^",R1,RF);
+            } else {
+                .concat(R0,"U",R1,RF);
+            }
         } elif (O == e) {
-            .concat(R0,">",R1,RF);
+            if (OLD \== "@" & OLD \== "H") {
+                .concat(R0,">",R1,RF);
+            } else {
+                .concat(R0,"R",R1,RF);
+            }
         } elif (O == w) {
-            .concat(R0,"<",R1,RF);
+            if (OLD \== "@" & OLD \== "H") {
+                .concat(R0,"<",R1,RF);
+            } else {
+                .concat(R0,"L",R1,RF);
+            }
         } else {
             // For other objects print the first letter
             .substring(O,R,0,1);
