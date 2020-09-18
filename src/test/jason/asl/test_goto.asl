@@ -387,6 +387,7 @@ vision(5).
     !test_goto_far_position(MIN_I);
     !test_goto_obstacle(MIN_I);
     !test_goto_nearest_blocked_neighbour(MIN_I);
+    !test_goto_nearest_objects_loaded(MIN_I);
 .
 
 /*
@@ -571,6 +572,31 @@ vision(5).
     //!print_map;
 .
 
++!test_goto_nearest_objects_loaded(MIN_I)
+    <-
+    //!build_map;
+
+    -+myposition(53,-25);
+    ?nearest(goal,X_1,Y_1);
+    !check_performance(test_goto(53,-25,X_1,Y_1,MIN_I,R0_1,R1_1,_,true),1,_);
+    !assert_equals(23,R0_1);
+    !assert_equals(23,R1_1);
+
+    ?nearest(b2,X2,Y2);
+    ?nearest_neighbour(X2,Y2,X_2,Y_2);
+    !check_performance(test_goto(X_1,Y_1,X_2,Y_2,MIN_I,R0_2,R1_2,_,true),1,_);
+    !assert_equals(29,R0_2);
+    !assert_equals(29,R1_2);
+
+    ?nearest(b1,X3,Y3);
+    ?nearest_neighbour(X3,Y3,X_3,Y_3);
+    !check_performance(test_goto(X_2,Y_2,X_3,Y_3,MIN_I,R0_3,R1_3,_,true),1,_);
+    !assert_equals(11,R0_3);
+    !assert_equals(11,R1_3);
+
+    !print_map;
+.
+
 +!test_goto_nearest_blocked_neighbour(MIN_I)
     <-
     ?nearest(b0,X2,Y2);
@@ -585,10 +611,14 @@ vision(5).
 
 +!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1,R2)
     <-
+    !test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1,R2,false);
+.
++!test_goto(X0,Y0,X1,Y1,MIN_I,R0,R1,R2,LOADED)
+    <-
     -+myposition(X0,Y0);
     !update_line(X0,Y0,MIN_I,"H");
     -+walked_steps(0);
-    !goto(X1,Y1,R2);
+    !goto(X1,Y1,LOADED,R2);
     !update_line(X1,Y1,MIN_I,"@");
     ?distance(X0,Y0,X1,Y1,R0);
     ?walked_steps(R1);

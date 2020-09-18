@@ -19,25 +19,25 @@ directionIncrement(w,-1,  0).
 directionIncrement(e, 1,  0).
 myposition(0,0).
 
-+!goto(X,Y,RET):
++!goto(X,Y,_,RET):
     myposition(X,Y)
     <-
     .log(warning,"-------> " ,arrived_at(X,Y));
     RET = success;
 .
 
-+!goto(X,Y,RET):
++!goto(X,Y,LOADED,RET):
     myposition(OX,OY) &
     (OX \== X | OY \== Y)
     <-
-    getDirection(OX,OY,X,Y,DIRECTION);
+    getDirection(OX,OY,X,Y,LOADED,DIRECTION);
     if (DIRECTION == error) {
         RET = no_route;
     } else {
         !do(move(DIRECTION),R);
         if (R == success) {
             !mapping(success,_,DIRECTION);
-            !goto(X,Y,_);
+            !goto(X,Y,LOADED,_);
             //RET = success;
         } else {
             .log(warning,"Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);

@@ -80,7 +80,7 @@ task_shortest_path(B,D) :-
     nearest(B,XN,YN)
     <-
     .log(warning,"Going to ",nearest(B,XN,YN)," from ",myposition(X,Y));
-    !goto(XN,YN,RET);
+    !goto(XN,YN,false,RET);
     .log(warning,goto(XN,YN,RET));
 .
 
@@ -96,7 +96,7 @@ task_shortest_path(B,D) :-
     distance(X,Y,XT,YT,DIST) & DIST > 1
     <-
     .log(warning,"Going to neighbour of ",nearest(B,XN,YN)," : ",distance(X,Y,XT,YT,DIST));
-    !goto(XT,YT,RET);
+    !goto(XT,YT,false,RET);
 .
 
 +!gotoNearestNeighbour(B) :

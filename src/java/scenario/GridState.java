@@ -16,6 +16,7 @@ public class GridState implements Estado, Heuristica {
     private String direction; //can be one of the following: [n,s,e,w]
     private Table<Integer, Integer, String> map;
     private int custoAcumulado;
+    private boolean loaded;
 
     /**
      * It is used to allow path costs until a certain tolerance comparing to
@@ -31,11 +32,12 @@ public class GridState implements Estado, Heuristica {
      * @param to
      * @param direction can be one of the following: [n,s,e,w]
      */
-    public GridState(Location l, Location from, Location to, String direction, Table<Integer, Integer, String> map) {
+    public GridState(Location l, Location from, Location to, String direction, boolean loaded, Table<Integer, Integer, String> map) {
         this.pos = l;
         this.from = from;
         this.to = to;
         this.direction = direction;
+        this.loaded = loaded;
         this.map = map;
     }
 
@@ -74,18 +76,35 @@ public class GridState implements Estado, Heuristica {
     }
 
     private void suc(List<Estado> s, Location newl, String direction) {
-        // Avoiding obstacles and agents of both teams
-        if (    (!map.contains(newl.x, newl.y)) || (
+        if (!loaded) { // Avoiding obstacles and agents of both teams just in one square 
+            if (isWalkable(newl))     
+            {
+                GridState newState = new GridState(newl, from, to, direction, loaded, map);
+                newState.setCustoAcumulado(this.custoAcumulado() + this.custo());
+                if (newState.custoAcumulado <= from.distance(to) * SOLVABILITY_THRESHOLD ) {
+                    s.add(newState);
+                }
+            }
+        } else { // Avoiding obstacles and agents of both teams in a central square plus 4 adjacents 
+            if (isWalkable(newl) && isWalkable(new Location(pos.x-1,pos.y)) &&
+                isWalkable(new Location(pos.x+1,pos.y)) && isWalkable(new Location(pos.x,pos.y-1)) &&
+                isWalkable(new Location(pos.x,pos.y+1))) 
+            {
+                GridState newState = new GridState(newl, from, to, direction, loaded, map);
+                newState.setCustoAcumulado(this.custoAcumulado() + this.custo());
+                if (newState.custoAcumulado <= from.distance(to) * SOLVABILITY_THRESHOLD ) {
+                    s.add(newState);
+                }
+            }
+        }
+    }
+    
+    public boolean isWalkable(Location newl) {
+        return (!map.contains(newl.x, newl.y)) || (
                 (!map.get(newl.x, newl.y).equals("a") || from.distance(newl) > 3) && // an agent of team a
                 (!map.get(newl.x, newl.y).equals("b") || from.distance(newl) > 3) && // an agent of team b
                 (!map.get(newl.x, newl.y).equals("obstacle"))
-                )) {
-            GridState newState = new GridState(newl, from, to, direction, map);
-            newState.setCustoAcumulado(this.custoAcumulado() + this.custo());
-            if (newState.custoAcumulado <= from.distance(to) * SOLVABILITY_THRESHOLD ) {
-                s.add(newState);
-            }
-        }
+                );
     }
 
     public boolean equals(Object o) {

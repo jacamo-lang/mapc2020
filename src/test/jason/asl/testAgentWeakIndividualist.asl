@@ -266,7 +266,7 @@ vision(5).
     -+myposition(X0,Y0);
     !update_line(X0,Y0,MIN_I,"H");
     -+walked_steps(0);
-    !goto(X1,Y1,R2);
+    !goto(X1,Y1,false,R2);
     !update_line(X1,Y1,MIN_I,"@");
     ?distance(X0,Y0,X1,Y1,R0);
     ?walked_steps(R1);
