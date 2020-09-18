@@ -2,13 +2,29 @@
  * Test goals for common_walking.asl
  */
 
-{ include("walking/common_walking.asl") }
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
+{ include("walking/common_walking.asl") }
+{ include("test_walking_helpers.asl") }
+
+
+@[test]
++!launch_common_walking_tests:
+    .findall(I,gps_map(I,J,O,_),LI) &
+    .min(LI,MIN_I) // MIN_I informs the more negative I to know how far is from zero
+    <-
+    !build_map(MIN_I);
+
+    !testNearest;
+    !testNearestNeighbour;
+    !test_task_shortest_path;
+
+    !print_map;
+.
 
 /**
  * Test rule that gives euclidean distance between two points
  */
-@testDistance[atomic,test]
+@[test]
 +!testDistance :
     distance(0,0,3,3,D0) &
     distance(-30,-20,4,4,D1) &
@@ -25,50 +41,44 @@
  * Test nearest rule which uses myposition and gps_map(X,Y,thing,ag)
  * to return the nearest thing regarding the reference (myposition)
  */
-@testNearest[atomic,test]
 +!testNearest :
-    true
+    .findall(I,gps_map(I,J,O,_),LI) &
+    .min(LI,MIN_I) // MIN_I informs the more negative I to know how far is from zero
     <-
-    .abolish(gps_map(_,_,_,_));
-    .abolish(myposition(_,_));
-    +gps_map(5,5,goal,0)[source(self)];
-    +gps_map(-5,-5,goal,0)[source(self)];
-    +gps_map(-5,-4,goal,0)[source(self)];
-    +gps_map(4,2,goal,0)[source(self)];
-    +myposition(0,0);
+    -+myposition(0,0);
     ?nearest(goal,X,Y);
-    !assert_equals(4,X);
-    !assert_equals(2,Y);
+    !update_line(19,-4,MIN_I,"G");
+    !assert_equals(19,X);
+    !assert_equals(-4,Y);
 .
 
 /*
  * Nearest neighbour is the nearest adjacent position
  * of a given point (X,Y) in relation to myposition(X,Y)
  */
-@testNearestNeighbour[atomic,test]
 +!testNearestNeighbour :
-    true
+    .findall(I,gps_map(I,J,O,_),LI) &
+    .min(LI,MIN_I) // MIN_I informs the more negative I to know how far is from zero
     <-
-    .abolish(myposition(_,_));
-    +myposition(12,12);
+    !build_map(MIN_I);
+
+    -+myposition(12,12);
     ?nearest_neighbour(10,10,X,Y);
+    !update_line(10,10,MIN_I,"y");
     !assert_equals(10,X);
     !assert_equals(11,Y);
+
+    !print_map;
 .
 
 /**
  * Test shortest path for a task
  */
-@test_task_shortest_path[atomic,test]
-+!test_task_shortest_path :
-    true
++!test_task_shortest_path
     <-
-    .abolish(myposition(_,_));
-    .abolish(gps_map(_,_,_,_));
-    +myposition(0,0);
-    +gps_map(0,5,taskboard,_);
+    -+myposition(0,0);
     +gps_map(0,-10,tstB,_);
-    +gps_map(0,10,goal,_);
+    //!update_line(0,-10,MIN_I,"k");
     ?task_shortest_path(tstB,D);
-    !assert_equals(D,40);
+    !assert_equals(55,D);
 .
