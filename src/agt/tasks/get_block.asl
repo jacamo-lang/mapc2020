@@ -15,7 +15,7 @@
  +!getBlock(B) :
      myposition(X,Y) &
      not attached(_,_) &
-     ((thing(I,J,dispenser,B) & directionIncrement(D,I,J)) | (thing(0,0,dispenser,B) & D = e))
+     (thing(I,J,dispenser,B) & directionIncrement(D,I,J))
      <-
      !do(request(D),R0);
      !do(attach(D),R1);

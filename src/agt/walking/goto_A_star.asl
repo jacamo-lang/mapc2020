@@ -19,25 +19,30 @@ directionIncrement(w,-1,  0).
 directionIncrement(e, 1,  0).
 myposition(0,0).
 
-+!goto(X,Y,_,RET):
++!goto(X,Y,RET):
     myposition(X,Y)
     <-
     .log(warning,"-------> " ,arrived_at(X,Y));
     RET = success;
 .
 
-+!goto(X,Y,LOADED,RET):
++!goto(X,Y,RET):
     myposition(OX,OY) &
     (OX \== X | OY \== Y)
     <-
-    getDirection(OX,OY,X,Y,LOADED,DIRECTION);
+    // Consider the agent is loaded or not
+    if ( attached(_,_) ) {
+        getDirection(OX,OY,X,Y,true,DIRECTION);
+    } else {
+        getDirection(OX,OY,X,Y,false,DIRECTION);
+    }
     if (DIRECTION == error) {
         RET = no_route;
     } else {
         !do(move(DIRECTION),R);
         if (R == success) {
             !mapping(success,_,DIRECTION);
-            !goto(X,Y,LOADED,_);
+            !goto(X,Y,_);
             //RET = success;
         } else {
             .log(warning,"Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);
