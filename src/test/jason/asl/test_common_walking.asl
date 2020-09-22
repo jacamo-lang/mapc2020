@@ -62,11 +62,37 @@
     <-
     !build_map(MIN_I);
 
-    -+myposition(12,12);
-    ?nearest_neighbour(10,10,X,Y);
-    !update_line(10,10,MIN_I,"y");
-    !assert_equals(10,X);
-    !assert_equals(11,Y);
+    // Nearest neighbour is adjacent north, it needs surround obstacles
+    -+myposition(0,-16);
+    !update_line(0,-16,MIN_I,"A");
+    ?nearest_neighbour(7,-15,X1,Y1);
+    !update_line(7,-15,MIN_I,"B");
+    !assert_equals(7,X1);
+    !assert_equals(-16,Y1);
+
+    // Nearest neighbour is adjacent south, it needs surround obstacles
+    -+myposition(0,-13);
+    !update_line(0,-13,MIN_I,"C");
+    ?nearest_neighbour(7,-14,X2,Y2);
+    !update_line(7,-14,MIN_I,"D");
+    !assert_equals(7,X2);
+    !assert_equals(-13,Y2);
+
+    // Nearest neighbour is both adjacent north and south, north is chosen
+    -+myposition(0,-7);
+    !update_line(0,-7,MIN_I,"E");
+    ?nearest_neighbour(7,-7,X3,Y3);
+    !update_line(7,-7,MIN_I,"F");
+    !assert_equals(7,X3);
+    !assert_equals(-8,Y3);
+
+    // Nearest neighbour is a streigh line both west and south adjacents, west is chosen
+    -+myposition(0,-7);
+    !update_line(0,-7,MIN_I,"G");
+    ?nearest_neighbour(5,-12,X4,Y4);
+    !update_line(5,-12,MIN_I,"H");
+    !assert_equals(4,X4);
+    !assert_equals(-12,Y4);
 
     !print_map;
 .
