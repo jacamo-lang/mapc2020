@@ -42,8 +42,7 @@ myposition(0,0).
         !do(move(DIRECTION),R);
         if (R == success) {
             !mapping(success,_,DIRECTION);
-            !goto(X,Y,_);
-            //RET = success;
+            !goto(X,Y,RET);
         } else {
             .log(warning,"Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);
             RET = error;

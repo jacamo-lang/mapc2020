@@ -81,7 +81,10 @@ task_shortest_path(B,D) :-
     <-
     .log(warning,"Going to ",nearest(B,XN,YN)," from ",myposition(X,Y));
     !goto(XN,YN,RET);
-    .log(warning,goto(XN,YN,RET));
+    if (RET \== success & myposition(X1,Y1)) {
+        .log(warning,"No success on: ",goto(XN,YN,RET)," ",myposition(X1,Y1));
+        .stopMAS(5000);
+    }
 .
 
 /**
@@ -97,6 +100,10 @@ task_shortest_path(B,D) :-
     <-
     .log(warning,"Going to neighbour of ",nearest(B,XN,YN)," : ",distance(X,Y,XT,YT,DIST));
     !goto(XT,YT,RET);
+    if (RET \== success & myposition(X1,Y1)) {
+        .log(warning,"No success on: ",goto(XT,YT,RET)," ",myposition(X1,Y1));
+        .stopMAS(5000);
+    }
 .
 
 +!gotoNearestNeighbour(B) :
