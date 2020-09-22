@@ -1,10 +1,14 @@
-mas tests {
+mas playground {
 
-    agent blind_search
+    agent player1 {
+        ag-bb-class: bb.FullTextPersistentBB
+    }
 
-    asl-path: "src/agt/walking"
-              "src/agt"
+    asl-path: "src/agt"
               "src/test/jason/asl"
+              "src/test/jason/inc"
+              "src/test/jacamo/inc"
+              "src/test/jacamo/agt"
 
     platform: jacamo.web.JCMWeb("--main 2181 --restPort 8080") // connects to platform at 2181
 }
