@@ -122,3 +122,12 @@
         +attached(I,J);
     }, self, begin);
 .
+
++!add_test_plans_sincMap
+    <-
+    .add_plan({
+        +!sincMap(_,_) 
+            <-
+            .log(warning,"Map synced.");
+    }, self, begin);
+.
