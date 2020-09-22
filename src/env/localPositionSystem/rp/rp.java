@@ -37,7 +37,7 @@ public class rp extends lps {
      * @param direction can be one of the following: [n,s,e,w]
      */
     @OPERATION
-    void getDirection(int iagx, int iagy, int itox, int itoy, boolean loaded, OpFeedbackParam<Atom> direction) {
+    void getDirection(int iagx, int iagy, int itox, int itoy, OpFeedbackParam<Atom> direction) {
         try {
             Busca search = new AEstrela();
             Location lini = new Location(iagx, iagy);
@@ -50,7 +50,9 @@ public class rp extends lps {
                 }
             }
 
-            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", loaded, map));
+            Table<Integer, Integer, String> attached = HashBasedTable.create();
+            attached.put(0, -1, "b0");
+            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map));
             /*
             //The view of the agent
             int SIZE = 50;
