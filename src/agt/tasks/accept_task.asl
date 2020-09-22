@@ -8,6 +8,7 @@
  /**
   * Accept a task (need to be close to a taskboard)
   */
+@acceptTask_close[atomic] // Should not accept more than one task at same time
  +!acceptTask(T) :
      not accepted(_) &
      thing(TX,TY,taskboard,_) &
@@ -38,3 +39,7 @@
   * If this task was already accepted, just skip.
   */
  +!acceptTask(T) : accepted(T).
+-!acceptTask(T)
+    <- 
+    .log(warning,"Could not accept ",T);
+.

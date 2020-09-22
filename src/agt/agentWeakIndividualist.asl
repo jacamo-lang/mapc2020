@@ -37,6 +37,7 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
 +!performTask(T):
     task(T,DL,Y,REQs) &
     not desire(performTask(_)) &            // I am not committed
+    not accepted(_) &                       // I am not committed
     (.length(REQs,LR) & LR == 1) &          // The task is a single block task
     .nth(0,REQs,REQ) & REQ = req(_,_,B) &   // Get the requirement (must be only one)
     task_shortest_path(BB,D) &
