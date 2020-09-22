@@ -30,12 +30,8 @@ myposition(0,0).
     myposition(OX,OY) &
     (OX \== X | OY \== Y)
     <-
-    // Consider the agent is loaded or not
-    if ( attached(_,_) ) {
-        getDirection(OX,OY,X,Y,true,DIRECTION);
-    } else {
-        getDirection(OX,OY,X,Y,false,DIRECTION);
-    }
+    getDirection(OX,OY,X,Y,DIRECTION);
+
     if (DIRECTION == error) {
         RET = no_route;
     } else {
