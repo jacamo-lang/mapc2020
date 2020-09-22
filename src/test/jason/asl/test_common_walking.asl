@@ -4,7 +4,7 @@
 
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 { include("walking/common_walking.asl") }
-{ include("test_walking_bb.asl") }
+{ include("test_walking.bb") }
 { include("test_walking_helpers.asl") }
 
 
