@@ -4,6 +4,7 @@
 
 { include("agentWeakIndividualist.asl") }
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
+{ include("test_walking_bb.asl") }
 { include("test_walking_helpers.asl") }
 
 @[test]
