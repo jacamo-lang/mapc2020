@@ -354,4 +354,13 @@ gps_map(68,-20,obstacle,"agenta0").
 gps_map(69,-32,obstacle,"agenta0").
 gps_map(76,-30,b1,"agenta0").
 gps_map(76,-28,obstacle,"agenta0").
+task(task2,177,27,[req((-1),1,b0),req((-1),2,b0),req(0,1,b0)]).
+task(task1,199,9,[req(0,1,b2),req(0,2,b1),req(0,3,b2)]).
+task(task4,241,49,[req(0,1,b2),req(1,1,b1),req(2,1,b0)]).
+task(task0,119,54,[req((-2),2,b2),req((-1),2,b2),req(0,1,b2),req(0,2,b1)]).
+task(task6,258,32,[req((-1),1,b0),req(0,1,b0)]).
+task(task5,213,120,[req(0,1,b0),req(0,2,b1),req(1,1,b1),req(1,2,b1)]).
+task(task3,186,18,[req(0,1,b1),req(0,2,b0)]).
+task(task3,186,18,[req(0,1,b1),req(0,2,b0)]).
+task(task99,186,18,[req(0,1,b99),req(0,2,b99)]).
 vision(5).
