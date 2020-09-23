@@ -28,7 +28,8 @@ myposition(0,0).
 
 +!goto(X,Y,RET):
     myposition(OX,OY) &
-    (OX \== X | OY \== Y)
+    (OX \== X | OY \== Y) &
+    step(S)
     <-
     getDirection(OX,OY,X,Y,DIRECTION);
 
@@ -38,6 +39,7 @@ myposition(0,0).
         !do(move(DIRECTION),R);
         if (R == success) {
             !mapping(success,_,DIRECTION);
+            .wait(step(Step) & Step > S); //wait for the next step to continue
             !goto(X,Y,RET);
         } else {
             .log(warning,"Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);

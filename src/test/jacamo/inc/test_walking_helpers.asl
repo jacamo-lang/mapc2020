@@ -97,9 +97,10 @@
         +!do(move(DIR),success) :
             myposition(OX,OY) &
             directionIncrement(DIR,I,J) &
-            walked_steps(S)
+            walked_steps(S) & step(SS)
             <-
             -+walked_steps(S+1);
+            -+step(SS+1);
             !update_line(OX,OY,MIN_I,DIR);
     }, self, begin);
 
@@ -107,18 +108,29 @@
      * Add mock plan for !do(rotate(D)) since it needs external library
      */
     .add_plan({ +!do(rotate(D),success) :
-        attached(I,J) & rotate(D,I,J,II,JJ)
+        attached(I,J) & rotate(D,I,J,II,JJ) &
+        step(SS)
         <-
         .print("mock ",rotate(D));
+        -+step(SS+1);
         -+attached(II,JJ);
     }, self, begin);
 
     /**
      * Add mock plan for !do(A) since it needs external library
      */
-    .add_plan({ +!do(submit(T),success) <- .print("mock ",A) }, self, begin);
-    .add_plan({ +!do(attach(D),success) : directionIncrement(D,I,J) <-
+    .add_plan({ +!do(submit(T),success) :
+            step(SS)
+            <-
+            -+step(SS+1); 
+            .print("mock ",A)
+    }, self, begin);
+    .add_plan({ +!do(attach(D),success) : 
+        directionIncrement(D,I,J) &
+        step(SS) 
+        <-
         .print("mock ",attach(B));
+        -+step(SS+1); 
         +attached(I,J);
     }, self, begin);
 .

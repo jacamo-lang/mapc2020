@@ -39,6 +39,7 @@
   * If this task was already accepted, just skip.
   */
  +!acceptTask(T) : accepted(T).
+ 
 -!acceptTask(T)
     <- 
     .log(warning,"Could not accept ",T);
