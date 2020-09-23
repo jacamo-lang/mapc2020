@@ -1,86 +1,88 @@
 mas env.connection {
 
-agent agenta0: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta0, artGPSa0
-}
+agent agenta0 : agentWeakIndividualist.asl { 
+    //ag-bb-class: bb.FullTextPersistentBB
+    join : enva 
+    focus : enva.arta0 , artGPSa0 
+} 
 agent agenta1: agentWeakIndividualist.asl{
- join: envb
-focus: enva.arta1, artGPSa1
+    //ag-bb-class: bb.FullTextPersistentBB
+    join: envb
+    focus: enva.arta1, artGPSa1
 }
 agent agenta2: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta2, artGPSa2
+    join: enva
+    focus: enva.arta2, artGPSa2
 }
 agent agenta3: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta3, artGPSa3
+    join: enva
+    focus: enva.arta3, artGPSa3
 }
 agent agenta4: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta4, artGPSa4
+    join: enva
+    focus: enva.arta4, artGPSa4
 }
 agent agenta5: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta5, artGPSa5
+    join: enva
+    focus: enva.arta5, artGPSa5
 }
 agent agenta6: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta6, artGPSa6
+    join: enva
+    focus: enva.arta6, artGPSa6
 }
 agent agenta7: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta7, artGPSa7
+    join: enva
+    focus: enva.arta7, artGPSa7
 }
 agent agenta8: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta8, artGPSa8
+    join: enva
+    focus: enva.arta8, artGPSa8
 }
 agent agenta9: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta9, artGPSa9
+    join: enva
+    focus: enva.arta9, artGPSa9
 }
 agent agenta10: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta10, artGPSa10
+    join: enva
+    focus: enva.arta10, artGPSa10
 }
 agent agenta11: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta11, artGPSa11
+    join: enva
+    focus: enva.arta11, artGPSa11
 }
 agent agenta12: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta12, artGPSa12
+    join: enva
+    focus: enva.arta12, artGPSa12
 }
 agent agenta13: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta13, artGPSa13
+    join: enva
+    focus: enva.arta13, artGPSa13
 }
 agent agenta14: agentWeakIndividualist.asl{
- join: enva
-focus: enva.arta14, artGPSa14
+    join: enva
+    focus: enva.arta14, artGPSa14
 }
 
 
 agent agentb0: agentDoNothing.asl{
- join: envb
-focus: envb.artb0, artGPSb
+    join: envb
+    focus: envb.artb0, artGPSb
 }
 agent agentb1: agentDoNothing.asl{
- join: envb
-focus: envb.artb1, artGPSb
+    join: envb
+    focus: envb.artb1, artGPSb
 }
 agent agentb2: agentDoNothing.asl{
- join: envb
-focus: envb.artb2, artGPSb
+    join: envb
+    focus: envb.artb2, artGPSb
 }
 agent agentb3: agentDoNothing.asl{
- join: envb
-focus: envb.artb3, artGPSb
+    join: envb
+    focus: envb.artb3, artGPSb
 }
 agent agentb4: agentDoNothing.asl{
- join: envb
-focus: envb.artb4, artGPSb
+    join: envb
+    focus: envb.artb4, artGPSb
 }
 agent agentb5: agentDoNothing.asl{
  join: envb

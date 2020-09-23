@@ -72,7 +72,7 @@ task playground (type: JavaExec, dependsOn: 'classes') {
     standardInput = System.in
     standardOutput = System.out
     main 'jacamo.infra.JaCaMoLauncher'
-    args = ['src/jcm/playground.jcm','browser']
+    args = ['src/jcm/playground.jcm', '--log-conf', '$jasonJar/templates/console-info-logging.properties']
     classpath sourceSets.main.runtimeClasspath
 }
 

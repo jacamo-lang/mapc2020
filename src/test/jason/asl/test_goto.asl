@@ -3,6 +3,7 @@
  */
 
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
+{ include("test_walking.bb") }
 { include("test_walking_helpers.asl") }
 { include("walking/goto_A_star.asl") }
 
