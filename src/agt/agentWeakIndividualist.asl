@@ -36,7 +36,8 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
 // Go to some random point and go back to the task board
 +!performTask(T):
     task(T,DL,Y,REQs) &
-    not desire(performTask(_)) &            // I am not committed
+    not .intend(performTask(_)) &
+    not accepted(_) &                       // I am not committed
     (.length(REQs,LR) & LR == 1) &          // The task is a single block task
     .nth(0,REQs,REQ) & REQ = req(_,_,B) &   // Get the requirement (must be only one)
     task_shortest_path(BB,D) &
@@ -53,11 +54,15 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     //No matter if it succeed or failed, it is supposed to be ready for another task
     +exploring;
 .
++!performTask(T)
+    <-
+    .log(warning,"Ignoring ",performTask(T),". It is likely busy with another execution of this plan.");
+.
 
 // I've found a single block task
 +task(T,DL,Y,REQs) :
     exploring &
-    not desire(performTask(_)) &
+    not .intend(performTask(_)) &
     not accepted(_) &                     // I am not committed
     gps_map(_,_,taskboard,_) &            // I know a taskboard position
     gps_map(_,_,goal,_) &                 // I know a goal area position
