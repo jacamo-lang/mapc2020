@@ -5,6 +5,7 @@
  */
 
 { include("walking/common_walking.asl") }
+{ include("tasks/common_task.asl") }
 { include("tasks/accept_task.asl") }
 { include("tasks/get_block.asl") }
 { include("tasks/drop_block.asl") }
@@ -34,18 +35,33 @@ rotate(ccw,-1,0,1,0). // 9  o'clock -> 6 o'clock
 rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
 
 // Go to some random point and go back to the task board
-+!performTask(T):
++!performTask(T) : // Discard to expire tasks
+    task(T,DL,Y,REQs) &
+    .length(REQs) == 1 &        // The task is a single block task
+    .nth(0,REQs,REQ) & REQ = req(_,_,B) &   // Get the requirement (must be only one)
+    task_shortest_path(B,D) &
+    step(S) & DL <= (S + D)        // deadline must be greater than step + shortest path
+    <-
+    +unwanted_task(T);
+.
++!performTask(T) :
+    not accepted(_) &                       // I am not committed
     task(T,DL,Y,REQs) &
     not .intend(performTask(_)) &
-    not accepted(_) &                       // I am not committed
-    (.length(REQs,LR) & LR == 1) &          // The task is a single block task
-    .nth(0,REQs,REQ) & REQ = req(_,_,B) &   // Get the requirement (must be only one)
-    task_shortest_path(BB,D) &
-    step(S) & DL > (S + D)                  // deadline must be greater than step + shortest path
+    .length(REQs) == 1
     <-
+    .log(warning,"Performing task ",T);
+    
+    -exploring;
+
     !acceptTask(T);
+
+    .nth(0,REQs,REQ);
+    REQ = req(_,_,B);
     !getBlock(B);
+
     !setRightPosition(REQ);
+
     !submitTask(T);
 
     // In case the submition did not succeed
@@ -56,25 +72,25 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
 .
 +!performTask(T)
     <-
-    .log(warning,"Ignoring ",performTask(T),". It is likely busy with another execution of this plan.");
+    .log(warning,"Could not perform ",T);
 .
 
 // I've found a single block task
 +task(T,DL,Y,REQs) :
-    exploring &
-    not .intend(performTask(_)) &
-    not accepted(_) &                     // I am not committed
-    gps_map(_,_,taskboard,_) &            // I know a taskboard position
-    gps_map(_,_,goal,_) &                 // I know a goal area position
-    (.length(REQs,LR) & LR == 1) &        // The task is a single block task
-    .nth(0,REQs,REQ) & REQ = req(_,_,B) & // Get the requirement (must be only one)
-    BB = B &
-    gps_map(_,_,BB,_) &                    // I know where to find B
-    task_shortest_path(BB,D) &
-    step(S) & DL > (S + D)                // deadline must be greater than step + shortest path
+    not unwanted_task(T) &
+    .length(REQs) \== 1 // The task is NOT a single block task
     <-
-    .log(warning,"Performing task ",T);
-    -exploring;
+    +unwanted_task(T);
+.
+
++task(T,DL,Y,REQs) :
+    exploring &
+    not accepted(_) &                     // I am not committed
+    not unwanted_task(T) &
+    .length(REQs) == 1 &
+    known_requirements(T)
+    <-
+    .log(warning,"I am able to perform ",T);
     !performTask(T);
 .
 
@@ -141,15 +157,15 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
 .
 
 /**
- * Just for debugging, stop the system if an unexpected error occurs
+ * For debugging if an unexpected error occurs
  */
 -!P[code(C),code_src(S),code_line(L),error_msg(M)] :
-    disabled //true
+    true//disabled //
     <-
     .log(warning,"...");
     .log(warning,"...");
     .log(severe,"Fail on event '",C,"' of '",S,"' at line ",L,", Message: ",M);
     .log(warning,"...");
     .log(warning,"...");
-    .stopMAS(0,1);
+    //.stopMAS(0,1);
 .

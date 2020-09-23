@@ -83,7 +83,6 @@ task_shortest_path(B,D) :-
     !goto(XN,YN,RET);
     if (RET \== success & myposition(X1,Y1)) {
         .log(warning,"No success on: ",goto(XN,YN,RET)," ",myposition(X1,Y1));
-        .stopMAS(5000);
     }
 .
 
@@ -95,14 +94,13 @@ task_shortest_path(B,D) :-
     myposition(X,Y) &
     gps_map(_,_,B,_) &
     nearest(B,XN,YN) &
-    nearest_neighbour(XN,YN,XT,YT) &
-    distance(X,Y,XT,YT,DIST) & DIST > 1
+    distance(X,Y,XN,YN,DIST) & DIST > 1 &
+    nearest_neighbour(XN,YN,XT,YT)
     <-
     .log(warning,"Going to neighbour of ",nearest(B,XN,YN)," : ",distance(X,Y,XT,YT,DIST));
     !goto(XT,YT,RET);
     if (RET \== success & myposition(X1,Y1)) {
         .log(warning,"No success on: ",goto(XT,YT,RET)," ",myposition(X1,Y1));
-        .stopMAS(5000);
     }
 .
 
@@ -110,7 +108,6 @@ task_shortest_path(B,D) :-
     myposition(X,Y) &
     gps_map(_,_,B,_) &
     nearest(B,XN,YN) &
-    nearest_neighbour(XN,YN,XT,YT) &
     distance(X,Y,XN,YN,DIST) & DIST == 1
     <-
     .log(warning,"I am already in a neighbour of ",B," : ",distance(X,Y,XN,YN,DIST));

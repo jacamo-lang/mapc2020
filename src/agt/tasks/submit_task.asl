@@ -26,6 +26,7 @@
      !gotoNearest(goal);
      .wait(step(Step) & Step > S); //wait for the next step to continue
      !submitTask(T);
+     .broadcast(tell,unwanted_task(T));
  .
 +!submitTask(T) // Should not occur
     <-
