@@ -71,6 +71,7 @@
     ?nearest(b0,X2,Y2);
     ?nearest_neighbour(X2,Y2,X_2,Y_2);
     !check_performance(test_goto(X_1,Y_1,X_2,Y_2,MIN_I,R0_2,R1_2,_),1,_);
+    .wait(50);
     !assert_equals(10,R0_2);
     !assert_equals(10,R1_2);
 

@@ -2,35 +2,36 @@
  * Get the next direction \in [n,s,e,w] from origin OX,OY to a target X,Y
  * ?get_direction(0,0,1,2,DIR);
  */
-get_direction(OX,OY,X,Y,DIR) :- search( [p([s(OX,OY)],Actions)], s(X,Y), Solution) & Solution = [DIR|T]
+get_direction(OX,OY,X,Y,DIR) :- .set.add_all(Closed,[]) &
+    search( [p([s(OX,OY,_)])], s(X,Y,_), Solution, Closed) &
+    Solution = p(Sol) & .reverse(Sol,RevSol) & RevSol = [H|T] & H = s(OX,OY,DIR)
     //& .log(warning,"Next direction: ",DIR)
 .
 
 /**
  * Blind search algorithm
- * Sample execution: ?search( [p(0,[s(0,0)],Actions)], s(3,3), _);
+ * Sample execution: ?search( [p(0,[s(0,0)],Actions)], s(3,3), RevActions); .log(warning,RevActions)
  * It is asking a path to go from X,Y = 0,0 to X,Y = 3,3, considering X increases to east (e) and Y increases to north (n)
- * Expected result: Sorted actions: [e,e,e,n,n,n|_1981] Path:[s(0,0),s(1,0),s(2,0),s(3,0),s(3,1),s(3,2)]
+ * Expected result:
  */
-search( [p([GoalState|Path],Actions) | _], GoalState, RevActions) :-
-    true & .reverse(Actions, RevActions) //& .reverse(Path, RevPath) & .log(warning,"Sorted actions: ",RevActions," Path:",RevPath)
-.
-search( [p([State|Path],PrevActions)|Open], GoalState, Solution) :-
-    State \== GoalState & //.log(warning,"  ** ",State," ",PrevActions) &
-    .findall(
-        p([NewState,State|Path],[Action|PrevActions]),
-        (transition(State,Action,NewState) & not .member(NewState, [State|Path])),
-        Sucs) &
-    .concat(Open,Sucs,LT) &
-    //.log(warning," open nodes #",.length(LT)) & .log(warning," new open = ",LT) &
-    search(LT, GoalState, Solution)
-.
+search( [p([GoalState|Path]) | _], GoalState, p([GoalState|Path]), Closed).
 
-/**
- * Transition is defined as transition(State,Action,NewState), i.e.,
- * from a given State, doing a certain Action, its achieves NewState
- */
-transition( s(X,Y),e,s(X+1,Y) ) :- not gps_map(X+1,Y,obstacle,_).
-transition( s(X,Y),w,s(X-1,Y) ) :- not gps_map(X-1,Y,obstacle,_).
-transition( s(X,Y),n,s(X,Y-1) ) :- not gps_map(X,Y-1,obstacle,_).
-transition( s(X,Y),s,s(X,Y+1) ) :- not gps_map(X,Y+1,obstacle,_).
+search( [p([State|Path])|Open], GoalState, Solution, Closed) :-
+    State \== GoalState &
+    .findall(
+         p([NewState, State|Path]), // new paths
+           ( suc(State,NewState) &
+         not .member(NewState, [State|Path]) & // turn closed off, otherwise it is too fast
+         not .member(NewState, Closed) &
+         .set.add(Closed, NewState)
+       ),
+       Suc
+    ) &
+    .concat( Open, Suc, NewOpen) &
+    //.print("open nodes #",.length(NewOpen)) & //," new open = ",NewOpen) &
+    search( NewOpen, GoalState, Solution, Closed).
+
+suc(s(X,Y,e),s(X+1,Y,_)) :- not gps_map(X+1,Y,obstacle,_).
+suc(s(X,Y,w),s(X-1,Y,_)) :- not gps_map(X-1,Y,obstacle,_).
+suc(s(X,Y,n),s(X,Y-1,_)) :- not gps_map(X,Y-1,obstacle,_).
+suc(s(X,Y,s),s(X,Y+1,_)) :- not gps_map(X,Y+1,obstacle,_).
