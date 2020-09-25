@@ -6,7 +6,6 @@
 { include("walking/goto_jA_star.asl") }
 { include("test_walking_helpers.asl") }
 { include("test_walking.bb") }
-{ include("non_existing.asl") }
 
 @[test]
 +!test_get_direction :
@@ -29,7 +28,7 @@
     !build_map(MIN_I);
 
     /**
-     * The following two tests regards to a direct comparison with Jason's blind search
+     * The following two tests regard to a direct comparison with Jason's blind search
      * implementation which was taken about 400 ms for the first test and
      * more than 1 s for the second. In case of the blind search no other tests
      * were done since a few steps further could mean not feasible processes due
@@ -50,7 +49,7 @@
 
     !test_goto_surrounding_objects(MIN_I);
     !test_goto_nearest_objects(MIN_I);
-    //!test_goto_far_position(MIN_I);
+    !test_goto_far_position(MIN_I);
     //!test_goto_obstacle(MIN_I);
     !test_goto_nearest_blocked_neighbour(MIN_I);
     !test_goto_nearest_objects_loaded(MIN_I);
@@ -110,6 +109,7 @@
 +!test_goto_far_position(MIN_I)
     <-
     // Test a simple path in which the euclidean distance can be achieved just avoiding obstacles
+    /** These tests are taking too long
     !check_performance(test_goto(0,0,48,-32,MIN_I,R0_1,R1_1,_),1,_);
     !assert_equals(80,R0_1);
     !assert_equals(84,R1_1);
@@ -117,6 +117,7 @@
     !check_performance(test_goto(49,-32,60,15,MIN_I,R0_2,R1_2,_),1,_);
     !assert_equals(58,R0_2);
     !assert_equals(58,R1_2);
+     */
 
     !check_performance(test_goto(59,15,12,6,MIN_I,R0_3,R1_3,_),1,_);
     !assert_equals(56,R0_3);
