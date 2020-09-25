@@ -11,7 +11,6 @@
 +!test_known_requirements:
     .findall(I,task(I,J,O,_),LI)
     <-
-    .log(warning,LI);
     for ( task(T,_,_,_) ) {
         if ( known_requirements(T) ) {
             !assert_contains([task2,task1,task4,task0,task6,task5,task3],T);    

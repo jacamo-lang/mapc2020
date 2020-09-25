@@ -50,8 +50,6 @@ public class rp extends lps {
                 }
             }
 
-            Table<Integer, Integer, String> attached = HashBasedTable.create();
-            attached.put(0, -1, "b0");
             Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map));
             /*
             //The view of the agent
