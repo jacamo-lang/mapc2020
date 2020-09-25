@@ -5,21 +5,15 @@
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 { include("test_walking.bb") }
 { include("test_walking_helpers.asl") }
-{ include("walking/goto_A_star.asl") }
+{ include("walking/goto_iaA_star.asl") }
 
 @[test]
 +!test_goto :
     .findall(I,gps_map(I,J,O,_),LI) &
     .min(LI,MIN_I) // MIN_I informs the more negative I to know how far is from zero
     <-
-    makeArtifact("rp", "localPositionSystem.rp.rp", [70,0], RpId);
-    focus(RpId);
-    for ( gps_map(I,J,O,MapId) ) {
-        setGpsMapForTests(I,J,O,MapId)[artifact_id(RpId)];
-    }
-
     !add_test_plans_do(MIN_I);
-
+    
     !build_map(MIN_I);
 
     !test_goto_surrounding_objects(MIN_I);
