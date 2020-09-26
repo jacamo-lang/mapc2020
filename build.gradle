@@ -88,9 +88,9 @@ task testJason {
                 if (gradle.startParameter.logLevel.toString().equals("DEBUG")) {
                     args = ['$jacamoJar/test/jacamo/unit_tests_project.jcm', '--log-conf', '$jasonJar/templates/console-debug-logging.properties']
                 } else if (gradle.startParameter.logLevel.toString().equals("INFO")) {
-                    args = ['$jacamoJar/test/jacamo/unit_tests_project.jcm', '--log-conf', '$jasonJar/templates/console-info-logging.properties']
+                    args = ['$jacamoJar/test/jacamo/unit_tests.jcm', '--log-conf', '$jasonJar/templates/console-info-logging.properties']
                 } else {
-                    args = ['$jacamoJar/test/jacamo/unit_tests_project.jcm', '--log-conf', '$jasonJar/templates/console-lifecycle-logging.properties']
+                    args = ['$jacamoJar/test/jacamo/unit_tests.jcm', '--log-conf', '$jasonJar/templates/console-lifecycle-logging.properties']
                 }
                 classpath sourceSets.main.runtimeClasspath
 
