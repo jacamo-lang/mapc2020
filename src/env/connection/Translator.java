@@ -12,9 +12,6 @@ import jason.asSyntax.StringTerm;
 import jason.asSyntax.Term;
 import jason.asSyntax.parser.ParseException;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import eis.iilang.Action;
