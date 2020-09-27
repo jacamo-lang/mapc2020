@@ -25,13 +25,13 @@ id(AUX) :- name(NAME) &
 +!hire <- true . 
 
 +!hiredeadline
-	: true
-	<-
-		.wait(1000);
-		if (helperscounter(C) & C>0 ) {
-			.broadcast(untell, hiring);
-		}
-	.
+    : true
+    <-
+        .wait(1000);
+        if (helperscounter(C) & C>0 ) {
+            .broadcast(untell, hiring);
+        }
+    .
 
 @t1[atomic] 
 +?hireme(RESULT)[source(AGH)]
@@ -61,26 +61,26 @@ id(AUX) :- name(NAME) &
 +hiring[source(AGM)]
     : not buildmaster(0) & not hired[source(_)]
     <-  
-    	.wait(name(_))
+        .wait(name(_))
         !candidateapplying(AGM);
     .
 
 @t3[atomic] 
 +!candidateapplying(AGM) 
     : not buildmaster(0) & not hired[source(_)]
-    <-	
+    <-  
         .send(AGM,askOne,hireme(_),hireme(RESULT));        
-		+RESULT[source(AGM)];        
+        +RESULT[source(AGM)];        
     . 
     
 -!candidateapplying(AGM) 
-	:  buildmaster(0) 
-	<- true.
+    :  buildmaster(0) 
+    <- true.
     
 -!candidateapplying(AGM) 
-	: not hired & not nothired[source(AGM)]
-	<-
-		!candidateapplying(AGM);
-	.
+    : not hired & not nothired[source(AGM)]
+    <-
+        !candidateapplying(AGM);
+    .
 -!candidateapplying(AGM) 
-	<- true.
+    <- true.
