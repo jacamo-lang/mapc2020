@@ -16,7 +16,7 @@
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
 { include("taskmanager.asl") }
-{ include("action.asl") }
+{ include("simulation/action.asl") }
 { include("exploration/common_exploration.asl") } //common beliefs, rules and plans for all the exploration strategies
 { include("exploration/randomExplorationStrategy.asl") } //random exploration strategy
 { include("exploration/spiralExplorationStrategy.asl") } //spiral exploration strategy

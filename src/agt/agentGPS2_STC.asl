@@ -1,6 +1,6 @@
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
-{ include("action.asl") }
+{ include("simulation/action.asl") }
 { include("taskmanager.asl") }
 { include("src/agt/STC_Strategy.asl")} //exploration strategy
 { include("exploration/meeting.asl")}

@@ -1,7 +1,7 @@
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
 { include("goto.asl") }
-{ include("action.asl") }
+{ include("simulation/action.asl") }
 
 !start.
 
