@@ -91,4 +91,11 @@ public class rp extends lps {
         defineObsProperty("gps_map",x,y,new Atom(type),mapId);
     }
 
+    @OPERATION
+    void eraseGpsMapProps() {
+        ObsProperty prop = this.getObsPropertyByTemplate("gps_map", null, null, null, null);
+        while (prop != null) {
+            this.removeObsPropertyByTemplate("gps_map", null, null, null, null);
+        }
+    }
 }
