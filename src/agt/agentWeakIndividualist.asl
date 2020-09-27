@@ -10,7 +10,7 @@
 { include("tasks/get_block.asl") }
 { include("tasks/drop_block.asl") }
 { include("tasks/submit_task.asl") }
-{ include("walking/goto_A_star.asl") }
+{ include("walking/goto_iaA_star.asl") }
 { include("agentBase.asl") }
 { include("watch_dog.asl") }
 { include("massim.asl") }

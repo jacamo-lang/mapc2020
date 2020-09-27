@@ -87,7 +87,10 @@ public class GridState implements Estado, Heuristica {
         return (!map.contains(newl.x, newl.y)) || (
                 (!map.get(newl.x, newl.y).equals("a") || from.distance(newl) > 3) && // an agent of team a
                 (!map.get(newl.x, newl.y).equals("b") || from.distance(newl) > 3) && // an agent of team b
-                (!map.get(newl.x, newl.y).equals("obstacle")) );
+                (!map.get(newl.x, newl.y).equals("obstacle")) &&
+                (!map.get(newl.x, newl.y).startsWith("block(")) && // block(B) comes from a rule in the iaA_star
+                (!map.get(newl.x, newl.y).startsWith("entity(")) // entity(E) comes from a rule in the iaA_star
+                );
     }
 
     public boolean equals(Object o) {
