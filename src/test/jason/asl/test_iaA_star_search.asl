@@ -244,3 +244,23 @@
 
     //!print_map;
 .
+
+/**
+ * Test if it is creating gps_map(X,Y,block(B),_) from
+ * thing(I,J,block,B) when its is not an attached block
+ */
+@test_gps_map_block[test]
++!test_gps_map_block
+    <-
+    !assert_false(gps_map(_,_,block(_),_));
+
+    -+thing(1,1,block,b1);
+    -+myposition(10,10);
+
+    !assert_true(gps_map(11,11,block(b1),_));
+
+    -+attached(-1,0);
+    -+thing(-1,0,block,b0);
+
+    !assert_false(gps_map(9,10,block(b0),_));
+.
