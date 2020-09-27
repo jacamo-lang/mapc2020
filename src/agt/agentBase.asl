@@ -21,7 +21,7 @@
 { include("exploration/randomExplorationStrategy.asl") } //random exploration strategy
 { include("exploration/spiralExplorationStrategy.asl") } //spiral exploration strategy
 { include("exploration/stcExplorationStrategy.asl") } //stc exploration strategy - 
-{ include("meeting.asl") } //TODO: move to the /exploration folder 
+{ include("exploration/meeting.asl") }
 
 exploring. //The agent keep exploring explore when the belief "explore" is true.
 exploration_strategy(spiral). //Current exploration strategy. Possible strategies: random, spiral, stc

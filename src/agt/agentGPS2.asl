@@ -2,7 +2,7 @@
 { include("$jacamoJar/templates/common-moise.asl") }
 { include("action.asl") }
 { include("taskmanager.asl") }
-{ include("src/agt/meeting.asl")} //exploration strategy
+{ include("exploration/meeting.asl")}
 
 
 

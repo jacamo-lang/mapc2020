@@ -7,6 +7,8 @@
 { include("test_walking.bb") }
 { include("test_walking_helpers.asl") }
 
+//TODO: Fix tests for new structure using simulation/massim.asl
+
 @[test]
 +!launch_weak_individualist_tests :
     .findall(I,gps_map(I,J,O,_),LI) &

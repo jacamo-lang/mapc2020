@@ -3,7 +3,7 @@
 { include("action.asl") }
 { include("taskmanager.asl") }
 { include("src/agt/STC_Strategy.asl")} //exploration strategy
-{ include("src/agt/meeting.asl")} //exploration strategy
+{ include("exploration/meeting.asl")}
 
 
 

@@ -2,7 +2,7 @@
  * Test goals for meeting.asl
  */
 
-{ include("meeting.asl") }
+{ include("exploration/meeting.asl") }
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 
 proof(-5,0).

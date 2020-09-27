@@ -4,7 +4,7 @@
 
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 { include("exploration/common_exploration.asl") }
-{ include("meeting.asl") }
+{ include("exploration/meeting.asl") }
 
 /**
  * Initial belief
