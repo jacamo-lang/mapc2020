@@ -1,6 +1,6 @@
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
-{ include("massim.asl") }
+{ include("simulation/massim.asl") }
 
 
 @step[atomic]   

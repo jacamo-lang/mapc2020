@@ -2,7 +2,7 @@
  * Test goals for agent Weak Individualist
  */
 
-{ include("agentWeakIndividualist.asl") }
+{ include("strategies/weak_individualist.asl") }
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 { include("test_walking.bb") }
 { include("test_walking_helpers.asl") }

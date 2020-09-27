@@ -1,21 +1,21 @@
 mas env.connection {
 
-agent agenta0 : agentWeakIndividualist.asl { 
+agent agenta0 : strategies/weak_individualist.asl { 
     //ag-bb-class: bb.FullTextPersistentBB
     join : enva 
 } 
 
-agent agenta : agentWeakIndividualist.asl { 
+agent agenta : strategies/weak_individualist.asl { 
     //ag-bb-class: bb.FullTextPersistentBB
     join : enva 
     instances: 49
 } 
 
-agent agentb0: agent_do_nothing.asl{
+agent agentb0: strategies/agent_do_nothing.asl{
     join: envb
 }
 
-agent agentb: agent_do_nothing.asl{
+agent agentb: strategies/agent_do_nothing.asl{
     join: envb
     instances: 49
 }
