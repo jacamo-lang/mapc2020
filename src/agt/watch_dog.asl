@@ -21,15 +21,13 @@ max_no_action_in_a_row(1).
     max_no_action_in_a_row(M) &
     C >= M
     <-
-    .log(severe,"****** Due to consecutives no_action: dropping all desires, intentions and events!");
+    .log(severe,"****** Restarting due to no_action: dropping all desires, intentions and events!");
     .drop_all_events;
     .drop_all_desires;
     .drop_all_intentions;
-    .log(warning,"****** Re-starting, setting for exploring...!");
     -+exploring;
     !!start;
     -+no_action_step_count(S,0);
-    .log(warning,"****** End of watch-dog intenvention.");
 .
 /**
  * This is NOT the first no_action in a row -> INCREMENT
