@@ -14,16 +14,6 @@ directionIncrement(e, 1,  0).
 
 newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
 
-/**
- * Map as gps_map(_,_,block(B),_) blocks that are not the ones that
- * this agent has attached, i.e., only maps blocks that are obstacles
- */
-gps_map(XB,YB,block(B),_) :- 
-    thing(I,J,block,B) &
-    not attached(I,J) &
-    myposition(X,Y) &
-    XB = X+I & YB = Y+J.
-
 //testing_exploration. //<< if true, the exploration runs in test mode to count the found objects
 
 
