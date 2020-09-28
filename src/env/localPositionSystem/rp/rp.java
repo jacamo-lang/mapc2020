@@ -93,9 +93,8 @@ public class rp extends lps {
 
     @OPERATION
     void eraseGpsMapProps() {
-        ObsProperty prop = this.getObsPropertyByTemplate("gps_map", null, null, null, null);
-        while (prop != null) {
-            this.removeObsPropertyByTemplate("gps_map", null, null, null, null);
+        while (getObsProperty("gps_map") != null) {
+            removeObsProperty("gps_map");
         }
     }
 }
