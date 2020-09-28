@@ -51,8 +51,9 @@ gps_map(XB,YB,entity(E),"iaA_star") :-
     (OX \== X | OY \== Y) &
     step(S)
     <-
-    .findall(gps_map(XG,YG,OG,IDG),gps_map(XG,YG,OG,IDG),L);
-    .get_direction(OX,OY,X,Y,L,DIRECTION);
+    .findall(gps_map(XG,YG,OG,IDG),gps_map(XG,YG,OG,IDG),LG);
+    .findall(attached(I,J),attached(I,J),LA);
+    .get_direction(OX,OY,X,Y,LG,LA,DIRECTION);
 
     if (DIRECTION == error) {
         RET = no_route;

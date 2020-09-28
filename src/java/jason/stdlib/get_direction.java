@@ -38,12 +38,12 @@ public class get_direction extends DefaultInternalAction {
 
     @Override
     public int getMinArgs() {
-        return 6;
+        return 7;
     }
 
     @Override
     public int getMaxArgs() {
-        return 6;
+        return 7;
     }
 
     @Override
@@ -51,10 +51,10 @@ public class get_direction extends DefaultInternalAction {
         super.checkArguments(args); // check number of arguments
         if (!args[0].isNumeric() || !args[1].isNumeric() || !args[2].isNumeric() || !args[3].isNumeric())
             throw JasonException.createWrongArgument(this, "First 4 arguments must be numbers");
-        if (!args[4].isList())
-            throw JasonException.createWrongArgument(this, "Fifth argument must be a list");
-        if (!args[5].isVar())
-            throw JasonException.createWrongArgument(this, "Sixth argument must be a var");
+        if (!args[4].isList() || !args[5].isList())
+            throw JasonException.createWrongArgument(this, "Fifth and sixth arguments must be lists");
+        if (!args[6].isVar())
+            throw JasonException.createWrongArgument(this, "Seventh argument must be a var");
     }
     
     @Override
@@ -72,19 +72,27 @@ public class get_direction extends DefaultInternalAction {
 
             Table<Integer, Integer, String> map = HashBasedTable.create();
 
-            final Iterator<Term> i = ((ListTerm)args[4]).iterator();
+            final Iterator<Term> i = ((ListTerm) args[4]).iterator();
             while (i.hasNext()) {
-                Literal l = (Literal)i.next();
+                Literal l = (Literal) i.next();
                 if (l.getFunctor().equals("gps_map") && l.getArity() == 4) {
-                        map.put(
-                                (int)((NumberTerm)l.getTerm(0)).solve(), 
-                                (int)((NumberTerm)l.getTerm(1)).solve(), 
-                                ((Literal)l.getTerm(2)).toString()
-                        );
-                } 
+                    map.put((int) ((NumberTerm) l.getTerm(0)).solve(), (int) ((NumberTerm) l.getTerm(1)).solve(),
+                            ((Literal) l.getTerm(2)).toString());
+                }
             }
 
-            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map));
+            Table<Integer, Integer, String> attached = HashBasedTable.create();
+
+            final Iterator<Term> i1 = ((ListTerm) args[5]).iterator();
+            while (i1.hasNext()) {
+                Literal l = (Literal) i1.next();
+                if (l.getFunctor().equals("attached") && l.getArity() == 2) {
+                    attached.put((int) ((NumberTerm) l.getTerm(0)).solve(), (int) ((NumberTerm) l.getTerm(1)).solve(),
+                            "attached");
+                }
+            }
+
+            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map, attached));
             /*
             //The view of the agent
             int SIZE = 50;
@@ -109,7 +117,7 @@ public class get_direction extends DefaultInternalAction {
                     root = root.getPai();
                 }
                 if (prev2 != null) {
-                    return un.unifies(args[5], new Atom(((GridState)prev2).getDirection()));
+                    return un.unifies(args[6], new Atom(((GridState)prev2).getDirection()));
                 }
             } 
         } catch (Throwable e) {
@@ -117,6 +125,6 @@ public class get_direction extends DefaultInternalAction {
         }
         
         System.err.println("No route from "+iagx+","+iagy+" to "+itox+","+itoy+"!");
-        return un.unifies(args[5], new Atom("error"));
+        return un.unifies(args[6], new Atom("error"));
     }
 }

@@ -50,7 +50,7 @@ public class rp extends lps {
                 }
             }
 
-            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map));
+            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map, null));
             /*
             //The view of the agent
             int SIZE = 50;
