@@ -28,7 +28,8 @@ distance(X1,Y1,X2,Y2,D) :-
  */
 nearest(T,X,Y) :-
     myposition(X1,Y1) &
-    .findall(p(D,X2,Y2),gps_map(X2,Y2,T,_) & distance(X1,Y1,X2,Y2,D),FL) &
+    origin_str(MyMAP) &
+    .findall(p(D,X2,Y2), gps_map(X2,Y2,T,MyMAP) & distance(X1,Y1,X2,Y2,D), FL) &
     .min(FL,p(_,X,Y))
 .
 
@@ -46,9 +47,10 @@ nearest(T,X,Y) :-
  */
 nearest_neighbour(XP,YP,X,Y) :-
     myposition(X1,Y1) &
+    origin_str(MyMAP) &
     .findall(p(D,X2,Y2),
       directionIncrement(_,I,J) & X2 = XP+I & Y2 = YP + J &
-      not gps_map(X2,Y2,obstacle,_) &
+      not gps_map(X2,Y2,obstacle,MyMAP) &
       distance(X1,Y1,X2,Y2,D), FL
     ) & .min(FL,p(_,X,Y))
 .
@@ -65,9 +67,10 @@ nearest_neighbour(XP,YP,X,Y) :-
  * perform a task to submit a block b1
  */
 task_shortest_path(B,D) :-
-    (myposition(X1,Y1) & gps_map(_,_,taskboard,_) & nearest(taskboard,X2,Y2) & distance(X1,Y1,X2,Y2,D12)) &
-    (gps_map(_,_,B,_) & nearest(B,X3,Y3) & distance(X2,Y2,X3,Y3,D23)) &
-    (gps_map(_,_,goal,_) & nearest(goal,X4,Y4) & distance(X3,Y3,X4,Y4,D34)) &
+    origin_str(MyMAP) &
+    (myposition(X1,Y1) & gps_map(_,_,taskboard,MyMAP) & nearest(taskboard,X2,Y2) & distance(X1,Y1,X2,Y2,D12)) &
+    (gps_map(_,_,B,MyMAP) & nearest(B,X3,Y3) & distance(X2,Y2,X3,Y3,D23)) &
+    (gps_map(_,_,goal,MyMAP) & nearest(goal,X4,Y4) & distance(X3,Y3,X4,Y4,D34)) &
     D = D12 + D23 + D34
 .
 
@@ -75,8 +78,9 @@ task_shortest_path(B,D) :-
  * If I know the position of at least B, find the nearest and go there!
  */
 +!gotoNearest(B) :
+    origin_str(MyMAP) &
     myposition(X,Y) &
-    gps_map(_,_,B,_) &
+    gps_map(_,_,B,MyMAP) &
     nearest(B,XN,YN)
     <-
     .log(warning,"Going to ",nearest(B,XN,YN)," from ",myposition(X,Y));
@@ -91,8 +95,9 @@ task_shortest_path(B,D) :-
  * point and go there!
  */
 +!gotoNearestNeighbour(B) :
+    origin_str(MyMAP) &
     myposition(X,Y) &
-    gps_map(_,_,B,_) &
+    gps_map(_,_,B,MyMAP) &
     nearest(B,XN,YN) &
     distance(X,Y,XN,YN,DIST) & DIST > 1 &
     nearest_neighbour(XN,YN,XT,YT)
@@ -105,8 +110,9 @@ task_shortest_path(B,D) :-
 .
 
 +!gotoNearestNeighbour(B) :
+    origin_str(MyMAP) &
     myposition(X,Y) &
-    gps_map(_,_,B,_) &
+    gps_map(_,_,B,MyMAP) &
     nearest(B,XN,YN) &
     distance(X,Y,XN,YN,DIST) & DIST == 1
     <-

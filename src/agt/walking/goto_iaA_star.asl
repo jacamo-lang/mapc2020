@@ -20,19 +20,21 @@ directionIncrement(e, 1,  0).
 myposition(0,0).
 
 /**
- * Map as gps_map(_,_,block(B),_) blocks that are not the ones that
+ * Map as gps_map(X,Y,block(B),MyMAP) blocks that are not the ones that
  * this agent has attached, i.e., only maps blocks that are obstacles
  */
-gps_map(XB,YB,block(B),"iaA_star") :-
+gps_map(XB,YB,block(B),MyMAP) :-
+    origin_str(MyMAP) &
     thing(I,J,block,B) &
     not attached(I,J) &
     myposition(X,Y) &
     XB = X+I & YB = Y+J
 .
 /**
- * Map as gps_map(_,_,entity(E),_) aegnts that are not this agent
+ * Map as gps_map(X,Y,entity(E),MyMAP) other agents
  */
-gps_map(XB,YB,entity(E),"iaA_star") :-
+gps_map(XB,YB,entity(E),MyMAP) :-
+    origin_str(MyMAP) &
     thing(I,J,entity,E) &
     (I \== 0 | J \== 0) &
     myposition(X,Y) &
@@ -49,9 +51,10 @@ gps_map(XB,YB,entity(E),"iaA_star") :-
 +!goto(X,Y,RET):
     myposition(OX,OY) &
     (OX \== X | OY \== Y) &
-    step(S)
+    step(S) &
+    origin_str(MyMAP)
     <-
-    .findall(gps_map(XG,YG,OG,IDG),gps_map(XG,YG,OG,IDG),LG);
+    .findall(gps_map(XG,YG,OG,MyMAP),gps_map(XG,YG,OG,MyMAP),LG);
     .findall(attached(I,J),attached(I,J),LA);
     .get_direction(OX,OY,X,Y,LG,LA,DIRECTION);
 
