@@ -14,6 +14,7 @@ import localPositionSystem.lps;
 import scenario.GridState;
 
 import cartago.*;
+import cartago.manual.syntax.NumberTerm;
 
 /**
  * RoutePlanner (rp) class uses search algorithm to find the best path from
@@ -87,6 +88,18 @@ public class rp extends lps {
     }
 
     @OPERATION
+    void setWantedTask(String agent, String task, int step, int cost) {
+        ObsProperty prop = getObsPropertyByTemplate("wanted_task",null,new Atom(task),null);
+        if (prop == null) {
+            defineObsProperty("wanted_task",new Atom(agent),new Atom(task),step,cost);
+        } else {
+            if ((Integer)prop.getValue(2) + (Integer)prop.getValue(3) > step + cost) { // This offer is better the other registered one
+                prop.updateValues(new Atom(agent),new Atom(task),step,cost);
+            }
+        }
+    }
+
+    @OPERATION
     void setGpsMapForTests(int x, int y, String type, String mapId) {
         defineObsProperty("gps_map",x,y,new Atom(type),mapId);
     }
@@ -95,6 +108,9 @@ public class rp extends lps {
     void eraseGpsMapProps() {
         while (getObsProperty("gps_map") != null) {
             removeObsProperty("gps_map");
+        }
+        while (getObsProperty("wanted_task") != null) {
+            removeObsProperty("wanted_task");
         }
     }
 }
