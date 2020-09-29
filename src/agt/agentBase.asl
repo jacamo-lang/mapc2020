@@ -47,7 +47,11 @@ exploration_strategy(spiral). //Current exploration strategy. Possible strategie
 
 
 /****************************************  Recharging ****************************************/
-
+//if the agent is exploring, then resume exploration after having recharged
++disabled(true) : exploring
+    <- .print("recharging...");
+        !recharge[critical_section(action), priority(2)];
+        !explore[critical_section(action), priority(1)];.
 
 +disabled(true)
     <- .print("recharging...");

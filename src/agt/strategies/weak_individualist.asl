@@ -49,7 +49,7 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
         .log(warning,"I want to perform the task ",T);
         
         setWantedTask(ME,T,S,D);
-        action(skip);
+        !do(skip,R);
         .wait(step(Step) & Step > S); //wait for the next step to continue
         
         if ( wanted_task(ME,T,_,_) ) { // there is no better agent to perform this task
@@ -74,8 +74,10 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
         }
     }
     
-    +exploring; // No matter if it succeed or failed, it is supposed to be ready for another task
 
+    //No matter if it succeed or failed, it is supposed to be ready for another task
+    +exploring;
+    !explore[critical_section(action), priority(1)];
 .
 +!performTask(T)
     <-
