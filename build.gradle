@@ -26,8 +26,8 @@ dependencies {
 	implementation 'org.jacamo:jacamo:0.10-SNAPSHOT'
     implementation 'org.jacamo:jacamo-web:0.6-SNAPSHOT'
     implementation name: 'search'
-    implementation name: 'eismassim-4.2-jar-with-dependencies'
-    implementation name: 'server-2020-1.0-jar-with-dependencies'
+    implementation name: 'eismassim-4.3-jar-with-dependencies'
+    implementation name: 'server-2020-2.0-jar-with-dependencies'
 	implementation 'com.google.guava:guava:29.0-jre'
 
 	testCompile group: 'junit', name: 'junit', version: '4.12'
@@ -58,6 +58,7 @@ task run (type: JavaExec, dependsOn: 'classes') {
         mkdir 'log'
     }
     standardInput = System.in
+    jvmArgs '-Xss15m'
     main 'runMAPC2020.RunTeam'
     args = ['src/jcm/weak_individualist.jcm','browser']
     classpath sourceSets.main.runtimeClasspath
