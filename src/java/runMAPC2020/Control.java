@@ -1,9 +1,6 @@
 package runMAPC2020;
 
-import java.awt.AWTException;
 import java.awt.Desktop;
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
 import java.net.URI;
 
 import cartago.CartagoService;
@@ -12,7 +9,7 @@ import jason.JasonException;
 import massim.Server;
 
 public class Control {
-    public void start(String Simulation, Boolean browser, Boolean waitEnter) {
+    public void start(String Simulation, Boolean browser) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -33,13 +30,6 @@ public class Control {
                         Thread.sleep(50);
                     }
 
-                    if (!waitEnter) {
-                        // Simulate ENTER key press
-                        Robot robot = new Robot();
-                        robot.keyPress(KeyEvent.VK_ENTER);
-                        robot.keyRelease(KeyEvent.VK_ENTER);
-                    }
-
                     // Start the server
                     Server.main(new String[] { "-conf", "serverconf/SampleConfig.json", "--monitor" });
                     
@@ -48,7 +38,7 @@ public class Control {
                         Desktop.getDesktop().browse(new URI("http://127.0.0.1:8000"));
                     }
 
-                } catch (UnsupportedOperationException | AWTException e) {
+                } catch (UnsupportedOperationException e) {
                     System.err.println("No browser supported " + e.getMessage());
                 } catch (Exception e) {
                     e.printStackTrace();
