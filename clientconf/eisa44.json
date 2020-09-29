@@ -1,0 +1,13 @@
+{
+"scenario":"test40x40",
+"host":"localhost",
+"port":12300,
+"scheduling":false,
+"timeout":4000,
+"times":false,
+"notifications":false,
+"queued":false,
+"entities": [
+{"name":"connectionA44", "username": "agentA44", "password": "1", "print-iilang":false, "print-json":false}
+  ]
+}

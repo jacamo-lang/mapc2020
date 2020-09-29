@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.collect.Table;
+import com.google.common.collect.Table.Cell;
 
 import busca.Estado;
 import busca.Heuristica;
@@ -15,6 +16,7 @@ public class GridState implements Estado, Heuristica {
     private Location from,to;
     private String direction; //can be one of the following: [n,s,e,w]
     private Table<Integer, Integer, String> map;
+    private Table<Integer, Integer, String> attached;
     private int custoAcumulado;
 
     /**
@@ -31,12 +33,13 @@ public class GridState implements Estado, Heuristica {
      * @param to
      * @param direction can be one of the following: [n,s,e,w]
      */
-    public GridState(Location l, Location from, Location to, String direction, Table<Integer, Integer, String> map) {
+    public GridState(Location l, Location from, Location to, String direction, Table<Integer, Integer, String> map, Table<Integer, Integer, String> attached) {
         this.pos = l;
         this.from = from;
         this.to = to;
         this.direction = direction;
         this.map = map;
+        this.attached = attached;
     }
 
     public int custo() {
@@ -75,19 +78,41 @@ public class GridState implements Estado, Heuristica {
 
     private void suc(List<Estado> s, Location newl, String direction) {
         if (isWalkable(newl)) {
-            GridState newState = new GridState(newl, from, to, direction, map);
+            GridState newState = new GridState(newl, from, to, direction, map, attached);
             newState.setCustoAcumulado(this.custoAcumulado() + this.custo());
             if (newState.custoAcumulado <= from.distance(to) * SOLVABILITY_THRESHOLD) {
-                s.add(newState);
+                
+                /**
+                 * Checks if the position(s) that would be occupied by an 
+                 * attached blocks is(are) also walkable 
+                 */
+                boolean constrainedByAttachedBlock = false;
+                if (attached != null ) {
+                    for (Cell<Integer,Integer,String> c : attached.cellSet()) {
+                        if (!isWalkable(new Location(newl.x + c.getRowKey(), newl.y + c.getColumnKey()))) {
+                            constrainedByAttachedBlock = true;
+                        }
+                    }
+                }
+                
+                /**
+                 * Create a successor if the next position for the agent and positions 
+                 * of attached blocks (if it is carrying blocks) are walkable 
+                 */
+                if (!constrainedByAttachedBlock) {
+                    s.add(newState);
+                }
             }
         }
     }
     
     public boolean isWalkable(Location newl) {
-        return (!map.contains(newl.x, newl.y)) || (
-                (!map.get(newl.x, newl.y).equals("a") || from.distance(newl) > 3) && // an agent of team a
-                (!map.get(newl.x, newl.y).equals("b") || from.distance(newl) > 3) && // an agent of team b
-                (!map.get(newl.x, newl.y).equals("obstacle")) );
+        return (!map.contains(newl.x, newl.y)) || // Any not mapped position is walkable (unknown and free terrains) 
+               ( // Check if the new position is mapped as a "not free" or obstacle terrains 
+                       (!map.get(newl.x, newl.y).equals("obstacle")) && // obstacle are objects mapped by lps artifact
+                       (!map.get(newl.x, newl.y).startsWith("block(")) && // block(B) comes from a rule in the iaA_star
+                       (!map.get(newl.x, newl.y).startsWith("entity(")) // entity(E) comes from a rule in the iaA_star
+               );
     }
 
     public boolean equals(Object o) {

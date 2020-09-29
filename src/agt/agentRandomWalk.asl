@@ -1,6 +1,6 @@
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
-{ include("action.asl") }
+{ include("simulation/action.asl") }
 
 directions([n,s,w,e]).
 

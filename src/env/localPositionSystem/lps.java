@@ -25,8 +25,6 @@ public class lps extends Artifact {
     
     @OPERATION
     void clear(int i, int j, int range) {    
-        // TODO: implement clear of Table map?
-        
         if (viewOn != 0) {
             this.view.clear(i, j,range);
         }

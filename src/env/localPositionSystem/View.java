@@ -34,8 +34,8 @@ public class View extends JFrame
             
         public View(int size) {
             
-        	this.size=size;
-        	this.map = new JLabel [size][size];
+            this.size=size;
+            this.map = new JLabel [size][size];
             setTitle("viewer");
             setPreferredSize(new Dimension(size*8+50,size*8+50));                   
             setLayout(new BorderLayout());
@@ -87,10 +87,10 @@ public class View extends JFrame
             case "path":
                 c = Color.CYAN.darker();    
                 break; 
-	        case "other":
-	            c = Color.ORANGE.darker();    
-	            break;
-	        }
+            case "other":
+                c = Color.ORANGE.darker();    
+                break;
+            }
             i = i%this.size;
             j = j%this.size;
             //* ajuste do toroide
@@ -107,11 +107,11 @@ public class View extends JFrame
                 j=j+this.size;
             } 
             //--------------- Vision
-            Color vc = new Color(	
-            		c.brighter().getRed()>155?255:c.brighter().getRed()+100,
-            		c.brighter().getGreen()>155?255:c.brighter().getGreen()+100,
-            		c.brighter().getBlue()>155?255:c.brighter().getBlue()+100,
-					100);
+            Color vc = new Color(   
+                    c.brighter().getRed()>155?255:c.brighter().getRed()+100,
+                    c.brighter().getGreen()>155?255:c.brighter().getGreen()+100,
+                    c.brighter().getBlue()>155?255:c.brighter().getBlue()+100,
+                    100);
             
             markVision(i, j, vc, vision);
             //---------------
@@ -150,40 +150,40 @@ public class View extends JFrame
         
         
         public void markVision(int i, int j, Color c, int vision) {
-        	int [] directions = {-1,1};
-        	for (int di:directions)
-	            for (int offseti=0;offseti<=vision;offseti++) {
-	            	for (int dj:directions)
-		            	for (int offsetj=0;offsetj<=vision-offseti;offsetj++) {
-		            		int newI = i+di*offseti;
-		            		int newJ = j+dj*offsetj;
-		            	    //* ajuste do toroide
-		                    if (center()+newI+1>this.size) {
-		                        newI=newI-this.size;                
-		                    } 
-		                    else if (newI<center()*-1) {
-		                        newI=newI+this.size; 
-		                    }
-		                    if (center()+newJ+1>this.size) {
-		                        newJ=newJ-this.size;
-		                    }
-		                    else if (newJ<center()*-1) {
-		                        newJ=newJ+this.size;
-		                    } 
-		                    //---------------
-//		                    if(!Arrays.asList(colors).contains(
-//		                    		this.map[center()+newI][center()+newJ].getBackground()) |
-//				               this.map[center()+newI][center()+newJ].getBackground()==DEFAULT_COLOR) {
-		                       this.map[center()+newI][center()+newJ].setBackground(c);
-		                       this.map[center()+newI][center()+newJ].setToolTipText( "("+String.valueOf(newI)+
-		                    		   											","+String.valueOf(newJ)+") - "+
-		                    		   											"vision");	
-		                       this.map[center()+newI][center()+newJ].setIcon(new ImageIcon(emptyImage()));          
-		                       this.map[center()+newI][center()+newJ].setOpaque(true);
-		                       this.map[center()+newI][center()+newJ].repaint();
-//		                    }
-		            	}
-	            }
+            int [] directions = {-1,1};
+            for (int di:directions)
+                for (int offseti=0;offseti<=vision;offseti++) {
+                    for (int dj:directions)
+                        for (int offsetj=0;offsetj<=vision-offseti;offsetj++) {
+                            int newI = i+di*offseti;
+                            int newJ = j+dj*offsetj;
+                            //* ajuste do toroide
+                            if (center()+newI+1>this.size) {
+                                newI=newI-this.size;                
+                            } 
+                            else if (newI<center()*-1) {
+                                newI=newI+this.size; 
+                            }
+                            if (center()+newJ+1>this.size) {
+                                newJ=newJ-this.size;
+                            }
+                            else if (newJ<center()*-1) {
+                                newJ=newJ+this.size;
+                            } 
+                            //---------------
+//                          if(!Arrays.asList(colors).contains(
+//                                  this.map[center()+newI][center()+newJ].getBackground()) |
+//                             this.map[center()+newI][center()+newJ].getBackground()==DEFAULT_COLOR) {
+                               this.map[center()+newI][center()+newJ].setBackground(c);
+                               this.map[center()+newI][center()+newJ].setToolTipText( "("+String.valueOf(newI)+
+                                                                                ","+String.valueOf(newJ)+") - "+
+                                                                                "vision");  
+                               this.map[center()+newI][center()+newJ].setIcon(new ImageIcon(emptyImage()));          
+                               this.map[center()+newI][center()+newJ].setOpaque(true);
+                               this.map[center()+newI][center()+newJ].repaint();
+//                          }
+                        }
+                }
         
         }
         

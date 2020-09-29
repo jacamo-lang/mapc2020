@@ -16,21 +16,15 @@
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
 { include("taskmanager.asl") }
-{ include("action.asl") }
+{ include("simulation/action.asl") }
 { include("exploration/common_exploration.asl") } //common beliefs, rules and plans for all the exploration strategies
 { include("exploration/randomExplorationStrategy.asl") } //random exploration strategy
 { include("exploration/spiralExplorationStrategy.asl") } //spiral exploration strategy
 { include("exploration/stcExplorationStrategy.asl") } //stc exploration strategy - 
-{ include("meeting.asl") } //TODO: move to the /exploration folder 
-
+{ include("exploration/meeting.asl") }
 
 exploring. //The agent keep exploring explore when the belief "explore" is true.
 exploration_strategy(spiral). //Current exploration strategy. Possible strategies: random, spiral, stc
-
-
-
-!start.
-
 
 +!start : .my_name(NAME) 
    <- .wait(step(_));  
