@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Team A
-for i in {0..49} 
+for i in {1..50} 
 do
 new=$(printf "eisa%d.json" "$i")
 (printf '{
@@ -21,7 +21,7 @@ new=$(printf "eisa%d.json" "$i")
 done
 
 # Team B
-for i in {0..49} 
+for i in {1..50} 
 do
 new=$(printf "eisb%d.json" "$i")
 (printf '{
