@@ -21,13 +21,7 @@ max_no_action_in_a_row(1).
     max_no_action_in_a_row(M) &
     C >= M
     <-
-    .log(severe,"****** Restarting due to no_action: dropping all desires, intentions and events!");
-    .drop_all_events;
-    .drop_all_desires;
-    .drop_all_intentions;
-    -+exploring;
-    !!start;
-    -+no_action_step_count(S,0);
+    !restart_agent;
 .
 /**
  * This is NOT the first no_action in a row -> INCREMENT
@@ -46,4 +40,26 @@ max_no_action_in_a_row(1).
     step(S)
     <-
     -+no_action_step_count(S,1);
+.
+
+@restart_agent[atomic]
++!restart_agent
+    <-
+    .log(severe,"****** Restarting due to no_action: dropping all desires, intentions and events!");
+    .drop_all_events;
+    .drop_all_desires;
+    .drop_all_intentions;
+    !!restart;
+    -+no_action_step_count(S,0);
+.
+
+/**
+ * Based on !start of agentBase - just do not change origin(NAME)
+ */
++!restart :
+    step(S)  
+    <- 
+    .wait(step(Step) & Step > S); //wait for the next step to continue
+    +exploring;
+    !explore[critical_section(action), priority(1)]
 .
