@@ -7,7 +7,7 @@
 { include("test_walking.bb") }
 
 
-@[test]
+@test_known_requirements[test]
 +!test_known_requirements:
     .findall(I,task(I,J,O,_),LI)
     <-

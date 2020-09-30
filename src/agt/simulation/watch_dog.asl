@@ -9,6 +9,8 @@
  * after two missed steps in a row, that is why I am using this parameter.
  */
 
+{ include("tasks/drop_block.asl") }
+
 no_action_step_count(-1,0). // oldest consecutive no_action step, count of no_action
 max_no_action_in_a_row(1).
 
@@ -21,13 +23,8 @@ max_no_action_in_a_row(1).
     max_no_action_in_a_row(M) &
     C >= M
     <-
-    .log(severe,"****** Restarting due to no_action: dropping all desires, intentions and events!");
-    .drop_all_events;
-    .drop_all_desires;
-    .drop_all_intentions;
-    -+exploring;
-    !!start;
-    -+no_action_step_count(S,0);
+    .log(severe,"****** Restarting due to no_action!");
+    !restart_agent;
 .
 /**
  * This is NOT the first no_action in a row -> INCREMENT
@@ -46,4 +43,44 @@ max_no_action_in_a_row(1).
     step(S)
     <-
     -+no_action_step_count(S,1);
+.
+
+@restart_agent[atomic]
++!restart_agent
+    <-
+    .log(severe,"****** Restarting:  dropping all desires, intentions, events and blocks!");
+    .drop_all_events;
+    .drop_all_desires;
+    .drop_all_intentions;
+    !drop_all_blocks;
+    !!restart;
+    -+no_action_step_count(S,0);
+.
+
+/**
+ * Based on !start of agentBase - just do not change origin(NAME)
+ */
++!restart :
+    step(S)  
+    <- 
+    .wait(step(Step) & Step > S); //wait for the next step to continue
+    +exploring;
+    !explore[critical_section(action), priority(1)]
+.
+
+/**
+ * Return to individual reseted map considering this as 0,0 position
+ */
++i_am_lost :
+    .my_name(ME) &
+    .term2string(ME,MEStr)
+    <-
+    .log(severe,"****** Restarting because I am lost!");
+    .abolish(gps_map(_,_,_,ME));
+    .abolish(gps_map(_,_,_,MEStr));
+    removeMyWantedTasks(MEStr);
+    -+myposition(0,0);
+    -+origin(ME);
+    .abolish(i_am_lost);
+    !restart_agent;
 .

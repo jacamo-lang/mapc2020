@@ -2,14 +2,14 @@
  * Test goals for agent Weak Individualist
  */
 
-{ include("strategies/weak_individualist.asl") }
+//{ include("strategies/weak_individualist.asl") }
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
 { include("test_walking.bb") }
 { include("test_walking_helpers.asl") }
 
 //TODO: Fix tests for new structure using simulation/massim.asl
 
-@[test]
+//@[test]
 +!launch_weak_individualist_tests :
     .findall(I,gps_map(I,J,O,_),LI) &
     .min(LI,MIN_I) // MIN_I informs the more negative I to know how far is from zero

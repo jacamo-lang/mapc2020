@@ -1,5 +1,6 @@
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
+{ include("environment/artifact_eis.asl") }
 { include("simulation/massim.asl") }
 
 

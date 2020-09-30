@@ -30,7 +30,7 @@
     step(S) &
     not accepted(_)
     <-
-    .log(warning,"Accepting ",T," : ",myposition(X,Y));
+    //.log(warning,"Accepting ",T," : ",myposition(X,Y));
     !gotoNearestNeighbour(taskboard);
     .wait(step(Step) & Step > S); //wait for the next step to continue
     !acceptTask(T);

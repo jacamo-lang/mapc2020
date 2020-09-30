@@ -92,7 +92,7 @@ public class rp extends lps {
     }
 
     @OPERATION
-    void eraseGpsMapProps() {
+    void resetRP() {
         while (getObsProperty("gps_map") != null) {
             removeObsProperty("gps_map");
         }
