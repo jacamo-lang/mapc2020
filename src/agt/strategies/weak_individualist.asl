@@ -13,6 +13,9 @@
 { include("walking/goto_iaA_star.asl") }
 { include("simulation/watch_dog.asl") }
 { include("simulation/massim.asl") }
+{ include("environment/artifact_eis.asl") }
+{ include("environment/artifact_gps.asl") }
+{ include("environment/artifact_simpleCFP.asl") }
 { include("agentBase.asl") }
 { include("origin_workaround.asl") }
 
@@ -32,7 +35,6 @@ rotate(ccw,1,0,0,-1). // 3  o'clock -> 12  o'clock
 rotate(ccw,0,1,1,0).  // 6  o'clock -> 3  o'clock
 rotate(ccw,-1,0,1,0). // 9  o'clock -> 6 o'clock
 rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
-
 
 +!performTask(T) :
     not accepted(_) &                       // I am not committed
