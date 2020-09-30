@@ -23,6 +23,10 @@
 { include("exploration/stcExplorationStrategy.asl") } //stc exploration strategy - 
 { include("exploration/meeting.asl") }
 
+{ include("environment/artifact_eis.asl") }
+{ include("environment/artifact_gps.asl") }
+{ include("simulation/massim.asl") }
+
 exploring. //The agent keep exploring explore when the belief "explore" is true.
 exploration_strategy(spiral). //Current exploration strategy. Possible strategies: random, spiral, stc
 
