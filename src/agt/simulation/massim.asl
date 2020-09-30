@@ -2,14 +2,25 @@
  * Used for special actions regarding massim simulator events
  */
 
+//TODO: Move create artifact plans to strategy/weak_individualist since other strategies may need different artifacts
+/**
+ * Besides the connection artifact, the weak individualist uses
+ * gps and simpleCFP
+ */
 !make_art.
 !make_gps.
+!make_simpleCFP.
+
 
 /**
  * The simulator just started / new round
  */
 +simStart :
-    step(0)
+    step(0) &
+    .my_name(NAME) &
+    .substring(NAME,TEAM,5,6) &
+    .concat("artGPS",TEAM,ArtGPS) & 
+    .concat("env",TEAM,Env)    
     <-
     .log(warning,"****** Initialising agent");
     .drop_all_events;
@@ -22,7 +33,14 @@
     .abolish(exploring);
     .abolish(myposition(_,_));
     .abolish(origin(_));
-
+    
+    if (.concat("artGPS",TEAM,ArtGPS) & focused(Env,ArtGPS)) {
+        resetRP;
+    }
+    if (.concat("simpleCFP",TEAM,ArtCFP) & focused(Env,ArtCFP)) {
+        resetSimpleCFP;
+    }
+    
     +exploring;
     +myposition(0,0);
 
@@ -73,3 +91,25 @@
     focusWhenAvailable(ArtGPS);
 .
 
++!make_simpleCFP :
+    .my_name(NAME) &
+    .substring(NAME,NUMBER,6) &
+    NUMBER == "1" & // only one agent creates the artifact (agenta1 of agentb1)
+    .substring(NAME,TEAM,5,6) &
+    .concat("simpleCFP",TEAM,ArtCFP) & 
+    .concat("env",TEAM,Env) &
+    not focused(Env,ArtCFP) // it seems, the artifact does not exist
+    <-
+    .log(warning,"Making and focusing on artifact ",ArtCFP);
+    makeArtifact(ArtCFP,"coordination.simpleCFP",[],ArtId);
+    focusWhenAvailable(ArtCFP);
+.
+
++!make_simpleCFP :
+    .my_name(NAME) &
+    .substring(NAME,TEAM,5,6) &
+    .concat("simpleCFP",TEAM,ArtCFP)
+    <-
+    .log(warning,"Focusing on artifact ",ArtCFP);
+    focusWhenAvailable(ArtCFP);
+.
