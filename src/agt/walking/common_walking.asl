@@ -108,13 +108,22 @@ task_shortest_path(B,D) :-
         .log(warning,"No success on: ",goto(XT,YT,RET)," ",myposition(X1,Y1));
     }
 .
-
 +!gotoNearestNeighbour(B) :
-    origin_str(MyMAP) &
+    thing(I,J,B,_) &
+    distance(0,0,I,J,1)
+    <-
+    !do(skip,R);
+    .log(warning,"I am already in a neighbour of ",B," : ",thing(I,J,B,_),", skip: ",R);
+.
+//TODO: Sometimes the agent is not mapping correctly, it is thinking it is in another X,Y
++!gotoNearestNeighbour(B) :
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
     nearest(B,XN,YN) &
-    distance(X,Y,XN,YN,DIST) & DIST == 1
+    nearest_neighbour(XN,YN,X,Y) &  // I think I am at the nearest neighbour
+    not thing(XN-X,YN-Y,B,_) // But, in fact, there is not a thing in the position it is supposed to be
     <-
-    .log(warning,"I am already in a neighbour of ",B," : ",distance(X,Y,XN,YN,DIST));
+    .log(warning,"I am lost looking for ",B," : ",myposition(X,Y)," : ",distance(X,Y,XN,YN,DIST));
+    +i_am_lost;
+    !do(skip,R);
 .

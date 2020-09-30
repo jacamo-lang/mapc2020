@@ -33,6 +33,7 @@ rotate(ccw,0,1,1,0).  // 6  o'clock -> 3  o'clock
 rotate(ccw,-1,0,1,0). // 9  o'clock -> 6 o'clock
 rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
 
+
 +!performTask(T) :
     not accepted(_) &                       // I am not committed
     not .intend(performTask(_)) &
@@ -42,17 +43,16 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     task_shortest_path(B,D) &
     step(S)        
     <-
-    -exploring;
     if ( DL <= (S + D) ) { // deadline must be greater than step + shortest path
         +unwanted_task(T); // Discard tasks that are going to expire    
     } else {
         .log(warning,"I want to perform the task ",T);
         
-        setWantedTask(ME,T,S,D);
-        !do(skip,R);
+        setWantedTask(ME,T,S,D); // no need to skip, just keep exploring until the auction ends
         .wait(step(Step) & Step > S); //wait for the next step to continue
         
         if ( wanted_task(ME,T,_,_) ) { // there is no better agent to perform this task
+            -exploring;
             .log(warning,"Accepting task... ",T);
             !acceptTask(T);
 
@@ -69,19 +69,26 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
             // In case submit did not succeed
             .log(warning,"Dropping blocks for ",T);
             !drop_all_blocks;
+
+            //No matter if it succeed or failed, it is supposed to be ready for another task
+            +exploring;
+            !explore[critical_section(action), priority(1)];
         } else {
             +unwanted_task(T);
         }
     }
-    
-
-    //No matter if it succeed or failed, it is supposed to be ready for another task
-    +exploring;
-    !explore[critical_section(action), priority(1)];
 .
 +!performTask(T)
     <-
     .log(warning,"Could not perform ",T);
+.
+-!performTask(T)
+    <-
+    .log(warning,"Failed on ",performTask(T)," dropping desire, back to explore.");
+    //No matter if it succeed or failed, it is supposed to be ready for another task
+    .drop_desire(performTask(_));
+    +exploring;
+    !explore[critical_section(action), priority(1)];
 .
 
 // This is not a single block task
