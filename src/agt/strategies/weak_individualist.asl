@@ -112,6 +112,14 @@ rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
     !!performTask(T);
 .
 
+/**
+ * If someone forgot task T, let us be open to perform it!
+ */
+-wanted_task(_,T)
+    <-
+    .abolish(unwanted_task(T));
+.
+
 @setRightPositionNoRotate[atomic]
 +!setRightPosition(req(I,J,B)) :
     attached(I,J) // no rotation is necessary

@@ -78,7 +78,7 @@ max_no_action_in_a_row(1).
     .log(severe,"****** Restarting because I am lost!");
     .abolish(gps_map(_,_,_,ME));
     .abolish(gps_map(_,_,_,MEStr));
-    removeMyWantedTasks(ME);
+    removeMyWantedTasks(MEStr);
     -+myposition(0,0);
     -+origin(ME);
     .abolish(i_am_lost);
