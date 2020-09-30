@@ -364,3 +364,5 @@ task(task3,186,18,[req(0,1,b1),req(0,2,b0)]).
 task(task3,186,18,[req(0,1,b1),req(0,2,b0)]).
 task(task99,186,18,[req(0,1,b99),req(0,2,b99)]).
 vision(5).
+origin(agenta0).
+origin_str("agenta0").
