@@ -52,9 +52,10 @@ exploration_strategy(spiral). //Current exploration strategy. Possible strategie
 
 /****************************************  Recharging ****************************************/
 //if the agent is exploring, then resume exploration after having recharged
-+disabled(true) : exploring
++disabled(true) : exploring & step(S)
     <- .print("recharging...");
         !recharge[critical_section(action), priority(2)];
+        .wait( step(NS)&NS>S );
         !explore[critical_section(action), priority(1)];.
 
 +disabled(true)
@@ -66,7 +67,7 @@ exploration_strategy(spiral). //Current exploration strategy. Possible strategie
                   
       
 /****************************************  Exploration ****************************************/
-               
++!explore : disabled(true).               
 
 +!explore : exploring & step(S)
    <- !check_direction; //defines the current_direction(D) belief
