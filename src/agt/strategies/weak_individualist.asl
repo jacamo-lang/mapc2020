@@ -12,9 +12,6 @@
 { include("walking/common_walking.asl") }
 { include("walking/goto_iaA_star.asl") }
 { include("simulation/watch_dog.asl") }
-{ include("simulation/massim.asl") }
-{ include("environment/artifact_eis.asl") }
-{ include("environment/artifact_gps.asl") }
 { include("environment/artifact_simpleCFP.asl") }
 { include("agentBase.asl") }
 { include("origin_workaround.asl") }
