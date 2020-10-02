@@ -37,3 +37,7 @@
     !!start;
 .
 
++bye
+    <-
+    .stopMAS;
+.
