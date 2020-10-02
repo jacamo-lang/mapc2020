@@ -25,8 +25,6 @@ public class lps extends Artifact {
     
     @OPERATION
     void clear(int i, int j, int range) {    
-        // TODO: implement clear of Table map?
-        
         if (viewOn != 0) {
             this.view.clear(i, j,range);
         }
@@ -75,8 +73,18 @@ public class lps extends Artifact {
             this.view.unmark(i, j);
         }        
     }
-    
-    
+
+    @OPERATION
+    void unmark(int i, int j, String type, String mapId) {   
+        Atom aType = new Atom(type);
+        ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,aType,mapId);
+        if(prop!=null) 
+            this.removeObsPropertyByTemplate("gps_map", i,j,aType,mapId);             
+        if (viewOn != 0) {
+            this.view.unmark(i, j);
+        }        
+    }
+
     /**
      * Add an edge from the point (xStart, yStart) to (xEnd,yEnd).
      * Useful in tree based exploration strategies.

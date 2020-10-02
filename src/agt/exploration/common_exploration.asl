@@ -3,7 +3,7 @@
 myposition(0,0).
 
 
-originlead(agenta0).
+originlead(agenta1).
 
 directions([n,s,w,e]).
 
@@ -41,6 +41,7 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
         for (thing(I,J,entity,TEAM) & team(TEAM)) {
             !sincMap(I,J);
         }
+        !update_block_mapping(X,Y,X+INCX,Y+INCY);
    .
    
          
@@ -108,3 +109,16 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
     <-
     unmark(X, Y);
 .
+
+  
+                 
++!update_block_mapping(OldX,OldY,X,Y) : step(S) & origin(O)
+   <- 
+      for(attached(I,J)&directionIncrement(D,I,J)){
+         //.print("... Removing attached block Pos(",X,",",Y,") Block(",I+OldX,",",OldY+J,")  Step: ", S, "   Map: ", O);
+         unmark(I+OldX,OldY+J,block,O);
+         //.print("... Moving with an attached block Pos(",X,",",Y,") Block(",I+X,",",Y+J,")  Step: ", S, "   Map: ", O);   
+         !addMap(I,J,X,Y,block);
+      }
+   . 
+       

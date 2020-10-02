@@ -1,8 +1,8 @@
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
-{ include("action.asl") }
+{ include("simulation/action.asl") }
 { include("taskmanager.asl") }
-{ include("src/agt/meeting.asl")} //exploration strategy
+{ include("exploration/meeting.asl")}
 
 
 
@@ -13,7 +13,7 @@ pertinence(XR,YR,X,Y):- ((XR<0  & X>=XR) |
                         ((YR<0  & Y>=YR) |
                         (YR>=0 & Y<=YR)). 
 
-originlead(agenta0).
+originlead(agenta1).
 
 nextDirection(w,n).
 nextDirection(n,e).

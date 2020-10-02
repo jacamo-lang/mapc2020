@@ -16,21 +16,19 @@
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
 { include("taskmanager.asl") }
-{ include("action.asl") }
+{ include("simulation/action.asl") }
 { include("exploration/common_exploration.asl") } //common beliefs, rules and plans for all the exploration strategies
 { include("exploration/randomExplorationStrategy.asl") } //random exploration strategy
 { include("exploration/spiralExplorationStrategy.asl") } //spiral exploration strategy
 { include("exploration/stcExplorationStrategy.asl") } //stc exploration strategy - 
-{ include("meeting.asl") } //TODO: move to the /exploration folder 
+{ include("exploration/meeting.asl") }
 
+{ include("environment/artifact_eis.asl") }
+{ include("environment/artifact_gps.asl") }
+{ include("simulation/massim.asl") }
 
 exploring. //The agent keep exploring explore when the belief "explore" is true.
 exploration_strategy(spiral). //Current exploration strategy. Possible strategies: random, spiral, stc
-
-
-
-!start.
-
 
 +!start : .my_name(NAME) 
    <- .wait(step(_));  
@@ -58,8 +56,6 @@ exploration_strategy(spiral). //Current exploration strategy. Possible strategie
     <-  .print("recharging...");
         !recharge[critical_section(action), priority(2)];
         !wait_to_explore. //resume the exploration after enabling
- 
- 
 +disabled(true)
     <-  .print("recharging...");
         !recharge[critical_section(action), priority(2)].
@@ -90,6 +86,12 @@ exploration_strategy(spiral). //Current exploration strategy. Possible strategie
 +!explore 
    <- .wait(step(_));
       !explore[critical_section(action), priority(1)].
+      
+      
++!wait_to_explore
+   <- .wait(disabled(false));
+      .drop_desire(explore); .drop_intention(explore); //ensure a single exploration intention 
+      !explore[critical_section(action), priority(1)].      
 
 
 +!wait_to_explore

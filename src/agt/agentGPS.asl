@@ -32,7 +32,7 @@ pertinence(XR,YR,X,Y):- ((XR<0  & X>=XR) |
                         ((YR<0  & Y>=YR) |
                         (YR>=0 & Y<=YR)). 
 
-originlead(agenta0).
+originlead(agenta1).
 
 nextDirection(w,n).
 nextDirection(n,e).

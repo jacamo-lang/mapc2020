@@ -50,9 +50,7 @@ public class rp extends lps {
                 }
             }
 
-            Table<Integer, Integer, String> attached = HashBasedTable.create();
-            attached.put(0, -1, "b0");
-            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map));
+            Nodo solution = search.busca(new GridState(lini, lini, new Location(itox, itoy), "", map, null));
             /*
             //The view of the agent
             int SIZE = 50;
@@ -93,4 +91,10 @@ public class rp extends lps {
         defineObsProperty("gps_map",x,y,new Atom(type),mapId);
     }
 
+    @OPERATION
+    void resetRP() {
+        while (getObsProperty("gps_map") != null) {
+            removeObsProperty("gps_map");
+        }
+    }
 }
