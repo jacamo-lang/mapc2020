@@ -53,20 +53,26 @@ exploration_strategy(spiral). //Current exploration strategy. Possible strategie
 
 
 /****************************************  Recharging ****************************************/
-
-
+//if the agent is exploring, then resume exploration after having recharged
++disabled(true) : exploring & step(S)
+    <-  .print("recharging...");
+        !recharge[critical_section(action), priority(2)];
+        !wait_to_explore. //resume the exploration after enabling
+ 
+ 
 +disabled(true)
-    <- .print("recharging...");
-        !recharge[critical_section(action), priority(2)] .
-        
+    <-  .print("recharging...");
+        !recharge[critical_section(action), priority(2)].
+       
 +!recharge  <- !do(skip,R) .       
       
                   
       
 /****************************************  Exploration ****************************************/
-               
-
-+!explore : exploring & step(S)
++!explore : disabled(true).
+        
+      
++!explore : disabled(false) & exploring & step(S)
    <- !check_direction; //defines the current_direction(D) belief
       ?current_direction(CD);//  .print("updated direction ", CD, " step: ", S);
       !move(CD); //moves to the selected direction
@@ -85,6 +91,11 @@ exploration_strategy(spiral). //Current exploration strategy. Possible strategie
    <- .wait(step(_));
       !explore[critical_section(action), priority(1)].
 
+
++!wait_to_explore
+   <- .wait(disabled(false));
+      .drop_desire(explore); .drop_intention(explore); //ensure a single exploration intention 
+      !explore[critical_section(action), priority(1)].
 
 +!check_direction : exploration_strategy(random)
    <- !update_direction_random.
