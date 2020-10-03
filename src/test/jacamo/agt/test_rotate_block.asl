@@ -16,14 +16,34 @@
     
     !build_map(MIN_I);
 
-    !update_line(0,0,MIN_I,"H");
-
-    -+myposition(0,0);
-    -+attached(1,0);
-    -+thing(1,0,block,b0);
-    !fix_rotation(req(0,1,b0));
+    !rotation_in_a_free_area(MIN_I);
+    !rotation_to_obstacle(MIN_I);
 
     !print_map;
     !assert_true(true);
 .
 
++!rotation_in_a_free_area(MIN_I)
+    <-
+    -+walked_steps(0);
+    -+myposition(0,0);
+    !update_line(0,0,MIN_I,"H");
+    // 3  o'clock -> 6  o'clock
+    -+attached(1,0);
+    -+thing(1,0,block,b0);
+    !fix_rotation(req(0,1,b0));
+    ?walked_steps(R1);
+    .log(warning,R1);
+.
+
++!rotation_to_obstacle(MIN_I)
+    <-
+    -+walked_steps(0);
+    // 3  o'clock -> 6  o'clock
+    -+myposition(14,0);
+    !update_line(14,0,MIN_I,"Y");
+    -+attached(1,0);
+    -+thing(1,0,block,b0);
+    !fix_rotation(req(0,1,b0));
+    ?walked_steps(R1);
+.

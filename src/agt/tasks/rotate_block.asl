@@ -5,6 +5,7 @@
  */
 
 { include("walking/rotate_jA_star.asl") }
+{ include("exploration/common_exploration.asl") }
 
 +!fix_rotation(req(I,J,B)) :
     attached(I,J) & thing(I,J,block,B) // no rotation is necessary
@@ -19,6 +20,8 @@
         !do(rotate(DIR),R);
         if (R == success) {
             .log(warning,"Rotated ",B," (",I,",",J,") to (",RI,",",RJ,") dir: ",DIR);
+            .wait(step(Step) & Step > S); //wait for the next step to continue
+            !fix_rotation(req(RI,RJ,B));
         } else {
             .log(warning,"Could not rotate ",B," (",I,",",J,") to (",RI,",",RJ,") dir: ",DIR);
         }
@@ -26,13 +29,16 @@
         .nth(math.floor(math.random(4)),[n,s,w,e],DIRECTION);
         !do(move(DIRECTION),R);
         if (R == success) {
+            !mapping(success,_,DIRECTION);
             .log(warning,"Due to no_rotation, dodged to ",DIRECTION);
+            .wait(step(Step) & Step > S); //wait for the next step to continue
+            !fix_rotation(req(RI,RJ,B));
         } else {
             .log(warning,"Could not dodge to ",DIRECTION);
+            .wait(step(Step) & Step > S); //wait for the next step to continue
+            !fix_rotation(req(RI,RJ,B));
         }    
     }
-    .wait(step(Step) & Step > S); //wait for the next step to continue
-    !fix_rotation(req(RI,RJ,B));
 .
 +!fix_rotation(req(_,_,B)) // If other plans fail
     <-
