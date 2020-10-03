@@ -28,6 +28,7 @@
 { include("simulation/massim.asl") }
 
 exploring. //The agent keep exploring explore when the belief "explore" is true.
+exploring :- status(exploring) & .log("use status/1 instead of exploring").
 exploration_strategy(spiral). //Current exploration strategy. Possible strategies: random, spiral, stc
 
 +!start : .my_name(NAME) 

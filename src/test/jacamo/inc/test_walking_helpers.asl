@@ -93,14 +93,20 @@
 
 +!add_test_plans_do(MIN_I)
     <-
+    +direction_increment(n,0,-1);
+    +direction_increment(s,0,1);
+    +direction_increment(w,-1,0);
+    +direction_increment(e,1,0);
+    
     .add_plan({
         +!do(move(DIR),success) :
             myposition(OX,OY) &
-            directionIncrement(DIR,I,J) &
+            direction_increment(DIR,I,J) &
             walked_steps(S) & step(SS)
             <-
             -+walked_steps(S+1);
             -+step(SS+1);
+            //-+myposition(OX+I,OY+J); !mapping is doing that
             !update_line(OX,OY,MIN_I,DIR);
     }, self, begin);
 
@@ -108,12 +114,15 @@
      * Add mock plan for !do(rotate(D)) since it needs external library
      */
     .add_plan({ +!do(rotate(D),success) :
-        attached(I,J) & rotate(D,I,J,II,JJ) &
+        attached(I,J) & 
+        rotate(D,I,J,II,JJ) &
+        thing(I,J,block,B) &
         step(SS)
         <-
         .print("mock ",rotate(D));
         -+step(SS+1);
         -+attached(II,JJ);
+        -+thing(II,JJ,block,B);
     }, self, begin);
 
     /**
@@ -125,8 +134,9 @@
             -+step(SS+1); 
             .print("mock ",A)
     }, self, begin);
+    
     .add_plan({ +!do(attach(D),success) : 
-        directionIncrement(D,I,J) &
+        direction_increment(D,I,J) &
         step(SS) 
         <-
         .print("mock ",attach(B));

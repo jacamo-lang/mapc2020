@@ -30,8 +30,6 @@ get_direction(OX,OY,X,Y,DIR) :-
 //TODO: Provide a way to return no_route when no solution is found after certain number of attempts
 a_star( _, _, no_route, _).
 
-directions([n,s,w,e]).
-
 +!goto(X,Y,RET):
     myposition(X,Y)
     <-
@@ -41,11 +39,10 @@ directions([n,s,w,e]).
 
 +!goto(X,Y,RET):
     myposition(OX,OY) &
-    (OX \== X | OY \== Y) &
     step(S) &
     get_direction(OX,OY,X,Y,DIRECTION)
     <-
-    if (directions(DIRS) & .member(DIRECTION,DIRS)) {
+    if ( .member(DIRECTION,[n,s,w,e]) ) {
         !do(move(DIRECTION),R);
         if (R == success) {
             !mapping(success,_,DIRECTION);
