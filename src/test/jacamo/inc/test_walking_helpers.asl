@@ -108,12 +108,15 @@
      * Add mock plan for !do(rotate(D)) since it needs external library
      */
     .add_plan({ +!do(rotate(D),success) :
-        attached(I,J) & rotate(D,I,J,II,JJ) &
+        attached(I,J) & 
+        rotate(D,I,J,II,JJ) &
+        thing(I,J,block,B) &
         step(SS)
         <-
         .print("mock ",rotate(D));
         -+step(SS+1);
         -+attached(II,JJ);
+        -+thing(II,JJ,block,B);
     }, self, begin);
 
     /**

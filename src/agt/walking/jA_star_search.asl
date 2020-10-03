@@ -16,7 +16,7 @@ a_star_l( Open, GoalState, s(F,G,[op(Op,GoalState)|Path]), Closed) :-
 
 a_star_l( Open, GoalState, Solution, Closed) :-
     .queue.remove(Open,s(F,G,[op(Op,State)|Path])) &
-    .print("exploring ",State," to be explored ", .length(Open)) &
+    //.print("exploring ",State," to be explored ", .length(Open)) &
     State \== GoalState &
     .findall(
         s(NF,NG,[ op(NOp,NewState), op(Op,State)|Path]), // new paths
@@ -30,7 +30,7 @@ a_star_l( Open, GoalState, Solution, Closed) :-
         ),
         Suc
     ) &
-    .print("     ",Suc) &
+    //.print("     ",Suc) &
     .queue.add_all(Open, Suc) &
     a_star_l( Open, GoalState, Solution, Closed)
 .
