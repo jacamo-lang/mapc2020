@@ -3,28 +3,20 @@
  */
 
 { include("$jasonJar/test/jason/inc/tester_agent.asl") }
+{ include("exploration/common_exploration.asl") }
 { include("walking/blind_search.asl") }
 { include("walking/common_walking.asl") }
 { include("test_walking_helpers.asl") }
 { include("test_walking.bb") }
 
-@[test]
-+!test_get_direction :
+@test_goto_blind_search[test]
++!test_goto_blind_search :
     .findall(I,gps_map(I,J,O,_),LI) &
     .min(LI,MIN_I) // MIN_I informs the more negative I to know how far is from zero
     <-
-    .add_plan({
-        +!do(move(DIR),success) :
-            myposition(OX,OY) &
-            directionIncrement(DIR,I,J) &
-            walked_steps(S)
-            <-
-            -+walked_steps(S+1);
-            !update_line(OX,OY,MIN_I,DIR);
-            -+myposition(OX+I,OY+J);
-    }, self, begin);
-
     !build_map(MIN_I);
+    
+    !add_test_plans_do(MIN_I);
 
     // A blind search is likely to take about 400 ms
     !check_performance(test_goto(0,0,-1,-3,MIN_I,R0_2,R1_2,_),1,_);
@@ -59,12 +51,14 @@
 
 +!goto(X,Y,RET):
     myposition(OX,OY) &
-    (OX \== X | OY \== Y) &
-    get_direction(OX,OY,X,Y,DIRECTION)
+    get_direction(OX,OY,X,Y,DIRECTION) &
+    step(S)
     <-
-    if (directions(DIRS) & .member(DIRECTION,DIRS)) {
+    if ( .member(DIRECTION,[n,s,w,e]) ) {
         !do(move(DIRECTION),R);
         if (R == success) {
+            !mapping(success,_,DIRECTION);
+            .wait(step(Step) & Step > S); //wait for the next step to continue
             !goto(X,Y,_);
         } else {
             .print("Fail on going to x: ",X," y: ",Y," act: ",DIRECTION);

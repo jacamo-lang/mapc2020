@@ -7,18 +7,6 @@
 { include("exploration/common_exploration.asl") }
 { include("walking/common_walking.asl") }
 
-nextDirection(w,n).
-nextDirection(n,e).
-nextDirection(e,s).
-nextDirection(s,w).
-
-directions([n,s,w,e]).
-directionIncrement(n, 0, -1).
-directionIncrement(s, 0,  1).
-directionIncrement(w,-1,  0).
-directionIncrement(e, 1,  0).
-myposition(0,0).
-
 /**
  * Map as gps_map(X,Y,block(B),MyMAP) blocks that are not the ones that
  * this agent has attached, i.e., only maps blocks that are obstacles
@@ -50,7 +38,6 @@ gps_map(XB,YB,entity(E),MyMAP) :-
 
 +!goto(X,Y,RET):
     myposition(OX,OY) &
-    (OX \== X | OY \== Y) &
     step(S) &
     origin_str(MyMAP)
     <-

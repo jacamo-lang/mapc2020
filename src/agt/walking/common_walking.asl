@@ -5,11 +5,10 @@
 /**
  * Initial beliefs
  */
-directionIncrement(n, 0, -1).
-directionIncrement(s, 0,  1).
-directionIncrement(w,-1,  0).
-directionIncrement(e, 1,  0).
-directions([n,s,w,e]).
+direction_increment(n,0,-1).
+direction_increment(s,0,1).
+direction_increment(w,-1,0).
+direction_increment(e,1,0).
 
 /**
  * Return on D euclidean distance between (X1,Y1) and (X2,Y2)
@@ -49,9 +48,9 @@ nearest_neighbour(XP,YP,X,Y) :-
     myposition(X1,Y1) &
     origin_str(MyMAP) &
     .findall(p(D,X2,Y2),
-      directionIncrement(_,I,J) & X2 = XP+I & Y2 = YP + J &
-      not gps_map(X2,Y2,obstacle,MyMAP) &
-      distance(X1,Y1,X2,Y2,D), FL
+        direction_increment(_,I,J) & X2 = XP+I & Y2 = YP + J &
+        not gps_map(X2,Y2,obstacle,MyMAP) &
+        distance(X1,Y1,X2,Y2,D), FL
     ) & .min(FL,p(_,X,Y))
 .
 
@@ -77,7 +76,7 @@ task_shortest_path(B,D) :-
 /**
  * If I know the position of at least B, find the nearest and go there!
  */
-+!gotoNearest(B) :
++!goto_nearest(B) :
     origin_str(MyMAP) &
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
@@ -94,7 +93,7 @@ task_shortest_path(B,D) :-
  * If I know the position of at least B, find the nearest neighbour
  * point and go there!
  */
-+!gotoNearestNeighbour(B) :
++!goto_nearest_neighbour(B) :
     origin_str(MyMAP) &
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
@@ -108,7 +107,7 @@ task_shortest_path(B,D) :-
         .log(warning,"No success on: ",goto(XT,YT,RET)," ",myposition(X1,Y1));
     }
 .
-+!gotoNearestNeighbour(B) :
++!goto_nearest_neighbour(B) :
     thing(I,J,B,_) &
     distance(0,0,I,J,1)
     <-
@@ -116,7 +115,7 @@ task_shortest_path(B,D) :-
     .log(warning,"I am already in a neighbour of ",B," : ",thing(I,J,B,_),", skip: ",R);
 .
 //TODO: Sometimes the agent is not mapping correctly, it is thinking it is in another X,Y
-+!gotoNearestNeighbour(B) :
++!goto_nearest_neighbour(B) :
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
     nearest(B,XN,YN) &

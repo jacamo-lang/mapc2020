@@ -8,8 +8,8 @@
  /**
   * Accept a task (need to be close to a taskboard)
   */
-@acceptTask_close[atomic] // Should not accept more than one task at same time
-+!acceptTask(T) :
+@accept_task_close[atomic] // Should not accept more than one task at same time
++!accept_task(T) :
     not accepted(_) &
     thing(TX,TY,taskboard,_) &
     distance(0,0,TX,TY,DIST) & DIST <= 1
@@ -25,22 +25,22 @@
  /**
   * If it is far from the taskboard, first get closer
   */
-+!acceptTask(T) :
++!accept_task(T) :
     myposition(X,Y) &
     step(S) &
     not accepted(_)
     <-
     //.log(warning,"Accepting ",T," : ",myposition(X,Y));
-    !gotoNearestNeighbour(taskboard);
+    !goto_nearest_neighbour(taskboard);
     .wait(step(Step) & Step > S); //wait for the next step to continue
-    !acceptTask(T);
+    !accept_task(T);
 .
  /**
   * If this task was already accepted, just skip.
   */
-+!acceptTask(T) : accepted(T).
++!accept_task(T) : accepted(T).
 
--!acceptTask(T)
+-!accept_task(T)
     <-
     .log(warning,"Could not accept ",T);
 .

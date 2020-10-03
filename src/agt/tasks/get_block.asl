@@ -12,7 +12,7 @@
  * existing ones should be also solved
  */
  
- +!getBlock(B) :
+ +!get_block(B) :
      myposition(X,Y) &
      not attached(_,_) &
      (thing(I,J,dispenser,B) & directionIncrement(D,I,J))
@@ -25,12 +25,12 @@
        .log(warning,"Could not request/attach block ",B, "::",R0,"/",R1," my position: (",X,",",Y,"), target (",I,",",J,")");
      }
  .
- +!getBlock(B) :  // In case the agent is far away from B
+ +!get_block(B) :  // In case the agent is far away from B
      step(S) &
      not attached(_,_)
      <-
-     !gotoNearestNeighbour(B);
+     !goto_nearest_neighbour(B);
      .wait(step(Step) & Step > S); //wait for the next step to continue
-     !getBlock(B);
+     !get_block(B);
  .
- +!getBlock(B) : attached(_,_). // If I am already carrying a block B
+ +!get_block(B) : attached(_,_). // If I am already carrying a block B

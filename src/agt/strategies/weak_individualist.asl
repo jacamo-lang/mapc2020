@@ -26,9 +26,9 @@
 { include("origin_workaround.asl") }
 
 
-+!performTask(T) :
++!perform_task(T) :
     not accepted(_) &                       // I am not committed
-    not .intend(performTask(_)) &
+    not .intend(perform_task(_)) &
     .my_name(ME) &
     task(T,DL,Y,REQs) &
     .nth(0,REQs,req(_,_,B)) &   // Get the requirement (must be only one)
@@ -46,17 +46,17 @@
         if ( wanted_task(ME,T,_,_) ) { // there is no better agent to perform this task
             -exploring;
             .log(warning,"Accepting task... ",T);
-            !acceptTask(T);
+            !accept_task(T);
 
             .log(warning,"Performing task... ",T);
             .nth(0,REQs,req(I,J,B));
-            !getBlock(B);
+            !get_block(B);
 
             .log(warning,"Setting position of the requirement for ",T);
             !fix_rotation(req(I,J,B));
 
             .log(warning,"Submitting task... ",T);
-            !submitTask(T);
+            !submit_task(T);
 
             // In case submit did not succeed
             .log(warning,"Dropping blocks for ",T);
@@ -70,15 +70,15 @@
         }
     }
 .
-+!performTask(T)
++!perform_task(T)
     <-
     .log(warning,"Could not perform ",T);
 .
--!performTask(T)
+-!perform_task(T)
     <-
-    .log(warning,"Failed on ",performTask(T)," dropping desire, back to explore.");
+    .log(warning,"Failed on ",perform_task(T)," dropping desire, back to explore.");
     //No matter if it succeed or failed, it is supposed to be ready for another task
-    .drop_desire(performTask(_));
+    .drop_desire(perform_task(_));
     +exploring;
     !explore[critical_section(action), priority(1)];
 .
@@ -99,7 +99,7 @@
     known_requirements(T)
     <-
     .log(warning,"I am able to perform ",T);
-    !!performTask(T);
+    !!perform_task(T);
 .
 
 /**
