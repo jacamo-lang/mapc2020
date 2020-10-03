@@ -123,6 +123,6 @@ task_shortest_path(B,D) :-
     not thing(XN-X,YN-Y,B,_) // But, in fact, there is not a thing in the position it is supposed to be
     <-
     .log(warning,"I am lost looking for ",B," : ",myposition(X,Y)," : ",distance(X,Y,XN,YN,DIST));
-    +i_am_lost;
+    +status(lost);
     !do(skip,R);
 .
