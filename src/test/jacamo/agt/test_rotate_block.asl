@@ -18,6 +18,7 @@
 
     !rotation_in_a_free_area(MIN_I);
     !rotation_to_obstacle(MIN_I);
+    !rotation_from_obstacle(MIN_I);
 
     !print_map;
     !assert_true(true);
@@ -42,6 +43,24 @@
     // 3  o'clock -> 6  o'clock
     -+myposition(14,0);
     !update_line(14,0,MIN_I,"Y");
+    -+attached(1,0);
+    -+thing(1,0,block,b0);
+    !fix_rotation(req(0,1,b0));
+    ?walked_steps(R1);
+.
+
+/*
+ * This situation actually should never happen.
+ * It is when the block starts from an obstacle, in this case,
+ * the algorithm won't check the origin of the block, just the
+ * destination, i.e., it should rotate as in a normal situation.
+ */
++!rotation_from_obstacle(MIN_I)
+    <-
+    -+walked_steps(0);
+    // 3  o'clock -> 6  o'clock
+    -+myposition(16,3);
+    !update_line(16,3,MIN_I,"G");
     -+attached(1,0);
     -+thing(1,0,block,b0);
     !fix_rotation(req(0,1,b0));

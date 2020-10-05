@@ -19,7 +19,8 @@ suc(b(I1,J1),b(I2,J2),1,D) :- rotate(D,I1,J1,I2,J2) &
                               origin_str(MyMAP) &
                               not gps_map(X+I2,Y+J2,obstacle,MyMAP).                              
 
-h(b(I1,J1),b(I1,J1),0).
+// very simple and not very useful heuristic: 0 when no rotation is needed, 1 if any rotation is needed
+h(b(I1,J1),b(I1,J1),0). 
 h(b(I1,J1),b(I2,J2),1).
 
 // For rotation
