@@ -30,6 +30,9 @@ public class Control {
                         Thread.sleep(50);
                     }
 
+                    Statistics s = Statistics.getInstance();
+                    s.prepareMatchesStatsFile();
+
                     // Start the server
                     Server.main(new String[] { "-conf", "serverconf/SampleConfig.json", "--monitor" });
                     
