@@ -45,7 +45,7 @@
     !assert_equals(5,R0_3);
     !assert_equals(5,R1_3);
 
-    !print_map;
+    //!print_map;
 
     !test_goto_surrounding_objects(MIN_I);
     !test_goto_nearest_objects(MIN_I);

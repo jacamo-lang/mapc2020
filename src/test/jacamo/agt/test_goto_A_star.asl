@@ -7,8 +7,8 @@
 { include("test_walking_helpers.asl") }
 { include("walking/goto_A_star.asl") }
 
-@[test]
-+!test_goto :
+@test_goto_A_star[test]
++!test_goto_A_star :
     .findall(I,gps_map(I,J,O,_),LI) &
     .min(LI,MIN_I) // MIN_I informs the more negative I to know how far is from zero
     <-

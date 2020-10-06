@@ -1,5 +1,5 @@
 /**
- * Shameful macgyvering workaround for many situations where agents are crashing 
+ * Shameful macgyvering workaround for many situations where agents are crashing
  * and I don't know why and how to resolve it properly.
  *
  * It is counting how many no_action in a row it is happening. Sometimes,
@@ -61,8 +61,8 @@ max_no_action_in_a_row(1).
  * Based on !start of agentBase - just do not change origin(NAME)
  */
 +!restart :
-    step(S)  
-    <- 
+    step(S)
+    <-
     .wait(step(Step) & Step > S); //wait for the next step to continue
     +exploring;
     !explore[critical_section(action), priority(1)]
@@ -71,7 +71,7 @@ max_no_action_in_a_row(1).
 /**
  * Return to individual reseted map considering this as 0,0 position
  */
-+i_am_lost :
++status(lost) :
     .my_name(ME) &
     .term2string(ME,MEStr)
     <-
@@ -81,6 +81,6 @@ max_no_action_in_a_row(1).
     removeMyWantedTasks(MEStr);
     -+myposition(0,0);
     -+origin(ME);
-    .abolish(i_am_lost);
+    .abolish(status(lost));
     !restart_agent;
 .
