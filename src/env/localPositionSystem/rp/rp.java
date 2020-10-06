@@ -96,5 +96,8 @@ public class rp extends lps {
         while (getObsProperty("gps_map") != null) {
             removeObsProperty("gps_map");
         }
+        while (getObsProperty("edge") != null) { //used in stc strategy
+            removeObsProperty("edge");
+        }
     }
 }
