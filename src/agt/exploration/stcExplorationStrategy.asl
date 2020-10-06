@@ -7,8 +7,8 @@ directions(1,[s,e,n,w]).//letter corresponding to the directions
 
 +!update_direction_stc : exploration_strategy(stc)
    <- !update_direction; //update direction according to STC strategy
-      ?current_direction_stc(Dir); 
-      ?path_direction(PD) 
+      ?current_direction_stc(Dir);      
+      ?path_direction(PD); 
       ?directions(PD,DIRECTIONS); 
       .nth(Dir,DIRECTIONS,ND); //STC: update to the next direction
       -+current_direction(ND).
