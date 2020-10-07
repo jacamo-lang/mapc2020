@@ -21,9 +21,12 @@ max_no_action_in_a_row(1).
     step(S) &
     no_action_step_count(_,C) &
     max_no_action_in_a_row(M) &
+    .my_name(ME) &
     C >= M
     <-
     .log(severe,"****** Restarting due to no_action!");
+    .concat("[",no_action(ME),"]",STR);
+    .save_stats("restarted",STR);
     !restart_agent;
 .
 /**
@@ -76,6 +79,8 @@ max_no_action_in_a_row(1).
     .term2string(ME,MEStr)
     <-
     .log(severe,"****** Restarting because I am lost!");
+    .concat("[",lost(ME),"]",STR);
+    .save_stats("restarted",STR);
     .abolish(gps_map(_,_,_,ME));
     .abolish(gps_map(_,_,_,MEStr));
     removeMyWantedTasks(MEStr);

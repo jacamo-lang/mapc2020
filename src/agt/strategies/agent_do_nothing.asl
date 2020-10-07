@@ -3,6 +3,7 @@
 { include("environment/artifact_eis.asl") }
 { include("simulation/massim.asl") }
 
+exploration_strategy(none).
 
 @step[atomic]   
 +step( S ): true
