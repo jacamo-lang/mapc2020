@@ -19,7 +19,7 @@
     !testNearestNeighbour;
     !test_task_shortest_path;
 
-    !print_map;
+    //!print_map;
 .
 
 /**
@@ -95,7 +95,7 @@
     !assert_equals(4,X4);
     !assert_equals(-12,Y4);
 
-    !print_map;
+    //!print_map;
 .
 
 /**

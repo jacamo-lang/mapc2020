@@ -38,8 +38,8 @@ docker run -ti --rm -u gradle -v gradle-cache:/home/gradle/.gradle -v "$PWD":/ho
 
 # Additional running configurations
 * To add addition configurations when running add `--args=` after `./gradlew run`.
-  * Use the first argument to specify an JCM file (eg.: `./gradlew run --args="src/jcm/donothing_X_donothing.jcm`.
-  * Use the second argument to specify whether you want to open the standard browser automatically (eg.: `./gradlew run --args="src/jcm/donothing_X_donothing.jcm browser` to open it. Use something else to do not open the browser `./gradlew run --args="src/jcm/donothing_X_donothing.jcm noBrowser`).
+  * Use the first argument to specify an JCM file (e.g.: `./gradlew run --args="src/jcm/donothing_X_donothing.jcm`.
+  * Use the second argument to specify whether you want to open the standard browser automatically (e.g.: `./gradlew run --args="src/jcm/donothing_X_donothing.jcm browser` to open it. Use something else to do not open the browser `./gradlew run --args="src/jcm/donothing_X_donothing.jcm noBrowser`).
 
 ## Troubleshoot when using docker
 
@@ -79,7 +79,7 @@ mapc2020/
 ```
 # Understanding the dynamics behind this project
 
-* (MAPC)[https://multiagentcontest.org/] provides an environment which provides body representations for agents which walk on a 2 dimensional space and are expected to achieve given tasks.
+* [MAPC](https://multiagentcontest.org/) provides an environment which provides body representations for agents which walk on a 2 dimensional space and are expected to achieve given tasks.
 * We play at the client side but while developing we are also able to launch the server side and do local simulations.
 * The simulation run in steps and each agent has a timeout, i.e., a deadline to reply to the simulator a given action to the current step (default is 4 seconds).
 * If no action is provided by a given agent it is counted as a missed step. For the qualification we cannot miss more than 30% of the steps on each round.
@@ -112,7 +112,6 @@ mapc2020/
 * The server setup is stated at `mapc2020/serverconf/` and client setups, which are the most important part for us, are stated at `mapc2020/clientconf/` folder.
 * When running locally, our `json` configuration files on `mapc2020/clientconf/` are set to connect to the `localhost` machine. When qualifying or during matches we will need to set our agents to some given server.
 ** The script `createFiles.sh` helps to quickly create a set of configuration files, just edit the template inside of `createFiles.sh` and run it `$ ./createFiles.sh`.
-
 
 # Using jason unit tests
 
@@ -147,6 +146,35 @@ In the file `src/test/jason/asl/test_meeting.asl` we add some known facts. When 
 
 ## Why it is important to create unit tests?
 
-Tests are run every git push and can also be perfomed locally using `./gradlew test` or `gradle test`.
+Tests are run every git push and can also be performed locally using `./gradlew test` or `gradle test`.
 * When we have a plan being tested on every push we have the opportunity to be advised if some change has affected other parts of the system. It is specially effective when we have many developers working in the same project.
 * Performing local tests may also be a more convenient and faster way to test new features. The local tests usually run faster than the simulation. It is also often hard to test from the simulation since usually we have to wait for agents to reach some specific condition in which some test is going to be performed. It takes time, needs focus of the developer and usually many .print/.log messages.
+
+
+# Using a jacamo-web playgroung
+
+We have a JCM using [jacamo-web](https://github.com/jacamo-lang/jacamo-web) which may be helpful for faster the development of new features and tests. Actually, since MAPC uses a simulator which can produce changes very fast, jacamo-web is not being shown a good development environment. For this reason, the playground proposes the use jacamo-web out of the simulation. It is useful since it allows to quickly make changes (even while running) and after it has some maturity we can move from player's code to a final agent code or a tester agent. The script `src/jcm/playground.jcm` just launches a jacamo-web environment with the agent `src/agt/player.asl`. For instance, if we want to test the rule `get_rotation` provided by `walking/rotate_jA_star.asl`.
+
+```
+{ include("test_walking_helpers.asl") }
+{ include("walking/rotate_jA_star.asl") }
+
++!start
+    <-
+    -+myposition(0,0);
+    -+origin_str(mymap);
+
+    ?get_rotation(b(1,0,b0),b(0,1,b0),D0);
+    .log(warning,"Rotate a block from 3 o'clock to 6 o'clock got ",D0);
+.
+```
+
+* We can use jacamo-web command box to trigger the plan `!start` whenever we want to check the result.
+* We can use jacamo-web to edit and reload the agent `player` with the new code to quickly try different possibilities.
+* Since we don't have inputs from the simulation, it is often necessary to use some snapshot of the simulation like the one we have at `src/test/inc/test_walking.bb`.
+* It is also often necessary to mock plans that triggers actions on the environment (the file `src/test/inc/test_walking_helpers.asl` has some examples of mocks at plan `!add_test_plans_do(MIN_I)`).
+
+---
+**WARNING:**  
+* Unfortunately, jacamo-web is not updating agent's rules after hot-swapping the agent, instead it is necessary to manually kill/create the agent.
+---
