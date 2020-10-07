@@ -42,9 +42,11 @@
     step(2) &
     .my_name(NAME) & 
     .substring(NAME,ID,6) & ID == "1" & // only agenta1 and b1 are writing statistics
-    teamSize(TS)
+    teamSize(TS) &
+    vision(V) &
+    exploration_strategy(ES)
     <-
-    .concat(teamSize(TS),C);
+    .concat("[",teamSize(TS),",",vision(V),",",exploration_strategy(ES),"]",C);
     .save_stats("simStart",C);
 .
 /**
@@ -73,7 +75,7 @@
     ranking(R) &
     score(S)
     <-
-    .concat(score(S),ranking(R),C);
+    .concat("[",score(S),",",ranking(R),"]",C);
     .save_stats("simEnd",C);
     -ranking(R);
     -score(R);

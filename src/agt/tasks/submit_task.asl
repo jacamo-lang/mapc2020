@@ -14,7 +14,7 @@
     !do(submit(T),R0);
     if (R0 == success) {
         .log(warning,"I've submitted task ",T," : ",REQs,", attached: ",LA);    
-        .term2string(task(T,DL,Y,REQs),STR);
+        .concat("[",task(T,DL,Y,REQs),"]",STR);
         .save_stats("taskSubmitted",STR);
     } else {
         .fail;
