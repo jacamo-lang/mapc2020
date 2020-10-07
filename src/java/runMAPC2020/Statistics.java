@@ -44,6 +44,7 @@ public class Statistics {
         //fields and sequence of columns in the CSV file
         this.fields.add("date");
         this.fields.add("host");
+        this.fields.add("pid");
         this.fields.add("asls");
         this.fields.add("team");
         this.fields.add("event");
@@ -93,6 +94,7 @@ public class Statistics {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             line.put("date", formatter.format(new Date()));
             line.put("host", InetAddress.getLocalHost().getHostName());
+            line.put("pid", String.valueOf(ProcessHandle.current().pid()));
             line.put("asls", JaCaMoLauncher.getRunner().getProject().getAllASFiles().toString());
             line.put("team", data.get("team"));
             line.put("event", data.get("event"));
