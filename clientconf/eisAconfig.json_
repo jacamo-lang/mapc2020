@@ -1,6 +1,6 @@
 {
   "scenario": "assemble2020",
-  "host": "http://agentcontest2.in.tu-clausthal.de",
+  "host": "localhost",
   "port": 12300,
   "scheduling": true,
   "only-once": false,
@@ -10,9 +10,9 @@
   "queued": false,
   "multi-entities": [
     {
-      "name-prefix":  "agentJaCaMoBuilders",
+      "name-prefix":  "connectionA",
       "username-prefix":  "agentA",
-      "password":  "8P7bgZhC",
+      "password":  "1",
       "print-iilang": false,
       "print-json": false,
       "count": 10,

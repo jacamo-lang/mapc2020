@@ -1,6 +1,6 @@
 {
 "scenario":"test40x40",
-"host":"localhost",
+"host":"agentcontest2.in.tu-clausthal.de",
 "port":12300,
 "scheduling":false,
 "timeout":4000,
@@ -8,6 +8,6 @@
 "notifications":false,
 "queued":false,
 "entities": [
-{"name":"connectionA49", "username": "agentA49", "password": "1", "print-iilang":false, "print-json":false}
+{"name":"agentJaCaMoBuilders49", "username": "agentA49", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}
   ]
 }

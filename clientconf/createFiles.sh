@@ -6,7 +6,7 @@ do
 new=$(printf "eisa%d.json" "$i")
 (printf '{
 "scenario":"test40x40",
-"host":"localhost",
+"host":"agentcontest2.in.tu-clausthal.de",
 "port":12300,
 "scheduling":false,
 "timeout":4000,
@@ -14,7 +14,7 @@ new=$(printf "eisa%d.json" "$i")
 "notifications":false,
 "queued":false,
 "entities": [
-{"name":"connectionA%d", "username": "agentA%d", "password": "1", "print-iilang":false, "print-json":false}
+{"name":"agentJaCaMoBuilders%d", "username": "agentA%d", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}
   ]
 }
 ' "$i" "$i") > $new
