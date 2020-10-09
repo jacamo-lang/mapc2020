@@ -6,7 +6,7 @@ defaultTasks 'run'
 
 apply plugin: 'java'
 
-version '0.1'
+version '0.2'
 group   'org.jacamo.mapc'
 
 sourceCompatibility = 1.13
@@ -52,6 +52,17 @@ sourceSets {
 if (JavaVersion.current() < project.targetCompatibility) {
     println "The java version used ${JavaVersion.current()}, it is expected version ${project.targetCompatibility}."
 }
+
+task createProperties(dependsOn: processResources) {
+	doLast {
+		new File("$buildDir/version.properties").withWriter { w ->
+			Properties p = new Properties()
+			p['version'] = project.version.toString()
+			p.store w, null
+		}
+	}
+}
+tasks.classes.dependsOn createProperties
 
 task run (type: JavaExec, dependsOn: 'classes') {
     group      ' MAPC'

@@ -2,8 +2,10 @@ package runMAPC2020;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -17,6 +19,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import jacamo.infra.JaCaMoLauncher;
+import jade.util.leap.Properties;
 
 /**
  * @author cleber
@@ -27,6 +30,7 @@ public class Statistics {
     private static Statistics instance = null;
     final String matchesStatsFolder = "output/statistics/";
     final String matchesStatsFile   = "matches.csv";
+    final String propFile           = "build/version.properties";
     
     int id = 0;
     
@@ -43,6 +47,7 @@ public class Statistics {
     private Statistics() {
         //fields and sequence of columns in the CSV file
         this.fields.add("date");
+        this.fields.add("version");
         this.fields.add("host");
         this.fields.add("pid");
         this.fields.add("asls");
@@ -99,6 +104,7 @@ public class Statistics {
             line.put("team", data.get("team"));
             line.put("event", data.get("event"));
             line.put("comment", data.get("comment"));
+            line.put("version", getVersionFromPropertiesFile());
             // line.put("rDL", (String.format("%.2f", assignedDataLoad)));
 
         } catch (UnknownHostException e) {
@@ -112,5 +118,23 @@ public class Statistics {
         // create folders if doesnt exist
         File file = new File(matchesStatsFolder + "tmp");
         file.getParentFile().mkdirs();
+    }
+
+    private String getVersionFromPropertiesFile() {
+        File file = new File(propFile);
+        try {
+            if ( file.exists() ) {
+                InputStream inputStream;
+                inputStream = new FileInputStream(propFile);
+                Properties prop = new Properties();
+                prop.load(inputStream);
+                return prop.getProperty("version");
+            } else {
+                return "0.0";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "0.00";
     }
 }
