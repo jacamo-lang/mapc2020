@@ -15,7 +15,7 @@ public class Control {
             public void run() {
                 try {
                     System.out.println("Starting simulation....");
-
+                    /*
                     // Wait for jacamo
                     boolean waitAgents = true;
                     while (waitAgents) {
@@ -32,7 +32,7 @@ public class Control {
 
                     Statistics s = Statistics.getInstance();
                     s.prepareMatchesStatsFile();
-
+                    */
                     // Start the server
                     Server.main(new String[] { "-conf", "serverconf/SampleConfig.json", "--monitor" });
                     
