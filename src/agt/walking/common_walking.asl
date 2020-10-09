@@ -85,6 +85,9 @@ task_shortest_path(B,D) :-
     .log(warning,"Going to ",nearest(B,XN,YN)," from ",myposition(X,Y));
     !goto(XN,YN,RET);
     if (RET \== success & myposition(X1,Y1)) {
+        if(RET==no_route){ 
+            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
+        } 
         .log(warning,"No success on: ",goto(XN,YN,RET)," ",myposition(X1,Y1));
     }
 .
@@ -104,6 +107,9 @@ task_shortest_path(B,D) :-
     .log(warning,"Going to neighbour of ",nearest(B,XN,YN)," : ",distance(X,Y,XT,YT,DIST));
     !goto(XT,YT,RET);
     if (RET \== success & myposition(X1,Y1)) {
+        if(RET==no_route){ 
+            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
+        } 
         .log(warning,"No success on: ",goto(XT,YT,RET)," ",myposition(X1,Y1));
     }
 .

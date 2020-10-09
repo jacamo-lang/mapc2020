@@ -93,6 +93,12 @@ cycle(X,Y,XX,YY) :- false.
    <- .abolish(failed_move_count(_,_)).   
 
 
+
+//At the beginning, there is not a free direction - do nothing
++!update_direction: exploration_strategy(stc) & 
+                    myposition(0,0) & next_direction(X,Y,-1) & not(parent(_,_,_,_,_))
+   <- -+current_moving_step(0).
+
 //At the beginning, go to the first free direction
 +!update_direction: exploration_strategy(stc) & 
                     myposition(0,0) & next_direction(X,Y,D) & not(parent(_,_,_,_,_))

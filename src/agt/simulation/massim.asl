@@ -24,6 +24,10 @@
     .abolish(exploring);
     .abolish(myposition(_,_));
     .abolish(origin(_));
+    .abolish(edge(_,_,_,_,_,_)); //from stc exploration strategy
+    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol 
+    .abolish(pending_areyou(_,_,_)); //from meeting protocol
+    
     
     if (.concat("artGPS",TEAM,ArtGPS) & focused(Env,ArtGPS)) {
         resetRP;
@@ -34,6 +38,7 @@
     
     +exploring;
     +myposition(0,0);
+    -+last_node(-1,-1); //from stc strategy 
 
     !!start;
 .
