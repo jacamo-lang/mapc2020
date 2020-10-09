@@ -135,6 +135,6 @@ public class Statistics {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "0.00";
+        return "0.0";
     }
 }
