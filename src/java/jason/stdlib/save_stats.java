@@ -1,12 +1,14 @@
 package jason.stdlib;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import jason.JasonException;
 import jason.asSemantics.DefaultInternalAction;
 import jason.asSemantics.TransitionSystem;
 import jason.asSemantics.Unifier;
+import jason.asSyntax.Literal;
 import jason.asSyntax.StringTerm;
 import jason.asSyntax.Term;
 import runMAPC2020.Statistics;
@@ -41,6 +43,15 @@ public class save_stats extends DefaultInternalAction {
             
             Map<String, String> data = new HashMap<>();
             data.put("team", ts.getAgArch().getAgName().substring(5, 6));
+
+            Iterator<Literal> it = ts.getAg().getBB().iterator();
+            while (it.hasNext()) {
+                Literal l = it.next();
+                if ( ((Literal)l).getFunctor().equals("persistTeamSize") ) {
+                    data.put("teamSize", ((Literal)l).getTerm(0).toString() );
+                    break;
+                }
+            }
             data.put("event", ((StringTerm)args[0]).getString());
             data.put("comment", ((StringTerm)args[1]).getString());
             

@@ -43,7 +43,7 @@
     !!start;
 .
 
-+simStart :
++simStart : // to avoid a flood of register, only agent1 of each team generate the simStart event
     step(2) &
     .my_name(NAME) & 
     .substring(NAME,ID,6) & ID == "1" & // only agenta1 and b1 are writing statistics
@@ -51,14 +51,24 @@
     vision(V) &
     exploration_strategy(ES)
     <-
+    -+persistTeamSize(TS);
     .concat("[",teamSize(TS),",",vision(V),",",exploration_strategy(ES),"]",C);
     .save_stats("simStart",C);
 .
++simStart : // for the other agents, just write persistTeamSize(TS)
+    step(2) &
+    .my_name(NAME) & 
+    .substring(NAME,ID,6) & // only agenta1 and b1 are writing statistics
+    teamSize(TS)
+    <-
+    -+persistTeamSize(TS);
+.
+   
 /**
  * The simulator just stopped / end of a round
  */
-+simEnd :
-    step(1) &
++simEnd : // I was expecting this just once at step(749) but I am getting it at every step!
+    step(1) & // This is the first step of the next round (also works for the last round!) 
     .my_name(NAME) & 
     .substring(NAME,ID,6) & ID == "1" // only agenta1 and b1 are writing statistics
     <-
