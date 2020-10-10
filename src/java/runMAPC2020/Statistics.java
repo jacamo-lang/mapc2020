@@ -49,7 +49,7 @@ public class Statistics {
         this.fields.add("date");
         this.fields.add("version");
         this.fields.add("host");
-        this.fields.add("pid");
+        this.fields.add("rid");
         this.fields.add("asls");
         this.fields.add("team");
         this.fields.add("event");
@@ -99,16 +99,14 @@ public class Statistics {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             line.put("date", formatter.format(new Date()));
             line.put("host", InetAddress.getLocalHost().getHostName());
-            line.put("pid", String.valueOf(ProcessHandle.current().pid()));
+            line.put("rid", String.valueOf(ProcessHandle.current().pid()) + data.get("team") + data.get("teamSize"));
             line.put("asls", JaCaMoLauncher.getRunner().getProject().getAllASFiles().toString());
             line.put("team", data.get("team"));
             line.put("event", data.get("event"));
             line.put("comment", data.get("comment"));
             line.put("version", getVersionFromPropertiesFile());
-            // line.put("rDL", (String.format("%.2f", assignedDataLoad)));
 
         } catch (UnknownHostException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return line;
