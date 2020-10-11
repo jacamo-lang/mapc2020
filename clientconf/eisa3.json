@@ -8,6 +8,6 @@
 "notifications":false,
 "queued":false,
 "entities": [
-{"name":"agentJaCaMoBuilders3", "username": "agentA3", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}
+{"name":"agentJaCaMo_Builders3", "username": "agent3", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}
   ]
 }
