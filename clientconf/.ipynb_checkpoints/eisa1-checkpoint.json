@@ -1,6 +1,6 @@
 {
 "scenario":"test40x40",
-"host":"agentcontest2.in.tu-clausthal.de",
+"host":"localhost",
 "port":12300,
 "scheduling":false,
 "timeout":4000,
