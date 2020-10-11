@@ -14,7 +14,7 @@ new=$(printf "eisa%d.json" "$i")
 "notifications":false,
 "queued":false,
 "entities": [
-{"name":"agentJaCaMo_Builders%d", "username": "agent%d", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}
+{"name":"agentJaCaMo_Builders%d", "username": "agentJaCaMo_Builders%d", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}
   ]
 }
 ' "$i" "$i") > $new
