@@ -11,16 +11,22 @@
 @accept_task_close[atomic] // Should not accept more than one task at same time
 +!accept_task(T) :
     not accepted(_) &
+    task(T,DL,Y,REQs) &
     thing(TX,TY,taskboard,_) &
-    distance(0,0,TX,TY,DIST) & DIST <= 1
+    distance(0,0,TX,TY,DIST) & DIST <= 1 &
+    .my_name(ME)
     <-
     !do(accept(T),R0);
     if (R0 == success) {
-         .log(warning,"Task ",T," accepted!");
+        .log(warning,"Task ",T," accepted!");
+        .concat("[",task(T,DL,Y,REQs),",",agent(ME),"]",STR);
+        .save_stats("taskAccepted",STR);
     } else {
-      .log(warning,"Could not accept task ",T);
-      .fail;
-   }
+        .log(warning,"Could not accept task ",T);
+        .concat("[",task(T,DL,Y,REQs),",",agent(ME),"]",STR);
+        .save_stats("errorOnAccept",STR);
+        .fail;
+    }
 .
  /**
   * If it is far from the taskboard, first get closer

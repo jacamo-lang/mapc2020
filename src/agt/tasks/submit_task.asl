@@ -4,16 +4,13 @@
  */
 
 +!submit_task(T) : //thing(0,1,block,b1)
-    attached(I,J) &
-    direction_increment(D,I,J) &
-    .findall(attached(I,J),attached(I,J),LA) &
     task(T,DL,Y,REQs) &
     goal(0,0)         // I am over a goal
     <-
     .abolish(accepted(_));
     !do(submit(T),R0);
     if (R0 == success) {
-        .log(warning,"I've submitted task ",T," : ",REQs,", attached: ",LA);    
+        .log(warning,"I've submitted task ",T);    
         .concat("[",task(T,DL,Y,REQs),"]",STR);
         .save_stats("taskSubmitted",STR);
     } else {

@@ -27,7 +27,7 @@
     .abolish(edge(_,_,_,_,_,_)); //from stc exploration strategy
     .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol 
     .abolish(pending_areyou(_,_,_)); //from meeting protocol
-    
+    .abolish(task(_,_,_,_));    
     
     if (.concat("artGPS",TEAM,ArtGPS) & focused(Env,ArtGPS)) {
         resetRP;

@@ -19,10 +19,10 @@ distance(X1,Y1,X2,Y2,D) :-
 
 /** 
  * Return the coordinates X,Y of the nearest specific thing 
- * in the map.
+ * on the map.
  * 
  * For instance: ?nearest(taskboard,X,Y) has unified in X,Y
- * the neareast taskboard this agent know (based on its gps_map(_,_,_,_)
+ * the nearest taskboard this agent know (based on its gps_map(_,_,_,_)
  * and myposition(_,_) beliefs
  */
 nearest(T,X,Y) :-
@@ -30,6 +30,31 @@ nearest(T,X,Y) :-
     origin_str(MyMAP) &
     .findall(p(D,X2,Y2), gps_map(X2,Y2,T,MyMAP) & distance(X1,Y1,X2,Y2,D), FL) &
     .min(FL,p(_,X,Y))
+.
+
+/** 
+ * Returns the coordinates X,Y that leaves thing T at direction DIR, i.e.,
+ * returns the adjacent of the specific thing in which the thing is at DIR
+ * of this adjacent
+ * 
+ * Example: let a thing T at X=0 and Y=0 be surrounded by its 4 adjacent 
+ * (n,w,s,e) as below.  
+ * ....n....
+ * ...wTe...
+ * ....s....
+ * nearest_adjacent(T,X,Y,w) unifies X=1,Y=0 which matches with the position 'e'
+ * i.e., the position that leaves T at west direction.
+ * 
+ * For instance: ?nearest_dir(taskboard,X,Y,DIR) has unified in X,Y
+ * the nearest taskboard this agent know (based on its gps_map(_,_,_,_)
+ * and myposition(_,_) beliefs plus the given direction DIR
+ */
+nearest_adjacent(T,X,Y,DIR) :-
+    myposition(X1,Y1) &
+    origin_str(MyMAP) &
+    .findall(p(D,X2,Y2), gps_map(X2,Y2,T,MyMAP) & distance(X1,Y1,X2,Y2,D), FL) &
+    .min(FL,p(_,X3,Y3)) & direction_increment(DIR,I,J) &
+    X = X3 + I & Y = Y3 + J
 .
 
 /**
@@ -73,6 +98,10 @@ task_shortest_path(B,D) :-
     D = D12 + D23 + D34
 .
 
+is_walkable(I,J) :- not thing(I,J,obstacle,_) &
+                    not thing(I,J,entity,_) &
+                    not (thing(I,J,block,B) & not attached(I,J)).
+
 /**
  * If I know the position of at least B, find the nearest and go there!
  */
@@ -85,7 +114,7 @@ task_shortest_path(B,D) :-
     .log(warning,"Going to ",nearest(B,XN,YN)," from ",myposition(X,Y));
     !goto(XN,YN,RET);
     if (RET \== success & myposition(X1,Y1)) {
-        if(RET==no_route){ 
+        if(RET == no_route){ 
             !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
         } 
         .log(warning,"No success on: ",goto(XN,YN,RET)," ",myposition(X1,Y1));
@@ -118,7 +147,7 @@ task_shortest_path(B,D) :-
     distance(0,0,I,J,1)
     <-
     !do(skip,R);
-    .log(warning,"I am already in a neighbour of ",B," : ",thing(I,J,B,_),", skip: ",R);
+    .log(warning,"I am already at a neighbour of ",B," : ",thing(I,J,B,_),", skip: ",R);
 .
 //TODO: Sometimes the agent is not mapping correctly, it is thinking it is in another X,Y
 +!goto_nearest_neighbour(B) :
@@ -131,4 +160,32 @@ task_shortest_path(B,D) :-
     .log(warning,"I am lost looking for ",B," : ",myposition(X,Y)," : ",distance(X,Y,XN,YN,DIST));
     +status(lost);
     !do(skip,R);
+.
+
+/**
+ * If I know the position of at least B, find the nearest neighbour
+ * point and go there!
+ */
++!goto_nearest_adjacent(B,DIR) :
+    origin_str(MyMAP) &
+    myposition(X,Y) &
+    gps_map(_,_,B,MyMAP) &
+    nearest_adjacent(B,XA,YA,DIR) &
+    distance(X,Y,XA,YA,DIST) & DIST > 0
+    <-
+    .log(warning,"Going to adjacent of ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));
+    !goto(XA,YA,RET);
+    if (RET \== success & myposition(X1,Y1)) {
+        if(RET==no_route){ 
+            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
+        } 
+        .log(warning,"No success on: ",goto(XA,YA,RET)," ",myposition(X1,Y1));
+    }
+.
++!goto_nearest_adjacent(B,DIR) :
+    thing(I,J,B,_) &
+    direction_increment(DIR,I,J)
+    <-
+    !do(skip,R);
+    .log(warning,"I am already at an adjacent of ",B," : ",thing(I,J,B,_),", skip: ",R);
 .

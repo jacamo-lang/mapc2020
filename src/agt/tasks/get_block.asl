@@ -11,26 +11,33 @@
  *it is possible to have requerements of multiple blocks, so, the position of
  * existing ones should be also solved
  */
- 
- +!get_block(B) :
-     myposition(X,Y) &
-     not attached(_,_) &
-     (thing(I,J,dispenser,B) & directionIncrement(D,I,J))
-     <-
-     !do(request(D),R0);
-     !do(attach(D),R1);
-     if ((R0 == success) & (R1 == success)) {
-       .log(warning,"I have attached a block ",B);
-     } else {
-       .log(warning,"Could not request/attach block ",B, "::",R0,"/",R1," my position: (",X,",",Y,"), target (",I,",",J,")");
-     }
- .
- +!get_block(B) :  // In case the agent is far away from B
++!get_block(req(I,J,B)) :
+    myposition(X,Y) &
+    (thing(ID,JD,dispenser,B) & distance(0,0,ID,JD,1) & direction_increment(DD,ID,JD)) & // direction of the dispenser
+    not attached(ID,JD) &
+    .my_name(ME)
+    <-
+    !do(request(DD),R0);
+    !do(attach(DD),R1);
+    if ((R0 == success) & (R1 == success)) {
+        .log(warning,"I have attached a block ",B);
+        .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,BB), L);
+        .findall(t(I,J,T),thing(I,J,T,_), LT);
+        .concat("[",req(I,J,B),",",agent(ME),",",myposition(X,Y),",",a(L),",",t(LT),",",R0,"/",R1,"]",STR);
+        .save_stats("blockAttached",STR);
+    } else {
+        .log(warning,"Could not request/attach block ",B, "::",R0,"/",R1," my position: (",X,",",Y,"), target (",I,",",J,")");
+        .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,BB), L);
+        .findall(t(I,J,T),thing(I,J,T,_), LT);
+        .concat("[",req(I,J,B),",",agent(ME),",",myposition(X,Y),",",a(L),",",t(LT),",",R0,"/",R1,"]",STR);
+        .save_stats("errorOnAttach",STR);
+    }
+.
++!get_block(req(I,J,B)) :  // In case the agent is far away from B
      step(S) &
-     not attached(_,_)
+     direction_increment(DIR,I,J)
      <-
-     !goto_nearest_neighbour(B);
+     !goto_nearest_adjacent(B,DIR);
      .wait(step(Step) & Step > S); //wait for the next step to continue
-     !get_block(B);
- .
- +!get_block(B) : attached(_,_). // If I am already carrying a block B
+     !get_block(req(I,J,B));
+.
