@@ -62,7 +62,7 @@ task stage (type: JavaExec, dependsOn: 'classes') {
     standardInput = System.in
     jvmArgs = ['-Xss15m','-Djava.awt.headless=true']
     main 'runMAPC2020.RunTeam'
-    args = ['src/jcm/weak_individualist.jcm']
+    args = ['src/jcm/individualist.jcm']
     classpath sourceSets.main.runtimeClasspath
 }
 
@@ -86,7 +86,7 @@ task run (type: JavaExec, dependsOn: 'classes') {
     standardInput = System.in
     jvmArgs = ['-Xss15m','-Djava.awt.headless=true']
     main 'runMAPC2020.RunTeam'
-    args = ['src/jcm/weak_individualist.jcm']
+    args = ['src/jcm/individualist.jcm']
     classpath sourceSets.main.runtimeClasspath
 }
 

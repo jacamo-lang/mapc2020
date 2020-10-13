@@ -153,3 +153,18 @@
             .log(warning,"Map synced.");
     }, self, begin);
 .
+
+/**
+ * Remove all thing(_,_,_,_) and create new ones based on vision(V),
+ * my_position(_,_) and gps_map(_,_,_,_)
+ */
++!update_thing_from_gps_map :
+    myposition(OX,OY) &
+    origin_str(MyMAP) &
+    vision(V)
+    <-
+    .abolish(thing(_,_,_,_));
+    for ( gps_map(X,Y,O,MyMAP) & math.abs(OX-X) <= V & math.abs(OY-Y) <= V ) {
+        +thing(X-OX,Y-OY,O,_); 
+    }
+.

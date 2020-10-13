@@ -28,6 +28,7 @@
     <-
     -+walked_steps(0);
     -+myposition(0,0);
+    -+step(0);
     !update_line(0,0,MIN_I,"H");
     // 3  o'clock -> 6  o'clock
     -+attached(1,0);

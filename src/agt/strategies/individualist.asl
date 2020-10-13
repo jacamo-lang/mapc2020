@@ -49,11 +49,13 @@
             !accept_task(T);
 
             .log(warning,"Performing task... ",T);
-            .nth(0,REQs,req(I,J,B));
-            !get_block(req(I,J,B));
-
-            .log(warning,"Setting position of the requirement for ",T);
-            !fix_rotation(req(I,J,B));
+            for ( .member(req(IR,JR,BR),REQs) ) {
+                .log(warning,"getblock ",req(IR,JR,BR));
+                !get_block(req(IR,JR,BR));
+                
+                .log(warning,"Setting position of the requirement for ",req(IR,JR,BR));
+                !fix_rotation(req(IR,JR,BR));
+            }
 
             .log(warning,"Submitting task... ",T);
             !submit_task(T);
@@ -83,19 +85,24 @@
     !explore[critical_section(action), priority(1)];
 .
 
-// This is not a single block task
+/**
+ * Thanks in which one req (math.abs(I) + math.abs(J)) is greater than  1
+ * are the ones that need help, i.e., cannot be performed by an individualist
+ */
 +task(T,DL,Y,REQs) :
     not unwanted_task(T) &
-    .length(REQs) \== 1 // The task is NOT a single block task
+   .member(req(I,J,_),REQs) & 
+   (math.abs(I) + math.abs(J)) > 1 // There is a req which requires help from other agent
     <-
     +unwanted_task(T);
 .
 
 +task(T,DL,Y,REQs) :
     exploring &
-    not accepted(_) &                     // I am not committed
+    not accepted(_) &   // I am not committed
     not unwanted_task(T) &
-    .length(REQs) == 1 &
+    .member(req(I,J,_),REQs) & 
+    (math.abs(I) + math.abs(J)) <= 1 & // reqs all placed only on adjacent squares
     known_requirements(T)
     <-
     .log(warning,"I am able to perform ",T);

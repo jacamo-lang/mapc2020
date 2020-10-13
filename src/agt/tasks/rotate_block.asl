@@ -14,7 +14,8 @@
     attached(I,J) &
     thing(I,J,block,B) & 
     get_rotation(b(I,J,B),b(RI,RJ,B),DIR) &
-    step(S)
+    step(S) &
+    .my_name(ME)
     <-
     if (DIR \== no_rotation) {
         !do(rotate(DIR),R);
@@ -24,6 +25,10 @@
             !fix_rotation(req(RI,RJ,B));
         } else {
             .log(warning,"Could not rotate ",B," (",I,",",J,") to (",RI,",",RJ,") dir: ",DIR);
+            .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,BB), L);
+            .findall(t(I,J,T),thing(I,J,T,_), LT);
+            .concat("[",req(I,J,B),",",agent(ME),",",a(L),",",t(LT),",",R,"]",STR);
+            .save_stats("errorOnRotate",STR);
         }
     } else { // could not find a valid rotation, try to randomly dodge
         .nth(math.floor(math.random(4)),[n,s,w,e],DIRECTION);
