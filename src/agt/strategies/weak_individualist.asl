@@ -40,10 +40,10 @@
     } else {
         .log(warning,"I want to perform the task ",T);
         
-        setWantedTask(ME,T,S,D); // no need to skip, just keep exploring until the auction ends
+        setCFP("wanted_task",T,S+D); // no need to skip, just keep exploring until the auction ends
         .wait(step(Step) & Step > S); //wait for the next step to continue
         
-        if ( wanted_task(ME,T,_,_) ) { // there is no better agent to perform this task
+        if ( wanted_task(ME,T,_) ) { // there is no better agent to perform this task
             -exploring;
             .log(warning,"Accepting task... ",T);
             !accept_task(T);
@@ -105,7 +105,7 @@
 /**
  * If someone forgot task T, let us be open to perform it!
  */
--wanted_task(_,T)
+-wanted_task(_,T,_)
     <-
     .abolish(unwanted_task(T));
 .

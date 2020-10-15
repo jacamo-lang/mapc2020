@@ -10,9 +10,7 @@
     .substring(NAME,NUMBER,6) &
     NUMBER == "1" & // only one agent creates the artifact (agenta1 of agentb1)
     .substring(NAME,TEAM,5,6) &
-    .concat("artGPS",TEAM,ArtGPS) & 
-    .concat("env",TEAM,Env) &
-    not focused(Env,ArtGPS) // it seems, the artifact does not exist
+    .concat("artGPS",TEAM,ArtGPS)
     <-
     .log(warning,"Making and focusing on artifact ",ArtGPS);
     makeArtifact(ArtGPS,"localPositionSystem.rp.rp",[90,0],ArtId);

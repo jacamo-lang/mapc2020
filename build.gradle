@@ -6,7 +6,7 @@ defaultTasks 'run'
 
 apply plugin: 'java'
 
-version '0.3'
+version '0.4'
 group   'org.jacamo.mapc'
 
 sourceCompatibility = 1.13

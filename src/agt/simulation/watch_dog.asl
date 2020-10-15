@@ -83,7 +83,7 @@ max_no_action_in_a_row(1).
     .save_stats("restarted",STR);
     .abolish(gps_map(_,_,_,ME));
     .abolish(gps_map(_,_,_,MEStr));
-    removeMyWantedTasks(MEStr);
+    removeMyCFPs;
     -+myposition(0,0);
     -+origin(ME);
     .abolish(status(lost));
