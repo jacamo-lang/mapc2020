@@ -1,5 +1,8 @@
 package coordination;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import cartago.*;
 import jason.asSyntax.Atom;
 
@@ -10,48 +13,53 @@ import jason.asSyntax.Atom;
  *
  */
 public class simpleCFP extends Artifact {
+    
+    Set<String> cfps = new HashSet<>();
 
     /**
-     * Tells that an agent wants to perform a given task with some predicted cost
-     * The cost also depends on the step the agent is at.
-     * If another agent comes telling that is can do this task earlier, the property
-     * will be updated.
-     * This property will keep only one register for a given task, it should be removed
-     * at the end of the round to avoid conflicts with next round tasks identifiers. 
+     * Tells that an agent wants to participate of a given CFP (Call For Proposals) with 
+     * some predicted cost. The cost also depends on the step the agent is at.
+     * If another agent comes telling that it wants to participate to this CFP and it can 
+     * give a better offer (less than the actual), the property will be updated.
+     * This property will keep only one register for a given CFP, it should be removed
+     * at the end of the round to avoid conflicts with next round identifiers. 
      * 
-     * @param agent that wants to perform the task
-     * @param task unique identifier for each wanted_task(_,task,_,_)
-     * @param step the step in which the agent is at
-     * @param cost the predicted cost (number of steps) the agent thinks is necessary to perform the task
+     * @param agent that wants to participate on the CFP
+     * @param subject unique identifier for each subject of a CFP
+     * @param offer of the agent (usually the step it is in + predicted cost)
      */
     @OPERATION
-    synchronized void setWantedTask(String agent, String task, int step, int cost) {
-        ObsProperty prop = getObsPropertyByTemplate("wanted_task", null, new Atom(task), null, null);
+    synchronized void setCFP(String cfp, String subject, int offer) {
+        String agent = getCurrentOpAgentId().getAgentName();
+        ObsProperty prop = getObsPropertyByTemplate(cfp, null, new Atom(subject), null);
+        if (!cfps.contains(cfp)) 
+            cfps.add(cfp);
         if (prop == null) {
-            defineObsProperty("wanted_task", new Atom(agent), new Atom(task), step, cost);
+            defineObsProperty(cfp, new Atom(agent), new Atom(subject), offer);
         } else {
             // Is this offer is better the other registered one?
-            if ((Integer) prop.getValue(2) + (Integer) prop.getValue(3) > step + cost) { 
-                prop.updateValues(new Atom(agent), new Atom(task), step, cost);
+            if (offer < (Integer) prop.getValue(2)) { 
+                prop.updateValues(new Atom(agent), new Atom(subject), offer);
             }
         }
     }
 
     /**
-     * In case the agent decided to do not perform the task, it may remove
-     * wanted_task properties signed to its. It has no effect if the agent is not
+     * In case the agent decided to quit of a CFP, it may remove
+     * all CFP subjects properties signed to the agent. It has no effect if the agent is not
      * the winner of an auction. By removing this property, a new auction may be
-     * done. An agent may decide to forget the task if it was reseted. It may remove
+     * done. An agent may decide to forget the subject if it was reseted. It may remove
      * old/performed auctions too.
-     * 
-     * @param agent the agent that wants to tell it is forgetting the task
-     * @param task  the given task to forget
      */
     @OPERATION
-    void removeMyWantedTasks(String agent) {
-        ObsProperty prop = getObsPropertyByTemplate("wanted_task", new Atom(agent), null, null, null);
-        if (prop != null) {
-            removeObsPropertyByTemplate("wanted_task", new Atom(agent), null, null, null);
+    void removeMyCFPs() {
+        String agent = getCurrentOpAgentId().getAgentName();
+        
+        for ( String cfp : cfps ) {
+            ObsProperty prop = getObsPropertyByTemplate(cfp, new Atom(agent), null, null);
+            if (prop != null) {
+                removeObsPropertyByTemplate(cfp, new Atom(agent), null, null);
+            }
         }
     }
 
@@ -60,8 +68,11 @@ public class simpleCFP extends Artifact {
      */
     @OPERATION
     void resetSimpleCFP() {
-        while (getObsProperty("wanted_task") != null) {
-            removeObsProperty("wanted_task");
+        for ( String cfp : cfps ) {
+            while (getObsProperty(cfp) != null) {
+                removeObsProperty(cfp);
+            }
         }
+        cfps.clear();
     }
 }

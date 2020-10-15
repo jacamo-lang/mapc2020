@@ -19,7 +19,7 @@
     .drop_all_intentions;
 
     .abolish(unwanted_task(_));
-    .abolish(wanted_task(_,_,_,_));
+    .abolish(wanted_task(_,_,_));
     .abolish(gps_map(_,_,_,_));
     .abolish(exploring);
     .abolish(myposition(_,_));

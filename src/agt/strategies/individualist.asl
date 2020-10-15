@@ -1,7 +1,13 @@
 /**
  * The individualist acts alone, it will try to submit tasks that it can
- * do alone. The weak individualist can carry only one block, so it will
- * only accept such simple tasks.
+ * do alone. This implementation is supposed to be able to perform any task that
+ * has as requirements only adjacent blocks. An adjacent block has its I+J equals to 1,
+ * i.e., it is \in [n,e,w,s]. Adjacent blocks are the ones that the carrier doesn't need
+ * any help to attach.
+ * 
+ * This code could not be tested with tasks that require more than one block since
+ * in all tests massim did not publish any task with 2, 3 or 4 blocks in which all of them
+ * were adjacent.
  * 
  * Key beliefs:
  * gps_map(X,Y,goal,_): The terrain X,Y is a goal spot [source(lps/rp artifact)]
@@ -40,10 +46,10 @@
     } else {
         .log(warning,"I want to perform the task ",T);
         
-        setWantedTask(ME,T,S,D); // no need to skip, just keep exploring until the auction ends
+        setCFP("wanted_task",T,S+D); // no need to skip, just keep exploring until the auction ends
         .wait(step(Step) & Step > S); //wait for the next step to continue
         
-        if ( wanted_task(ME,T,_,_) ) { // there is no better agent to perform this task
+        if ( wanted_task(ME,T,_) ) { // there is no better agent to perform this task
             -exploring;
             .log(warning,"Accepting task... ",T);
             !accept_task(T);
@@ -86,7 +92,7 @@
 .
 
 /**
- * Thanks in which one req (math.abs(I) + math.abs(J)) is greater than  1
+ * Tasks in which one req (math.abs(I) + math.abs(J)) is greater than  1
  * are the ones that need help, i.e., cannot be performed by an individualist
  */
 +task(T,DL,Y,REQs) :
