@@ -28,12 +28,12 @@
     .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol 
     .abolish(pending_areyou(_,_,_)); //from meeting protocol
     .abolish(task(_,_,_,_));    
-    
-    if (.concat("artGPS",TEAM,ArtGPS) & focused(Env,ArtGPS)) {
-        resetRP;
-    }
-    if (.concat("simpleCFP",TEAM,ArtCFP) & focused(Env,ArtCFP)) {
-        resetSimpleCFP;
+
+    .concat("simpleCFP",TEAM,ArtCFP);
+    .term2string(ArtCFPterm,ArtCFP);
+    .term2string(Envterm,Env);
+    if ( focused(Envterm,ArtCFPterm,_) ) {
+        removeMyCFPs;
     }
     
     +exploring;
@@ -54,6 +54,19 @@
     -+persistTeamSize(TS);
     .concat("[",teamSize(TS),",",vision(V),",",exploration_strategy(ES),"]",C);
     .save_stats("simStart",C);
+    
+    .concat("artGPS",TEAM,ArtGPS);
+    .term2string(ArtGPSterm,ArtGPS);
+    .term2string(Envterm,Env);
+    if ( focused(Envterm,ArtGPSterm,_) ) {
+        resetRP;
+    }
+
+    .concat("simpleCFP",TEAM,ArtCFP);
+    .term2string(ArtCFPterm,ArtCFP);
+    if ( focused(Envterm,ArtCFPterm,_) ) {
+        resetSimpleCFP;
+    }
 .
 +simStart : // for the other agents, just write persistTeamSize(TS)
     step(2) &

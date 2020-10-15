@@ -118,7 +118,7 @@
 /**
  * If someone forgot task T, let us be open to perform it!
  */
--wanted_task(_,T)
+-wanted_task(_,T,_)
     <-
     .abolish(unwanted_task(T));
 .
