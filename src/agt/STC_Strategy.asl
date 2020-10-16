@@ -144,7 +144,7 @@ cycle(X,Y,XX,YY) :- false.
                     current_moving_step(MS) & vision(CS) & (MS >= CS & ((X mod CS)==0 & (Y mod CS)==0))  & //the agent has reached the border of the cell                     
                     next_direction(X,Y,ND) & ND>-1 & forward & //the agent has a free-obstacle direction ahead
                     last_node(LX,LY) 
-   <- .print("1. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
+   <- //.print("1. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
       !do_set_edge(LX,LY,CD,X,Y);
       //!update_notorigin_teammates(LX,LY,CD,X,Y);  //update the spanning tree in the origin agent
       -+last_node(X,Y); //the current position becomes the last visited node            

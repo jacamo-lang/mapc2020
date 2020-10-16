@@ -112,13 +112,7 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     nearest(B,XN,YN)
     <-
     .log(warning,"Going to ",nearest(B,XN,YN)," from ",myposition(X,Y));
-    !goto(XN,YN,RET);
-    if (RET \== success & myposition(X1,Y1)) {
-        if(RET == no_route){ 
-            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
-        } 
-        .log(warning,"No success on: ",goto(XN,YN,RET)," ",myposition(X1,Y1));
-    }
+    !goto_XY(XN,YN);
 .
 
 /**
@@ -134,13 +128,7 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     nearest_neighbour(XN,YN,XT,YT)
     <-
     .log(warning,"Going to neighbour of ",nearest(B,XN,YN)," : ",distance(X,Y,XT,YT,DIST));
-    !goto(XT,YT,RET);
-    if (RET \== success & myposition(X1,Y1)) {
-        if(RET==no_route){ 
-            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
-        } 
-        .log(warning,"No success on: ",goto(XT,YT,RET)," ",myposition(X1,Y1));
-    }
+    !goto_XY(XT,YT);
 .
 +!goto_nearest_neighbour(B) :
     thing(I,J,B,_) &
@@ -174,13 +162,7 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     distance(X,Y,XA,YA,DIST) & DIST > 0
     <-
     .log(warning,"Going to adjacent of ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));
-    !goto(XA,YA,RET);
-    if (RET \== success & myposition(X1,Y1)) {
-        if(RET==no_route){ 
-            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
-        } 
-        .log(warning,"No success on: ",goto(XA,YA,RET)," ",myposition(X1,Y1));
-    }
+    !goto_XY(XA,YA);
 .
 +!goto_nearest_adjacent(B,DIR) :
     thing(I,J,B,_) &
@@ -188,4 +170,23 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     <-
     !do(skip,R);
     .log(warning,"I am already at an adjacent of ",B," : ",thing(I,J,B,_),", skip: ",R);
+.
+
+/**
+ * goto XY, skip if no_route
+ */
++!goto_XY(X,Y) : myposition(X,Y)
+    <-
+    !do(skip,R);
+    .log(warning,"I am already at ",X,",",Y,", skip: ",R);
+.
++!goto_XY(X,Y)
+    <-
+    !goto(X,Y,RET);
+    if (RET \== success & myposition(XP,YP)) {
+        if(RET == no_route){ 
+            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
+        } 
+        .log(warning,"No success on: ",goto(X,Y,RET)," ",myposition(XP,YP));
+    }
 .

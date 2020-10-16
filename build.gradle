@@ -86,7 +86,7 @@ task run (type: JavaExec, dependsOn: 'classes') {
     standardInput = System.in
     jvmArgs = ['-Xss15m','-Djava.awt.headless=true']
     main 'runMAPC2020.RunTeam'
-    args = ['src/jcm/individualist.jcm']
+    args = ['src/jcm/collectivist.jcm']
     classpath sourceSets.main.runtimeClasspath
 }
 
