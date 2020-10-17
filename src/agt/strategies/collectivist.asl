@@ -45,13 +45,13 @@
         .nth(1,REQs,req(IH,JH,BH));
         .log(warning,"Asking help... ",T);
         
-        setCFP("bring_block",block_to(BH,ME,XX,YY,T,MyMAP),9999); // Start the CFP with a very high offer
+        setCFP("bring_block",block_to(BH,ME,T,MyMAP),9999); // Start the CFP with a very high offer
         //!do(skip,R1);
         .wait(step(Step) & Step > S); //wait for the next step to continue
           
-        if ( bring_block(Helper,block_to(B,Master,XX,YY,T,MAP),_) & Helper \== ME) { // someone is coming to help me
+        if ( bring_block(Helper,block_to(B,Master,T,MAP),_) & Helper \== ME) { // someone is coming to help me
         
-            setCFP("bring_block",block_to(BH,ME,XX,YY,T,MyMAP),-1);
+            setCFP("bring_block",block_to(BH,ME,T,MyMAP),-1);
 
             setCFP("wanted_task",T,S+1+D); // no need to skip, just keep exploring until the auction ends
             //!do(skip,R2);
@@ -81,7 +81,7 @@
                 !goto_XY(XG+3,YG+3);
                 ?myposition(XO,YO);
                 .concat("[",ME,",",myposition(XO,YO),",",Helper,"]",C2);
-                .save_stats("ready_for_assembly",C2);
+                .save_stats("ready_to_assembly",C2);
                 
             
                 .log(warning,"Submitting task... ",T);
@@ -142,7 +142,7 @@
     .abolish(unwanted_task(T));
 .
 
-+bring_block(_,block_to(B,Master,XX,YY,T,MAP),O) :
++bring_block(_,block_to(B,Master,T,MAP),O) :
     not .intend(bring_block(_,_,_)) &
     not .intend(perform_task(_)) &
     .my_name(ME) &
@@ -152,17 +152,20 @@
     nearest(B,XB,YB) &
     myposition(X,Y) &
     distance(X,Y,XB,YB,D1) &
-    distance(XB,YB,XX,YY,D2) &
-    (D = D1 + D2) &
     step(S)
     <-
-    .log(warning,"I am able to help on ",block_to(B,Master,XX,YY,T,MAP));
-    setCFP("bring_block",block_to(B,Master,XX,YY,T,MAP),S+D);
+    .log(warning,"I am able to help on ",block_to(B,Master,T,MAP));
+
+    // for the auction, it is used the current position of master
+    .send(Master,askOne,myposition(XM,YM),myposition(XM,YM));
+    ?distance(XB,YB,XM,YM,D2);
+    D = D1 + D2;
+    setCFP("bring_block",block_to(B,Master,T,MAP),S+D);
     //!do(skip,R1);
     .wait(step(Step) & Step > S); //wait for the next step to continue
 
-    if ( bring_block(ME,block_to(B,Master,XX,YY,T,MAP),_) ) { // I won
-        .concat("[",ME,",",block_to(B,Master,XX,YY,T,MAP),",",step(S),"]",C1);
+    if ( bring_block(ME,block_to(B,Master,T,MAP),_) ) { // I won
+        .concat("[",ME,",",block_to(B,Master,T,MAP),",",step(S),",",myposition(X,Y),",",master_position(XM,YM),"]",C1);
         .save_stats("bring_block",C1);
 
         -exploring;
