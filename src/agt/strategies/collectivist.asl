@@ -49,7 +49,7 @@
         //!do(skip,R1);
         .wait(step(Step) & Step > S); //wait for the next step to continue
           
-        if ( bring_block(Helper,BTO,_) & .term2string(BTOterm,BTO) & BTOterm = block_to(BH,ME,XX,YY,T,MyMAP) & Helper \== ME) { // someone is coming to help me
+        if ( bring_block(Helper,block_to(B,Master,XX,YY,T,MAP),_) & Helper \== ME) { // someone is coming to help me
         
             setCFP("bring_block",block_to(BH,ME,XX,YY,T,MyMAP),-1);
 
@@ -85,7 +85,7 @@
                 
             
                 .log(warning,"Submitting task... ",T);
-                !submit_task(T);//TODO: X,Y
+                !submit_task(T);
 
                 // In case submit did not succeed
                 .log(warning,"Dropping blocks for ",T);
@@ -142,11 +142,9 @@
     .abolish(unwanted_task(T));
 .
 
-+bring_block(_,BTO,O) :
++bring_block(_,block_to(B,Master,XX,YY,T,MAP),O) :
     not .intend(bring_block(_,_,_)) &
     not .intend(perform_task(_)) &
-    .term2string(BTOterm,BTO) &
-    BTOterm = block_to(B,Master,XX,YY,T,MAP) &
     .my_name(ME) &
     Master \== ME & // do not attend to CFP that it is the master
     origin_str(MAP) &  // My map is same of Master's map
@@ -158,12 +156,12 @@
     (D = D1 + D2) &
     step(S)
     <-
-    .log(warning,"I am able to help on ",BTOterm);
+    .log(warning,"I am able to help on ",block_to(B,Master,XX,YY,T,MAP));
     setCFP("bring_block",block_to(B,Master,XX,YY,T,MAP),S+D);
     //!do(skip,R1);
     .wait(step(Step) & Step > S); //wait for the next step to continue
 
-    if ( bring_block(ME,BTO,_) ) { // I won
+    if ( bring_block(ME,block_to(B,Master,XX,YY,T,MAP),_) ) { // I won
         .concat("[",ME,",",block_to(B,Master,XX,YY,T,MAP),",",step(S),"]",C1);
         .save_stats("bring_block",C1);
 

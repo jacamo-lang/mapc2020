@@ -5,6 +5,7 @@ import java.util.Set;
 
 import cartago.*;
 import jason.asSyntax.Atom;
+import jason.asSyntax.Literal;
 
 /**
  * Simple Call For Proposals may be useful for lightweight auctions
@@ -31,15 +32,15 @@ public class simpleCFP extends Artifact {
     @OPERATION
     synchronized void setCFP(String cfp, String subject, int offer) {
         String agent = getCurrentOpAgentId().getAgentName();
-        ObsProperty prop = getObsPropertyByTemplate(cfp, null, new Atom(subject), null);
+        ObsProperty prop = getObsPropertyByTemplate(cfp, null, Literal.parseLiteral(subject), null);
         if (!cfps.contains(cfp)) 
             cfps.add(cfp);
         if (prop == null) {
-            defineObsProperty(cfp, new Atom(agent), new Atom(subject), offer);
+            defineObsProperty(cfp, new Atom(agent), Literal.parseLiteral(subject), offer);
         } else {
             // Is this offer is better the other registered one?
             if (offer < (Integer) prop.getValue(2)) { 
-                prop.updateValues(new Atom(agent), new Atom(subject), offer);
+                prop.updateValues(new Atom(agent), Literal.parseLiteral(subject), offer);
             }
         }
     }
