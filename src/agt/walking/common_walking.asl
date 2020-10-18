@@ -151,8 +151,9 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
 .
 
 /**
- * If I know the position of at least B, find the nearest neighbour
- * point and go there!
+ * If I know the position of at least B, find the nearest adjacent
+ * point and go there! Only execute if myposition is not the target
+ * position.
  */
 +!goto_nearest_adjacent(B,DIR) :
     origin_str(MyMAP) &
@@ -164,12 +165,26 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     .log(warning,"Going to adjacent of ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));
     !goto_XY(XA,YA);
 .
+/**
+ * This plan should be executed when myposition is the target position
+ * i.e., I should be seeing the target object, if not, I am lost! 
+ */
 +!goto_nearest_adjacent(B,DIR) :
     thing(I,J,B,_) &
     direction_increment(DIR,I,J)
     <-
     !do(skip,R);
     .log(warning,"I am already at an adjacent of ",B," : ",thing(I,J,B,_),", skip: ",R);
+.
+/**
+ * If DIST from myposition and the target is 0 and I am not seeing the target, at the 
+ * supposed position I am lost!
+ */
++!goto_nearest_adjacent(B,DIR)
+    <-
+    .log(warning,"I was doing ",goto_nearest_adjacent(B,DIR)," when I realised I am lost.");
+    +status(lost);
+    !do(skip,R);
 .
 
 /**
