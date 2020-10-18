@@ -115,7 +115,8 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     !goto(XN,YN,RET);
     if (RET \== success & myposition(X1,Y1)) {
         if(RET == no_route){ 
-            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
+            //!do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
+            .fail; // .fail is better because it is used in submit, so the agent may drop the intention 
         } 
         .log(warning,"No success on: ",goto(XN,YN,RET)," ",myposition(X1,Y1));
     }
@@ -137,7 +138,8 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     !goto(XT,YT,RET);
     if (RET \== success & myposition(X1,Y1)) {
         if(RET==no_route){ 
-            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
+            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
+			// A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance 
         } 
         .log(warning,"No success on: ",goto(XT,YT,RET)," ",myposition(X1,Y1));
     }
@@ -178,6 +180,7 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     if (RET \== success & myposition(X1,Y1)) {
         if(RET==no_route){ 
             !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
+			// A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance
         } 
         .log(warning,"No success on: ",goto(XA,YA,RET)," ",myposition(X1,Y1));
     }
