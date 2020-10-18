@@ -17,8 +17,8 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
 //testing_exploration. //<< if true, the exploration runs in test mode to count the found objects
 
 
-+!mapping(success,Step,D): myposition(X,Y) & directionIncrement(D, INCX,  INCY) & step(S)
-   <- -+myposition(X+INCX,Y+INCY);
++!mapping(success,Step,D): myposition(X,Y) & directionIncrement(D, INCX,  INCY) & step(S) & origin(MyMap) 
+   <- !map_position(X+INCX,Y+INCY);
       -+update_position_step(S);
       if(origin(OL) & originlead(OL)) {
             unmark(X,Y); 
@@ -46,6 +46,14 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
    
          
 +!mapping(R,Step,D).
+
+/* Plan to avoid double position changing in the same step */
+@map_position[atomic]
++!map_position(X,Y) : step(S) & not(mapped_step(S))
+   <- -+myposition(X,Y);
+      -+mapped_step(S).
+      
++!map_position(X,Y).      
 
 
 
