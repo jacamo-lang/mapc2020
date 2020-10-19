@@ -126,6 +126,16 @@ is_walkable_area(X,Y,R) :-
 .
 
 /**
+ * Check if both master and helper have space for a meeting considering
+ * X,Y the position for the master and considering the helper will be placed
+ * on the right hand side of master. It is used R as the radius (stack of blocks)
+ * for both agents since they may need to rotate.
+ */
+is_meeting_area(X,Y,R) :- 
+    is_walkable_area(X,Y,R) & is_walkable_area(1+(2*R)+X,Y,R)
+. 
+
+/**
  * If I know the position of at least B, find the nearest and go there!
  */
 +!goto_nearest(B) :
@@ -235,4 +245,48 @@ is_walkable_area(X,Y,R) :-
         }
         .log(warning,"No success on: ",goto(X,Y,RET)," ",myposition(XP,YP));
     }
+.
+
+/**
+ * find_meeting_area(X,Y,R,XM,YM) looks for a clear area for a meeting considering the agents are
+ * carrying blocks. This simple approach considers R as the maximum stack number of blocks
+ * that one is carrying. It is the radius since they may need to rotate. The approach tries to
+ * put the master near the given X,Y and the helper on the right hand side of master.
+ * For example, let us say we want to check if -5,-5 is a meeting area for R = 1, the approach
+ * will try to check if both master (M) and helper (H) may be placed there considering they
+ * are carrying at least one block and may need to rotate:
+ * 
+ *              #     ##                                    ggg                               -7
+ *  #      M  H           t          g                      1g            #                   -6
+ *        MMMHHH                    ggg                                                       -5
+ *         M  H       2            ggggg1                                                     -4
+ *                                  ggg                                  ##                   -3
+ *                                   g          #                    ##                       -2
+ * 
+ * Notice, in this example the result unifies since -5,-5 are surrounded area is clear. However,
+ * If the desired are is close to 0,-7, we can see that the agents would not have space for the
+ * meeting. In this case, in a loop we will try a few possibilities near X,Y. Arbitrarily, we are
+ * trying to increase X and Y at each iteration while no solution is found.
+ */
++!find_meeting_area(X,Y,R,XM,YM)
+    <-
+    -+desired_meeting_point(X,Y,R);
+    -+find_meeting_iterator(0);
+    while ( find_meeting_iterator(I) & (I < 10) ) {
+        if ( desired_meeting_point(DX,DY,R) & is_meeting_area(DX,DY,R) ) {
+            .log(warning,">>>> ",desired_meeting_point(DX,DY,R));
+            +found_meeting_point(DX,DY);
+            -+find_meeting_iterator(10); // finish
+        } else {
+            ?desired_meeting_point(DX,DY,R);
+            .log(warning,"<<<< ",desired_meeting_point(DX,DY,R));
+            if (I mod 2 == 0) {
+                -+desired_meeting_point(DX+1,DY,R);
+            } else {
+                -+desired_meeting_point(DX,DY+1,R);
+            }
+            -+find_meeting_iterator(I+1);
+        }
+    }
+    ?found_meeting_point(XM,YM);
 .

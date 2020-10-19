@@ -22,7 +22,9 @@
     !print_map;
 
     !test_is_walkable_area(MIN_I);
-
+    !test_is_meeting_area(MIN_I);
+    !test_find_meeting_area(MIN_I);
+    
     !print_map;
 .
 
@@ -120,42 +122,48 @@
 +!test_is_walkable_area(MIN_I)
     <-
     // test a completely clear area with radius = 1 surrounding 0,0
-    !update_line_conditional(0,0,MIN_I,"#","C","B");
-    !update_line_conditional(0,-1,MIN_I,"#","C","B");
-    !update_line_conditional(0,1,MIN_I,"#","C","B");
-    !update_line_conditional(-1,0,MIN_I,"#","C","B");
-    !update_line_conditional(1,0,MIN_I,"#","C","B");
+    !print_agent_with_radius(0,0,MIN_I,1);
     !assert_true(is_walkable_area(0,0,1));
 
     // test a NOT clear area with radius = 1 surrounding 10,0 (southern position is an obstacle)
-    !update_line_conditional(10,0,MIN_I,"#","C","B");
-    !update_line_conditional(10,-1,MIN_I,"#","C","B");
-    !update_line_conditional(10,1,MIN_I,"#","C","B");
-    !update_line_conditional(9,0,MIN_I,"#","C","B");
-    !update_line_conditional(11,0,MIN_I,"#","C","B");
+    !print_agent_with_radius(10,0,MIN_I,1);
     !assert_false(is_walkable_area(10,0,1));
 
     // test a completely clear area with radius = 2 surrounding -5,-5
-    !update_line_conditional(-5,-5,MIN_I,"#","C","B");
-    !update_line_conditional(-5,-6,MIN_I,"#","C","B");
-    !update_line_conditional(-5,-4,MIN_I,"#","C","B");
-    !update_line_conditional(-6,-5,MIN_I,"#","C","B");
-    !update_line_conditional(-4,-5,MIN_I,"#","C","B");
-    !update_line_conditional(-5,-7,MIN_I,"#","C","B");
-    !update_line_conditional(-5,-3,MIN_I,"#","C","B");
-    !update_line_conditional(-7,-5,MIN_I,"#","C","B");
-    !update_line_conditional(-3,-5,MIN_I,"#","C","B");
+    !print_agent_with_radius(-5,-5,MIN_I,2);
     !assert_true(is_walkable_area(-5,-5,2));
     
     // test a completely clear area with radius = 2 surrounding 0,10
-    !update_line_conditional(0,10,MIN_I,"#","C","B");
-    !update_line_conditional(0,11,MIN_I,"#","C","B");
-    !update_line_conditional(0,9,MIN_I,"#","C","B");
-    !update_line_conditional(-1,10,MIN_I,"#","C","B");
-    !update_line_conditional(1,10,MIN_I,"#","C","B");
-    !update_line_conditional(0,8,MIN_I,"#","C","B");
-    !update_line_conditional(0,12,MIN_I,"#","C","B");
-    !update_line_conditional(-2,10,MIN_I,"#","C","B");
-    !update_line_conditional(2,10,MIN_I,"#","C","B");
+    !print_agent_with_radius(0,10,MIN_I,2);
     !assert_false(is_walkable_area(0,10,2));
+.
+
++!test_is_meeting_area(MIN_I)
+    <-
+    // test a completely clear meeting area
+    !print_agent_with_radius(45,8,MIN_I,1);
+    !print_agent_with_radius(48,8,MIN_I,1);
+    !assert_true(is_meeting_area(45,8,1));
+
+    // test an area in which the helper would find an obstacle
+    !print_agent_with_radius(35,10,MIN_I,1);
+    !print_agent_with_radius(38,10,MIN_I,1);
+    !assert_false(is_meeting_area(35,10,1));
+.
+
++!test_find_meeting_area(MIN_I)
+    <-
+    // test a completely clear meeting area
+    !print_agent_with_radius(35,0,MIN_I,1);
+    !print_agent_with_radius(38,0,MIN_I,1);
+    !find_meeting_area(35,0,1,XM2,YM2);
+    !assert_equals(35,XM2);
+    !assert_equals(0,YM2);
+
+    // test an area in which the helper would find an obstacle
+    !print_agent_with_radius(58,3,MIN_I,1);
+    !print_agent_with_radius(61,3,MIN_I,1);
+    !find_meeting_area(55,1,1,XM1,YM1);
+    !assert_equals(58,XM1);
+    !assert_equals(3,YM1);
 .

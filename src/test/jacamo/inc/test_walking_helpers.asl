@@ -85,6 +85,18 @@ get_printed_object(I,J,MIN_I,O) :-
     }
 .
 
++!print_agent_with_radius(I,J,MIN_I,R)
+    <- 
+    for ( .range(II,-R,R) ) {
+        if (II == 0) {
+            for ( .range(JJ,-R,R) ) {
+                !update_line_conditional(I+II,J+JJ,MIN_I,"#","C","B");
+            }
+        } else {
+            !update_line_conditional(I+II,J,MIN_I,"#","C","B");
+        }
+    }
+.
 
 +!print_map :
     .findall(J,gps_map(I,J,O,_),LJ) &
