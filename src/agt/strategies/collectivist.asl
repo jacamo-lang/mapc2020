@@ -90,6 +90,7 @@
                 // In case submit did not succeed
                 .log(warning,"Dropping blocks for ",T);
                 !drop_all_blocks;
+                removeMyCFPs; // in case the agent did not succeed, another agent can try
 
                 //No matter if it succeed or failed, it is supposed to be ready for another task
                 +exploring;

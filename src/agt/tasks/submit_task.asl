@@ -13,6 +13,7 @@
         .log(warning,"I've submitted task ",T);    
         .concat("[",task(T,DL,Y,REQs),"]",STR);
         .save_stats("taskSubmitted",STR);
+        .broadcast(tell,unwanted_task(T));
     } else {
         .fail;
     }
@@ -25,7 +26,6 @@
      !goto_nearest(goal);
      .wait(step(Step) & Step > S); //wait for the next step to continue
      !submit_task(T);
-     .broadcast(tell,unwanted_task(T));
  .
 +!submit_task(T) // Should not occur
     <-
