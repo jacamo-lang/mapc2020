@@ -98,9 +98,32 @@ task_shortest_path(B,D) :-
     D = D12 + D23 + D34
 .
 
-is_walkable(I,J) :- not thing(I,J,obstacle,_) &
-                    not thing(I,J,entity,_) &
-                    not (thing(I,J,block,B) & not attached(I,J)).
+/**
+ * Unifies when the position is clear for walk, used for close/visible areas
+ */
+is_walkable(I,J) :- 
+    not thing(I,J,obstacle,_) &
+    not thing(I,J,entity,_) &
+    not ( thing(I,J,block,_) & not attached(I,J) )
+.
+
+/**
+ * Unifies when the X,Y and its surrounding positions are clear for walk,
+ * used for far areas (mapped by gps_map, not necessarily visible).
+ */
+is_walkable_area(X,Y,R) :-
+    not gps_map(X,Y,obstacle,MyMAP) &
+    .findall(p(XX,YY), 
+        .range(It,1,R) &
+        .member(DIR,[n,s,w,e]) &
+        direction_increment(DIR,I,J) &
+        origin_str(MyMAP) &
+        XX = (I * It) + X &
+        YY = (J * It) + Y &
+        gps_map(XX,YY,obstacle,MyMAP), L) &
+    //.log(warning,L) &
+    .length(L) == 0
+.
 
 /**
  * If I know the position of at least B, find the nearest and go there!
