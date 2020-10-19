@@ -27,7 +27,7 @@
 
 +!perform_task(T) :
     not accepted(_) &                       // I am not committed
-    not .intend(bring_block(_,_,_)) &
+    not .intend(bring_block(_,_,_,_)) &
     not .intend(perform_task(_)) &
     .my_name(ME) &
     task(T,DL,Y,REQs) &
@@ -44,6 +44,7 @@
         
         .nth(1,REQs,req(IH,JH,BH));
         .log(warning,"Asking help... ",T);
+        removeMyCFPs; // clear other auction, just in case
         
         setCFP("bring_block",block_to(BH,ME,T,MyMAP),9999); // Start the CFP with a very high offer
         //!do(skip,R1);
@@ -76,13 +77,11 @@
                 
                 .log(warning,"Setting position of the requirement for ",req(IR,JR,BR));
                 !fix_rotation(req(IR,JR,BR));
-                
 
                 !goto_XY(XG+3,YG+3);
                 ?myposition(XO,YO);
-                .concat("[",ME,",",myposition(XO,YO),",",Helper,"]",C2);
+                .concat("[",ME,",",myposition(XO,YO),",",helper_at(XG,YG)[source(Helper)],"]",C2);
                 .save_stats("ready_to_assembly",C2);
-                
             
                 .log(warning,"Submitting task... ",T);
                 !submit_task(T);
@@ -143,20 +142,26 @@
     .abolish(unwanted_task(T));
 .
 
-+bring_block(_,block_to(B,Master,T,MAP),O) :
-    not .intend(bring_block(_,_,_)) &
++bring_block(_,block_to(B,Master,T,MAP),_):
+    not .intend(bring_block(_,_,_,_)) &
     not .intend(perform_task(_)) &
     .my_name(ME) &
     Master \== ME & // do not attend to CFP that it is the master
-    origin_str(MAP) &  // My map is same of Master's map
+    origin_str(MAP)  // My map is same of Master's map
+    <-
+    .log(warning,"I am able to help on ",block_to(B,Master,T,MAP));
+    .abolish(meeting_point(_,_,_));
+    removeMyCFPs; // clear other auction, just in case
+    !!bring_block(B,Master,T,MAP);
+.
+
++!bring_block(B,Master,T,MAP):
     gps_map(_,_,B,MAP) &
     nearest(B,XB,YB) &
     myposition(X,Y) &
     distance(X,Y,XB,YB,D1) &
     step(S)
     <-
-    .log(warning,"I am able to help on ",block_to(B,Master,T,MAP));
-
     // for the auction, it is used the current position of master
     .send(Master,askOne,myposition(XM,YM),myposition(XM,YM));
     ?distance(XB,YB,XM,YM,D2);
@@ -175,9 +180,14 @@
         
         if ( meeting_point(T,XG,YG) & myposition(XO,YO) ) {
             .concat("[",ME,",",meeting_point(T,XG,YG),",",myposition(XO,YO),"]",C2);
-            .save_stats("meeting_poing",C2);
+            .save_stats("goto_meeting_point",C2);
 
             !goto_XY(XG,YG);
+            .send(Master,tell,helper_at(XG,YG));
+            
+            .concat("[",ME,",",connect(B,I,J)[source(Master)],"]",C3);
+            .save_stats("connect",C3);
+            .wait(connect(B,I,J)[source(Master)]);
         }
         
         // In case submit did not succeed
