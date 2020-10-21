@@ -66,6 +66,7 @@ max_no_action_in_a_row(1).
 +!restart :
     step(S)
     <-
+    !do(skip,R);
     .wait(step(Step) & Step > S); //wait for the next step to continue
     +exploring;
     !explore[critical_section(action), priority(1)]
@@ -89,5 +90,5 @@ max_no_action_in_a_row(1).
     -+myposition(0,0);
     -+origin(ME);
     .abolish(status(lost));
-    !restart_agent;
+    !!restart_agent;
 .
