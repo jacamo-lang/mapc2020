@@ -104,7 +104,7 @@
     score(S)
     <-
     .concat("[",score(S),",",ranking(R),"]",C);
-    .save_stats("simEnd",C);
+    .save_stats("simEnd  ",C);
     -ranking(R);
     -score(R);
 .

@@ -53,12 +53,9 @@
         if ( bring_block(Helper,block_to(B,ME,T,MAP),_) & Helper \== ME & wanted_task(ME,T,_)) { // someone is coming to help me and I won the master's auction
             !close_bring_CFP(block_to(BH,ME,T,MAP));
             
+            -+performing(T,Helper);
             -exploring;
         
-            //.broadcast(tell,unwanted_task(T));
-                
-            -+helper(T,Helper);
-
             ?nearest(goal,XG,YG);
             !find_meeting_area(XG,YG,1,XM,YM);
             .send(Helper,achieve,bring_block(B,ME,T,MAP,meeting_point(XM+4,YM)));
@@ -81,7 +78,7 @@
             .save_stats("waiting_helper",C3);
                 
             !wait_event( helper_at(XMO,YMO)[source(Helper)] );
-            .concat("[",helper_at(XMO,YMO),"]",C4);
+            .concat("[",helper_at(XMO,YMO),",",helper(Helper),"]",C4);
             .save_stats("assembly_ready",C4);
 
             //task(task10,191,4,[req((-1),1,b2),req(0,1,b1)]) req(IH,JH,BH)
@@ -116,6 +113,8 @@
     !drop_all_blocks;
     +exploring;
     !explore[critical_section(action), priority(1)];
+.
+^!perform_task(_) <- .abolish( performing(_,_) );
 .
 
 // solve conflict in which I am master of an auction and helper of another agent
@@ -200,7 +199,7 @@
 
 // if it said it may help an agent and did not won a master auction yet
 +!bring_block(B,Master,T,MAP,meeting_point(XM,YM)):
-    .intend(perform_task(TT)) & 
+    .intend( perform_task(TT) ) & 
     not wanted_task(ME,TT,_)
     <-
     .drop_intention( perform_task(_) );
@@ -212,6 +211,7 @@
     not .intend(bring_block(_,_,_,_,_)) &
     myposition(XO,YO) &
     .my_name(ME) &
+    not performing(_,_) &
     step(S)
     <-
     -exploring;
@@ -228,7 +228,7 @@
     ?myposition(XMO,YMO);
     .send(Master,tell,helper_at(XMO,YMO));
             
-    .concat("[",myposition(XMO,YMO),"]",C3);
+    .concat("[",myposition(XMO,YMO),",",master(Master),"]",C3);
     .save_stats("waiting_master",C3);
     !wait_event( connect(B,I,J)[source(Master)] );
         
