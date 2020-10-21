@@ -230,7 +230,8 @@ is_meeting_area(X,Y,R) :-
 /**
  * goto XY, skip if no_route
  */
-+!goto_XY(X,Y) : myposition(X,Y)
++!goto_XY(X,Y) : 
+    myposition(X,Y)
     <-
     !do(skip,R);
     .log(warning,"I am already at ",X,",",Y,", skip: ",R);

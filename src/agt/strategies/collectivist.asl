@@ -24,91 +24,118 @@
 { include("agentBase.asl") }
 { include("origin_workaround.asl") }
 
-
++!perform_task(T) : unwanted_task(T). // do nothing
 +!perform_task(T) :
     not accepted(_) &                       // I am not committed
     not .intend(bring_block(_,_,_,_)) &
     not .intend(perform_task(_)) &
     .my_name(ME) &
     task(T,DL,Y,REQs) &
-    .nth(0,REQs,req(_,_,B)) &   // Get the requirement (must be only one)
-    task_shortest_path(B,D) &
+    .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for 
+    .member(req(IH,JH,BH),REQs) & (math.abs(IH) + math.abs(JH)) > 1 & // This is the block that the HELPER must go for
+    task_shortest_path(BR,D) &
     step(S) &
-    origin_str(MyMAP) &
+    origin_str(MAP) &
     myposition(XX,YY)     
     <-
     if ( DL <= (S + D) ) { // deadline must be greater than step + shortest path
         +unwanted_task(T); // Discard tasks that are going to expire    
     } else {
         .log(warning,"I want to perform the task ",T);
+        //removeMyCFPs; // clear other auctions, just in case
         
-        .nth(1,REQs,req(IH,JH,BH));
-        .log(warning,"Asking help... ",T);
-        removeMyCFPs; // clear other auction, just in case
+        setCFP("bring_block",block_to(BH,ME,T,MAP),9999); // Start the CFP with a very high offer
+        setCFP("wanted_task",T,S+D); // no need to skip, just keep exploring until the auction ends
         
-        setCFP("bring_block",block_to(BH,ME,T,MyMAP),9999); // Start the CFP with a very high offer
         //!do(skip,R1);
         .wait(step(Step) & Step > S); //wait for the next step to continue
           
-        if ( bring_block(Helper,block_to(B,Master,T,MAP),_) & Helper \== ME) { // someone is coming to help me
+        if ( bring_block(Helper,block_to(B,ME,T,MAP),_) & Helper \== ME & wanted_task(ME,T,_)) { // someone is coming to help me and I won the master's auction
+            !close_bring_CFP(block_to(BH,ME,T,MAP));
+            
+            -exploring;
         
-            setCFP("bring_block",block_to(BH,ME,T,MyMAP),-1);
-
-            setCFP("wanted_task",T,S+1+D); // no need to skip, just keep exploring until the auction ends
-            //!do(skip,R2);
-            .wait(step(Step2) & Step2 > S+1); //wait for the next step to continue
-
-            if ( wanted_task(ME,T,_) ) { // there is no better agent to perform this task
-                -exploring;
+            //.broadcast(tell,unwanted_task(T));
                 
-                -+helper(T,Helper);
+            -+helper(T,Helper);
 
-                ?nearest(goal,XG,YG);
-                .send(Helper,tell,meeting_point(T,XG,YG));
+            ?nearest(goal,XG,YG);
+            !find_meeting_area(XG,YG,1,XM,YM);
+            .send(Helper,achieve,bring_block(B,ME,T,MAP,meeting_point(XM+4,YM)));
+
+            .concat("[",task(T),",",myposition(XX,YY),",",helper(Helper),",",myreq(IR,JR,BR),"]",C2);
+            .save_stats("mastering_task",C2);
             
-                .log(warning,"Accepting task... ",T);
-                !accept_task(T);
+            .log(warning,"Accepting task... ",T);
+            !accept_task(T);
 
-                .log(warning,"Performing task... ",T);
-                .nth(0,REQs,req(IR,JR,BR));
-
-                .log(warning,"getblock ",req(IR,JR,BR));
-                !get_block(req(IR,JR,BR));
+            .log(warning,"getblock ",req(IR,JR,BR));
+            !get_block(req(IR,JR,BR));
                 
-                .log(warning,"Setting position of the requirement for ",req(IR,JR,BR));
-                !fix_rotation(req(IR,JR,BR));
+            .log(warning,"Setting position of the requirement for ",req(IR,JR,BR));
+            !fix_rotation(req(IR,JR,BR));
 
-                !goto_XY(XG+3,YG+3);
-                ?myposition(XO,YO);
-                .concat("[",ME,",",myposition(XO,YO),",",helper_at(XG,YG)[source(Helper)],"]",C2);
-                .save_stats("ready_to_assembly",C2);
-            
-                .log(warning,"Submitting task... ",T);
-                !submit_task(T);
+            !goto_XY(XM,YM);
+            ?myposition(XO,YO);
+            .concat("[",myposition(XO,YO),",",helper(Helper),"]",C3);
+            .save_stats("waiting_helper",C3);
+                
+            !wait_event( helper_at(XMO,YMO)[source(Helper)] );
+            .concat("[",helper_at(XMO,YMO),"]",C4);
+            .save_stats("assembly_ready",C4);
 
-                // In case submit did not succeed
-                .log(warning,"Dropping blocks for ",T);
-                !drop_all_blocks;
-                removeMyCFPs; // in case the agent did not succeed, another agent can try
+            //task(task10,191,4,[req((-1),1,b2),req(0,1,b1)]) req(IH,JH,BH)
+            .send(Helper,achieve,rotate(cw));
 
-                //No matter if it succeed or failed, it is supposed to be ready for another task
-                +exploring;
-                !explore[critical_section(action), priority(1)];
-            }
+            .log(warning,"Submitting task... ",T);
+            !submit_task(T);
+            .broadcast(tell,unwanted_task(T));
+
+            // In case submit did not succeed
+            .log(warning,"Dropping blocks for ",T);
+            !drop_all_blocks;
+            removeMyCFPs; // in case the agent did not succeed, another agent can try
+
+            //No matter if it succeed or failed, it is supposed to be ready for another task
+            +exploring;
+            !explore[critical_section(action), priority(1)];
         }
     }
 .
-+!perform_task(T)
-    <-
-    .log(warning,"Could not perform ",T);
-.
--!perform_task(T)
++!perform_task(T).// <- .log(warning,"Could not perform ",T).
+-!perform_task(T) :
+    .my_name(ME)
     <-
     .log(warning,"Failed on ",perform_task(T)," dropping desire, back to explore.");
     //No matter if it succeed or failed, it is supposed to be ready for another task
+    .concat("[",perform_task(T),"]",C);
+    .save_stats("perform_fail",C);
     .drop_desire(perform_task(_));
+    .drop_desire(explore);
+    .drop_desire(bring_block(_,_,_,_,_));
+    !drop_all_blocks;
     +exploring;
     !explore[critical_section(action), priority(1)];
+.
+
+// solve conflict in which I am master of an auction and helper of another agent
++!close_bring_CFP(block_to(B,ME,T,MAP)) :
+    .my_name(ME)
+    <-
+    if (bring_block(ME,block_to(_,AnotherMaster,_,_),_) ) {
+        if (ME < AnotherMaster) {
+            .drop_intention( bid_to_bring_block(_,_,_,_) );
+            .drop_intention( bring_block(_,_,_,_,_) );
+            .concat("[",bring_block(ME,block_to(_,AnotherMaster,_,_),_),"]",C);
+            .save_stats("dropped_bring",C);
+        } else {
+            .drop_intention( perform_task(_) );
+            .concat("[",bring_block(ME,block_to(_,Master,_,_),_),",",bring_block(Master,block_to(_,ME,_,_),_),"]",C);
+            .save_stats("dropped_mastering",C);
+            .fail;
+        }
+    } 
+    setCFP("bring_block",block_to(B,ME,T,MAP),-1);
 .
 
 /**
@@ -118,8 +145,8 @@
 +task(T,DL,Y,REQs) :
     not unwanted_task(T) &
    .member(req(I,J,_),REQs) & 
-   (math.abs(I) + math.abs(J)) <= 1 & // There is a req which requires help from other agent
-   .length(REQs) \== 2 // Currently I am focusing only on two blocks tasks
+   (math.abs(I) + math.abs(J)) <= 1 & // There is no req which requires help from other agent
+   .length(REQs) \== 2 // Currently I am focusing only on two blocks tasks that needs help
     <-
     +unwanted_task(T);
 .
@@ -128,9 +155,10 @@
     exploring &
     not accepted(_) &   // I am not committed
     not unwanted_task(T) &
-    known_requirement(T,0)
+    .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for 
+    known_requirement(T,BR)
     <-
-    .log(warning,"I am able to perform ",T);
+    //.log(warning,"I am able to perform ",T);
     !!perform_task(T);
 .
 
@@ -142,62 +170,84 @@
     .abolish(unwanted_task(T));
 .
 
-+bring_block(_,block_to(B,Master,T,MAP),_):
-    not .intend(bring_block(_,_,_,_)) &
-    not .intend(perform_task(_)) &
-    .my_name(ME) &
-    Master \== ME & // do not attend to CFP that it is the master
-    origin_str(MAP)  // My map is same of Master's map
++bring_block(_,_,_) : .intend(bid_to_bring_block(_,_,_,_)). // I am busy
++bring_block(_,_,_) : .intend(bring_block(_,_,_,_,_)). // I am busy
++bring_block(_,_,_) : .my_name(ME) & wanted_task(ME,_,_). // I am busy performing a task as master
++bring_block(_,block_to(_,ME,_,_),_) : .my_name(ME). // it is me asking for help...
++bring_block(_,block_to(B,Master,T,MAP),_) 
     <-
-    .log(warning,"I am able to help on ",block_to(B,Master,T,MAP));
-    .abolish(meeting_point(_,_,_));
-    removeMyCFPs; // clear other auction, just in case
-    !!bring_block(B,Master,T,MAP);
+    !bid_to_bring_block(B,Master,T,MAP);
 .
 
-+!bring_block(B,Master,T,MAP):
++!bid_to_bring_block(B,Master,T,MAP) :
     gps_map(_,_,B,MAP) &
+    origin_str(MAP) & // My map is same of Master's map
     nearest(B,XB,YB) &
     myposition(X,Y) &
     distance(X,Y,XB,YB,D1) &
     step(S)
     <-
+    //.log(warning,"I am able to help on ",block_to(B,Master,T,MAP));
+    //removeMyCFPs; // clear other auction, just in case
+
     // for the auction, it is used the current position of master
     .send(Master,askOne,myposition(XM,YM),myposition(XM,YM));
     ?distance(XB,YB,XM,YM,D2);
     D = D1 + D2;
     setCFP("bring_block",block_to(B,Master,T,MAP),S+D);
-    //!do(skip,R1);
-    .wait(step(Step) & Step > S); //wait for the next step to continue
+.
++!bid_to_bring_block(B,Master,T,MAP). // I am busy
 
-    if ( bring_block(ME,block_to(B,Master,T,MAP),_) ) { // I won
-        .concat("[",ME,",",block_to(B,Master,T,MAP),",",step(S),",",myposition(X,Y),",",master_position(XM,YM),"]",C1);
-        .save_stats("bring_block",C1);
+// if it said it may help an agent and did not won a master auction yet
++!bring_block(B,Master,T,MAP,meeting_point(XM,YM)):
+    .intend(perform_task(TT)) & 
+    not wanted_task(ME,TT,_)
+    <-
+    .drop_intention( perform_task(_) );
+     .concat("[","]",C);
+    .save_stats("dropped_perform",C);
+.
 
-        -exploring;
++!bring_block(B,Master,T,MAP,meeting_point(XM,YM)):
+    not .intend(bring_block(_,_,_,_,_)) &
+    myposition(XO,YO) &
+    .my_name(ME) &
+    step(S)
+    <-
+    -exploring;
+
+    .concat("[",block_to(B,Master,T,MAP),",",step(S),",",myposition(XO,YO),",",meeting_point(XM,YM),"]",C1);
+    .save_stats("helping_task",C1);
+
+    !get_block(req(-1,0,B));
         
-        !get_block(req(0,1,B));
-        
-        if ( meeting_point(T,XG,YG) & myposition(XO,YO) ) {
-            .concat("[",ME,",",meeting_point(T,XG,YG),",",myposition(XO,YO),"]",C2);
-            .save_stats("goto_meeting_point",C2);
+    .concat("[",meeting_point(XM,YM),",",myposition(XO,YO),"]",C2);
+    .save_stats("goto_meeting",C2);
 
-            !goto_XY(XG,YG);
-            .send(Master,tell,helper_at(XG,YG));
+    !goto_XY(XM,YM);
+    ?myposition(XMO,YMO);
+    .send(Master,tell,helper_at(XMO,YMO));
             
-            .concat("[",ME,",",connect(B,I,J)[source(Master)],"]",C3);
-            .save_stats("connect",C3);
-            .wait(connect(B,I,J)[source(Master)]);
-        }
+    .concat("[",myposition(XMO,YMO),"]",C3);
+    .save_stats("waiting_master",C3);
+    !wait_event( connect(B,I,J)[source(Master)] );
         
-        // In case submit did not succeed
-        .log(warning,"Dropping blocks for ",T);
-        !drop_all_blocks;
+    // In case submit did not succeed
+    .log(warning,"Dropping blocks for ",T);
+    !drop_all_blocks;
         
-        //No matter if it succeed or failed, it is supposed to be ready for another task
-        +exploring;
-        !explore[critical_section(action), priority(1)];
-    }
+    //No matter if it succeed or failed, it is supposed to be ready for another task
+    +exploring;
+    !explore[critical_section(action), priority(1)];
+.
+
++!wait_event(E) : E.
++!wait_event(E) :
+    step(S)
+    <-
+    !do(skip,R);
+    .wait( (step(Step) & Step > S) ); //wait for the next step to continue
+    !wait_event(E);
 .
 
 /**

@@ -50,3 +50,12 @@
     .findall(b(I,J,B),attached(I,J) & thing(I,J,block,B),L);
     .log(warning,"No plans to rotate ",B,". Attached blocks: ",L);
 .
+
++!rotate(DIR) :
+    .member(DIR,[cw,ccw])
+    <-  
+    !do(rotate(cw),R);  
+    if (R \== success) {    
+      .log(warning,"Could not rotate ",B," (",I,",",J,") to (",RI,",",RJ,") dir: cw");  
+    }   
+.   
