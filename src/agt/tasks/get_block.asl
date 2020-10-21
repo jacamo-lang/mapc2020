@@ -19,7 +19,7 @@
     <-
     !do(request(DD),R0);
     !do(attach(DD),R1);
-    if ((R0 == success) & (R1 == success)) {
+    if (R1 == success) {
         .log(warning,"I have attached a block ",B);
         .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,BB), L);
         .findall(t(I,J,T),thing(I,J,T,_), LT);
