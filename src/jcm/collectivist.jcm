@@ -1,6 +1,6 @@
 mas env.connection {
 
-agent agenta : strategies/collectivist.asl { 
+agent agentA : strategies/collectivist.asl { 
     //ag-bb-class: bb.FullTextPersistentBB
     join : enva 
     instances: 50

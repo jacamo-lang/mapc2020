@@ -3,7 +3,7 @@
 myposition(0,0).
 
 
-originlead(agenta1).
+originlead(agentA1).
 
 directions([n,s,w,e]).
 
