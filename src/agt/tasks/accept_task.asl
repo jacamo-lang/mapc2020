@@ -19,11 +19,11 @@
     !do(accept(T),R0);
     if (R0 == success) {
         .log(warning,"Task ",T," accepted!");
-        .concat("[",task(T,DL,Y,REQs),",",agent(ME),"]",STR);
+        .concat("[",task(T,DL,Y,REQs),"]",STR);
         .save_stats("taskAccepted",STR);
     } else {
         .log(warning,"Could not accept task ",T);
-        .concat("[",task(T,DL,Y,REQs),",",agent(ME),"]",STR);
+        .concat("[",task(T,DL,Y,REQs),"]",STR);
         .save_stats("errorOnAccept",STR);
         .fail;
     }

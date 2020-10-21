@@ -274,12 +274,10 @@ is_meeting_area(X,Y,R) :-
     -+find_meeting_iterator(0);
     while ( find_meeting_iterator(I) & (I < 10) ) {
         if ( desired_meeting_point(DX,DY,R) & is_meeting_area(DX,DY,R) ) {
-            .log(warning,">>>> ",desired_meeting_point(DX,DY,R));
             +found_meeting_point(DX,DY);
             -+find_meeting_iterator(10); // finish
         } else {
             ?desired_meeting_point(DX,DY,R);
-            .log(warning,"<<<< ",desired_meeting_point(DX,DY,R));
             if (I mod 2 == 0) {
                 -+desired_meeting_point(DX+1,DY,R);
             } else {
