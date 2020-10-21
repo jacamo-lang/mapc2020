@@ -248,6 +248,9 @@ is_meeting_area(X,Y,R) :-
             // A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance 
         }
         .log(warning,"No success on: ",goto(X,Y,RET)," ",myposition(XP,YP));
+    } else {
+        //Try again
+        !goto_XY(X,Y);
     }
 .
 
