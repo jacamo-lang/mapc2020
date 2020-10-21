@@ -52,9 +52,12 @@ nearest(T,X,Y) :-
 nearest_adjacent(T,X,Y,DIR) :-
     myposition(X1,Y1) &
     origin_str(MyMAP) &
-    .findall(p(D,X2,Y2), gps_map(X2,Y2,T,MyMAP) & distance(X1,Y1,X2,Y2,D), FL) &
-    .min(FL,p(_,X3,Y3)) & direction_increment(DIR,I,J) &
-    X = X3 + I & Y = Y3 + J
+    .findall(p(D,X3,Y3), 
+        gps_map(X2,Y2,T,MyMAP) & 
+        direction_increment(DIR,I,J) & X3 = X2+I & Y3 = Y2+J &
+        not gps_map(X3,Y3,obstacle,MyMAP) &
+        distance(X1,Y1,X2,Y2,D), FL
+    ) & .min(FL,p(_,X,Y))
 .
 
 /**
@@ -73,7 +76,7 @@ nearest_neighbour(XP,YP,X,Y) :-
     myposition(X1,Y1) &
     origin_str(MyMAP) &
     .findall(p(D,X2,Y2),
-        direction_increment(_,I,J) & X2 = XP+I & Y2 = YP + J &
+        direction_increment(_,I,J) & X2 = XP+I & Y2 = YP+J &
         not gps_map(X2,Y2,obstacle,MyMAP) &
         distance(X1,Y1,X2,Y2,D), FL
     ) & .min(FL,p(_,X,Y))
@@ -245,6 +248,9 @@ is_meeting_area(X,Y,R) :-
             // A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance 
         }
         .log(warning,"No success on: ",goto(X,Y,RET)," ",myposition(XP,YP));
+    } else {
+        //Try again
+        !goto_XY(X,Y);
     }
 .
 

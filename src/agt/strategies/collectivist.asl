@@ -1,14 +1,14 @@
 /**
  * The collectivist is an agent that may act collectively with other agents
  * to build structures. It can be the 'master' of the task or a 'helper'.
- * 
+ *
  * Key beliefs:
  * gps_map(X,Y,goal,_): The terrain X,Y is a goal spot [source(lps/rp artifact)]
- * gps_map(X,Y,B,_): There is a disposer of block B at X,Y in which (.nth(P,[b0,b1,b2,b3],B) & P >= 0) [source(lps/rp artifact)] 
+ * gps_map(X,Y,B,_): There is a disposer of block B at X,Y in which (.nth(P,[b0,b1,b2,b3],B) & P >= 0) [source(lps/rp artifact)]
  * gps_map(X,Y,taskboard,_): There is a taskboard X,Y [source(lps/rp artifact)]
  * accepted(T): I am doing a task T [source(eis artifact)]
  * attached(I,J): I have a block attached on I,J [source(eis artifact)]
- * thing(I,J,O): I can see an object O on I,J (with attached you know the kind you have attached) [source(eis artifact)] 
+ * thing(I,J,O): I can see an object O on I,J (with attached you know the kind you have attached) [source(eis artifact)]
  */
 
 { include("tasks/common_task.asl") }
@@ -17,6 +17,7 @@
 { include("tasks/rotate_block.asl") }
 { include("tasks/drop_block.asl") }
 { include("tasks/submit_task.asl") }
+{ include("tasks/zumbi_mode.asl") }
 { include("walking/common_walking.asl") }
 { include("walking/goto_iaA_star.asl") }
 { include("simulation/watch_dog.asl") }
@@ -31,33 +32,30 @@
     not .intend(perform_task(_)) &
     .my_name(ME) &
     task(T,DL,Y,REQs) &
-    .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for 
+    .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for
     .member(req(IH,JH,BH),REQs) & (math.abs(IH) + math.abs(JH)) > 1 & // This is the block that the HELPER must go for
     task_shortest_path(BR,D) &
     step(S) &
     origin_str(MAP) &
-    myposition(XX,YY)     
+    myposition(XX,YY)
     <-
     if ( DL <= (S + D) ) { // deadline must be greater than step + shortest path
-        +unwanted_task(T); // Discard tasks that are going to expire    
+        +unwanted_task(T); // Discard tasks that are going to expire
     } else {
         .log(warning,"I want to perform the task ",T);
         //removeMyCFPs; // clear other auctions, just in case
-        
+
         setCFP("bring_block",block_to(BH,ME,T,MAP),9999); // Start the CFP with a very high offer
-        setCFP("wanted_task",T,S+D); // no need to skip, just keep exploring until the auction ends
-        
+        //setCFP("wanted_task",T,S+D); // no need to skip, just keep exploring until the auction ends
+
         //!do(skip,R1);
         .wait(step(Step) & Step > S); //wait for the next step to continue
-          
-        if ( bring_block(Helper,block_to(B,ME,T,MAP),_) & Helper \== ME & wanted_task(ME,T,_)) { // someone is coming to help me and I won the master's auction
+
+        if ( bring_block(Helper,block_to(B,ME,T,MAP),_) & Helper \== ME /* & wanted_task(ME,T,_) */) { // someone is coming to help me and I won the master's auction
             !close_bring_CFP(block_to(BH,ME,T,MAP));
-            
+
+            -+performing(T,Helper);
             -exploring;
-        
-            //.broadcast(tell,unwanted_task(T));
-                
-            -+helper(T,Helper);
 
             ?nearest(goal,XG,YG);
             !find_meeting_area(XG,YG,1,XM,YM);
@@ -65,27 +63,35 @@
 
             .concat("[",task(T),",",myposition(XX,YY),",",helper(Helper),",",myreq(IR,JR,BR),"]",C2);
             .save_stats("mastering_task",C2);
-            
+
             .log(warning,"Accepting task... ",T);
             !accept_task(T);
 
             .log(warning,"getblock ",req(IR,JR,BR));
-            !get_block(req(IR,JR,BR));
-                
-            .log(warning,"Setting position of the requirement for ",req(IR,JR,BR));
-            !fix_rotation(req(IR,JR,BR));
+            .log(warning,"Setting position for connecting with a helper comming from east");
+            !get_block(req(1,0,BR));
 
             !goto_XY(XM,YM);
+            !fix_rotation(req(1,0,BR));
             ?myposition(XO,YO);
             .concat("[",myposition(XO,YO),",",helper(Helper),"]",C3);
             .save_stats("waiting_helper",C3);
-                
+
             !wait_event( helper_at(XMO,YMO)[source(Helper)] );
-            .concat("[",helper_at(XMO,YMO),"]",C4);
+            .concat("[",helper_at(XMO,YMO),",",helper(Helper),"]",C4);
             .save_stats("assembly_ready",C4);
 
-            //task(task10,191,4,[req((-1),1,b2),req(0,1,b1)]) req(IH,JH,BH)
-            .send(Helper,achieve,rotate(cw));
+            !do(skip,_);
+            !command_zumbi(Helper,do(move(w),RZZ0));
+            !do(connect(Helper,1,0),RMM0);
+            !command_zumbi(Helper,do(connect(ME,-1,0),RZZ1));
+            .concat("[",do(connect(ME,-1,0),RZZ1),"]",C5);
+            .save_stats("do_connect",C5);
+            !do(skip,_);
+            !command_zumbi(Helper,do(disconnect(-1,0),RZZ2));
+
+            // Setting for submit position
+            !fix_rotation(req(IR,JR,BR));
 
             .log(warning,"Submitting task... ",T);
             !submit_task(T);
@@ -117,6 +123,7 @@
     +exploring;
     !explore[critical_section(action), priority(1)];
 .
+//^!perform_task(_) <- .abolish( performing(_,_) ).
 
 // solve conflict in which I am master of an auction and helper of another agent
 +!close_bring_CFP(block_to(B,ME,T,MAP)) :
@@ -134,7 +141,7 @@
             .save_stats("dropped_mastering",C);
             .fail;
         }
-    } 
+    }
     setCFP("bring_block",block_to(B,ME,T,MAP),-1);
 .
 
@@ -144,18 +151,18 @@
  */
 +task(T,DL,Y,REQs) :
     not unwanted_task(T) &
-   .member(req(I,J,_),REQs) & 
-   (math.abs(I) + math.abs(J)) <= 1 & // There is no req which requires help from other agent
    .length(REQs) \== 2 // Currently I am focusing only on two blocks tasks that needs help
     <-
     +unwanted_task(T);
+    //+task(task999,1000,1000,[req(0,1,b0),req(0,2,b0)]);
 .
 
 +task(T,DL,Y,REQs) :
     exploring &
     not accepted(_) &   // I am not committed
     not unwanted_task(T) &
-    .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for 
+    .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for
+    .member(req(IH,JH,BH),REQs) & (math.abs(IH) == 2 | math.abs(JH) == 2) & // Tho simplify, only accepting tasks with blocks on cardeal positions
     known_requirement(T,BR)
     <-
     //.log(warning,"I am able to perform ",T);
@@ -164,17 +171,16 @@
 
 /**
  * If someone forgot task T, let us be open to perform it!
- */
 -wanted_task(_,T,_)
     <-
     .abolish(unwanted_task(T));
 .
+ */
 
 +bring_block(_,_,_) : .intend(bid_to_bring_block(_,_,_,_)). // I am busy
 +bring_block(_,_,_) : .intend(bring_block(_,_,_,_,_)). // I am busy
-+bring_block(_,_,_) : .my_name(ME) & wanted_task(ME,_,_). // I am busy performing a task as master
 +bring_block(_,block_to(_,ME,_,_),_) : .my_name(ME). // it is me asking for help...
-+bring_block(_,block_to(B,Master,T,MAP),_) 
++bring_block(_,block_to(B,Master,T,MAP),_)
     <-
     !bid_to_bring_block(B,Master,T,MAP);
 .
@@ -198,44 +204,39 @@
 .
 +!bid_to_bring_block(B,Master,T,MAP). // I am busy
 
-// if it said it may help an agent and did not won a master auction yet
-+!bring_block(B,Master,T,MAP,meeting_point(XM,YM)):
-    .intend(perform_task(TT)) & 
-    not wanted_task(ME,TT,_)
-    <-
-    .drop_intention( perform_task(_) );
-     .concat("[","]",C);
-    .save_stats("dropped_perform",C);
-.
-
 +!bring_block(B,Master,T,MAP,meeting_point(XM,YM)):
     not .intend(bring_block(_,_,_,_,_)) &
     myposition(XO,YO) &
     .my_name(ME) &
     step(S)
     <-
+    // In case it is performing a task
+    .drop_intention( perform_task(_) );
+    
     -exploring;
 
     .concat("[",block_to(B,Master,T,MAP),",",step(S),",",myposition(XO,YO),",",meeting_point(XM,YM),"]",C1);
     .save_stats("helping_task",C1);
 
     !get_block(req(-1,0,B));
-        
+
     .concat("[",meeting_point(XM,YM),",",myposition(XO,YO),"]",C2);
     .save_stats("goto_meeting",C2);
 
     !goto_XY(XM,YM);
     ?myposition(XMO,YMO);
     .send(Master,tell,helper_at(XMO,YMO));
-            
-    .concat("[",myposition(XMO,YMO),"]",C3);
+
+    !fix_rotation(req(-1,0,B));
+    
+    .concat("[",myposition(XMO,YMO),",",master(Master),"]",C3);
     .save_stats("waiting_master",C3);
     !wait_event( connect(B,I,J)[source(Master)] );
-        
+
     // In case submit did not succeed
     .log(warning,"Dropping blocks for ",T);
     !drop_all_blocks;
-        
+
     //No matter if it succeed or failed, it is supposed to be ready for another task
     +exploring;
     !explore[critical_section(action), priority(1)];
