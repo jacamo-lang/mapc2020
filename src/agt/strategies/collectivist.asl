@@ -71,7 +71,7 @@
             .log(warning,"Setting position for connecting with a helper comming from east");
             !get_block(req(1,0,BR));
 
-            if ( not myposition(XM,YM) ) {
+            while ( not myposition(XM,YM) ) {
                 !goto_XY(XM,YM);
                 !fix_rotation(req(1,0,BR));
             }
@@ -97,6 +97,7 @@
             !do(skip,_);
             !command_zumbi(Helper,do(detach(w),RZZ2));
 
+            !do(skip,_);
             !command_zumbi(Helper,do(skip,_));
 
             // Setting for submit position
@@ -215,6 +216,7 @@
 
 +!bring_block(B,Master,T,MAP,meeting_point(XM,YM)):
     not .intend(bring_block(_,_,_,_,_)) &
+    not performing(_,_) &
     myposition(XO,YO) &
     .my_name(ME) &
     step(S)
