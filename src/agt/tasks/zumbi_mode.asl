@@ -13,8 +13,8 @@
 +!zumbi_do(P,S) :
     true
     <-
-    .wait(step(Step) & Step > S); //wait to synchronize with master
     !P;
     .concat("[",P,"]",C);
     .save_stats("zumbi_do",C);
+    .wait(step(Step) & Step > S); //wait to synchronize with master
 .

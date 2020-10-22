@@ -71,24 +71,33 @@
             .log(warning,"Setting position for connecting with a helper comming from east");
             !get_block(req(1,0,BR));
 
-            !goto_XY(XM,YM);
-            !fix_rotation(req(1,0,BR));
-            ?myposition(XO,YO);
-            .concat("[",myposition(XO,YO),",",helper(Helper),"]",C3);
+            if ( not myposition(XM,YM) ) {
+                !goto_XY(XM,YM);
+                !fix_rotation(req(1,0,BR));
+            }
+            .concat("[",myposition(XM,YM),",",helper(Helper),"]",C3);
             .save_stats("waiting_helper",C3);
 
-            !wait_event( helper_at(XMO,YMO)[source(Helper)] );
-            .concat("[",helper_at(XMO,YMO),",",helper(Helper),"]",C4);
+            !wait_event( helper_at(XM+4,YM)[source(Helper)] );
+            .concat("[",helper_at(XM+4,YM),",",helper(Helper),"]",C4);
             .save_stats("assembly_ready",C4);
 
+            while (not thing(3,0,entity,_)) {
+                !command_zumbi(Helper,do(move(w),RZZ0));
+                !do(skip,_);
+            }
+
+            while (not (lastAction(connect) & lastActionResult(success))) {
+                !do(connect(Helper,1,0),RMM0);
+                !command_zumbi(Helper,do(connect(ME,-1,0),RZZ1));
+                .concat("[",do(connect(ME,-1,0),RZZ1),"]",C5);
+                .save_stats("do_connect",C5);
+            }
+
             !do(skip,_);
-            !command_zumbi(Helper,do(move(w),RZZ0));
-            !do(connect(Helper,1,0),RMM0);
-            !command_zumbi(Helper,do(connect(ME,-1,0),RZZ1));
-            .concat("[",do(connect(ME,-1,0),RZZ1),"]",C5);
-            .save_stats("do_connect",C5);
-            !do(skip,_);
-            !command_zumbi(Helper,do(disconnect(-1,0),RZZ2));
+            !command_zumbi(Helper,do(detach(w),RZZ2));
+
+            !command_zumbi(Helper,do(skip,_));
 
             // Setting for submit position
             !fix_rotation(req(IR,JR,BR));
