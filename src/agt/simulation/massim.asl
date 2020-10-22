@@ -12,10 +12,17 @@
     .substring(NAME,ID,6) & // only agenta1 and b1 are writing statistics
     .concat("env",TEAM,Env) &
     .term2string(Envterm,Env) &
+    .concat("simpleCFP",TEAM,ArtCFP) &
+    .term2string(ArtCFPterm,ArtCFP) &
     .concat("stepCounter",TEAM,ArtCounter) &
     .term2string(ArtCounterTerm,ArtCounter)
     <-
     .log(warning,"****** Initialising agent");
+
+    if ( ID == "1" & focused(Envterm,ArtCounterTerm,_) ) {
+        resetStepCounter(-1);
+    }
+    
     .drop_all_events;
     .drop_all_desires;
     .drop_all_intentions;
