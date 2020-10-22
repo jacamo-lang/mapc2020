@@ -2,11 +2,11 @@ mas env.connection {
 
 agent agentA : strategies/collectivist.asl { 
     //ag-bb-class: bb.FullTextPersistentBB
-    join : enva 
+    join : envA 
     instances: 50
 } 
 
-workspace enva {
+workspace envA {
 
 }
 
