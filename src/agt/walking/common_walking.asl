@@ -139,7 +139,7 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     if (RET \== success & myposition(X1,Y1)) {
         if(RET==no_route){ 
             !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
-			// A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance 
+            // A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance 
         } 
         .log(warning,"No success on: ",goto(XT,YT,RET)," ",myposition(X1,Y1));
     }
@@ -180,7 +180,7 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     if (RET \== success & myposition(X1,Y1)) {
         if(RET==no_route){ 
             !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?) 
-			// A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance
+            // A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance
         } 
         .log(warning,"No success on: ",goto(XA,YA,RET)," ",myposition(X1,Y1));
     }
