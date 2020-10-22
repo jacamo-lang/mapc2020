@@ -13,6 +13,8 @@
     .substring(NAME,TEAM,5,6) &
     .concat("env",TEAM,Env) &
     .term2string(Envterm,Env) &
+    .concat("artGPS",TEAM,ArtGPS) &
+    .term2string(ArtGPSterm,ArtGPS) &
     .concat("simpleCFP",TEAM,ArtCFP) &
     .term2string(ArtCFPterm,ArtCFP) &
     .concat("stepCounter",TEAM,ArtCounter) &
@@ -24,14 +26,18 @@
         resetStepCounter(-1);
     }
     
-    .drop_all_events;
-    .drop_all_desires;
-    .drop_all_intentions;
-    !drop_beliefs;
+    if ( ID == "1" & focused(Envterm,ArtGPSterm,_) ) {
+        resetRP;
+    }
 
     if ( focused(Envterm,ArtCFPterm,_) ) {
         removeMyCFPs;
     }
+
+    .drop_all_events;
+    .drop_all_desires;
+    .drop_all_intentions;
+    !drop_beliefs;
 
     +exploring;
     +myposition(0,0);
@@ -44,13 +50,6 @@
     step(2) &
     .my_name(NAME) &
     .substring(NAME,ID,6) & ID == "1" & // only agenta1 and b1 are writing statistics
-    .substring(NAME,TEAM,5,6) &
-    .concat("env",TEAM,Env) &
-    .term2string(Envterm,Env) &
-    .concat("artGPS",TEAM,ArtGPS) &
-    .term2string(ArtGPSterm,ArtGPS) &
-    .concat("simpleCFP",TEAM,ArtCFP) &
-    .term2string(ArtCFPterm,ArtCFP) &
     teamSize(TS) &
     vision(V) &
     exploration_strategy(ES)
@@ -58,14 +57,6 @@
     -+persistTeamSize(TS);
     .concat("[",teamSize(TS),",",vision(V),",",exploration_strategy(ES),"]",C);
     .save_stats("simStart",C);
-
-    if ( focused(Envterm,ArtGPSterm,_) ) {
-        resetRP;
-    }
-
-    if ( focused(Envterm,ArtCFPterm,_) ) {
-        resetSimpleCFP;
-    }
 .
 +simStart : // for the other agents, just write persistTeamSize(TS)
     step(2) &
