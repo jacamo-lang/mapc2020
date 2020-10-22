@@ -22,6 +22,7 @@
 { include("walking/goto_iaA_star.asl") }
 { include("simulation/watch_dog.asl") }
 { include("environment/artifact_simpleCFP.asl") }
+{ include("environment/artifact_counter.asl") }
 { include("agentBase.asl") }
 { include("origin_workaround.asl") }
 
@@ -43,15 +44,15 @@
         +unwanted_task(T); // Discard tasks that are going to expire
     } else {
         .log(warning,"I want to perform the task ",T);
-        //removeMyCFPs; // clear other auctions, just in case
 
         setCFP("bring_block",block_to(BH,ME,T,MAP),9999); // Start the CFP with a very high offer
-        //setCFP("wanted_task",T,S+D); // no need to skip, just keep exploring until the auction ends
 
-        //!do(skip,R1);
         .wait(step(Step) & Step > S); //wait for the next step to continue
 
-        if ( bring_block(Helper,block_to(B,ME,T,MAP),_) & Helper \== ME /* & wanted_task(ME,T,_) */) { // someone is coming to help me and I won the master's auction
+        //TODO: Sometimes the master or the helper get stuck which compromise the whole task
+        //TODO: Sometimes another pair of agents are concurring to this same task and going to same place
+        //TODO: Sometimes an agent is winning two auction as helper giving false hope to one of them         
+        if ( bring_block(Helper,block_to(B,ME,T,MAP),_) & Helper \== ME ) { // someone is coming to help me and I won the master's auction
             !close_bring_CFP(block_to(BH,ME,T,MAP));
 
             -+performing(T,Helper);
@@ -78,30 +79,38 @@
             .concat("[",myposition(XM,YM),",",helper(Helper),"]",C3);
             .save_stats("waiting_helper",C3);
 
-            !wait_event( helper_at(XM+4,YM)[source(Helper)] );
+            !wait_event( helper_at(XM+4,YM)[source(Helper)],do(skip,_) );
             .concat("[",helper_at(XM+4,YM),",",helper(Helper),"]",C4);
             .save_stats("assembly_ready",C4);
 
-            while (not thing(3,0,entity,_)) {
-                !command_zumbi(Helper,do(move(w),RZZ0));
+            while ( not thing(3,0,entity,_) & step(AS1) ) {
                 !do(skip,_);
+                !command_zumbi(Helper,do(move(w),RZZ0));
+                .wait( step(NS) & NS > AS1 );
             }
 
-            while (not (lastAction(connect) & lastActionResult(success))) {
+            while (not (lastAction(connect) & lastActionResult(success)) & step(AS2)) {
                 !do(connect(Helper,1,0),RMM0);
                 !command_zumbi(Helper,do(connect(ME,-1,0),RZZ1));
                 .concat("[",do(connect(ME,-1,0),RZZ1),"]",C5);
                 .save_stats("do_connect",C5);
+                .wait( step(NS) & NS > AS2 );
+            }
+            
+            //TODO: coordination issues since Helper must be successful on detach to make master able to submit 
+            while (not thing(4,0,entity,_) & step(AS3) ) {
+                !do(skip,_);
+                !command_zumbi(Helper,do(detach(w),RZZ2));
+                !do(skip,_);
+                !command_zumbi(Helper,do(move(e),RZZ3));
+                .wait( step(NS) & NS > AS3 );
             }
 
-            !do(skip,_);
-            !command_zumbi(Helper,do(detach(w),RZZ2));
-
-            !do(skip,_);
-            !command_zumbi(Helper,do(skip,_));
-
             // Setting for submit position
-            !fix_rotation(req(IR,JR,BR));
+            while (not thing(IR,JR,block,BR) & step(AS4) ) {
+                !fix_rotation(req(IR,JR,BR));
+                .wait( step(NS) & NS > AS4 );
+            }
 
             .log(warning,"Submitting task... ",T);
             !submit_task(T);
@@ -133,7 +142,6 @@
     +exploring;
     !explore[critical_section(action), priority(1)];
 .
-//^!perform_task(_) <- .abolish( performing(_,_) ).
 
 // solve conflict in which I am master of an auction and helper of another agent
 +!close_bring_CFP(block_to(B,ME,T,MAP)) :
@@ -179,14 +187,6 @@
     !!perform_task(T);
 .
 
-/**
- * If someone forgot task T, let us be open to perform it!
--wanted_task(_,T,_)
-    <-
-    .abolish(unwanted_task(T));
-.
- */
-
 +bring_block(_,_,_) : .intend(bid_to_bring_block(_,_,_,_)). // I am busy
 +bring_block(_,_,_) : .intend(bring_block(_,_,_,_,_)). // I am busy
 +bring_block(_,block_to(_,ME,_,_),_) : .my_name(ME). // it is me asking for help...
@@ -203,9 +203,6 @@
     distance(X,Y,XB,YB,D1) &
     step(S)
     <-
-    //.log(warning,"I am able to help on ",block_to(B,Master,T,MAP));
-    //removeMyCFPs; // clear other auction, just in case
-
     // for the auction, it is used the current position of master
     .send(Master,askOne,myposition(XM,YM),myposition(XM,YM));
     ?distance(XB,YB,XM,YM,D2);
@@ -221,6 +218,9 @@
     .my_name(ME) &
     step(S)
     <-
+    // remove the auction that lead to this helping plan and other ones to do not give false hope
+    removeMyCFPs;
+
     // In case it is performing a task
     .drop_intention( perform_task(_) );
     
@@ -242,7 +242,7 @@
     
     .concat("[",myposition(XMO,YMO),",",master(Master),"]",C3);
     .save_stats("waiting_master",C3);
-    !wait_event( connect(B,I,J)[source(Master)] );
+    !wait_event( connect(B,I,J)[source(Master)],do(skip,_) );
 
     // In case submit did not succeed
     .log(warning,"Dropping blocks for ",T);
@@ -252,14 +252,20 @@
     +exploring;
     !explore[critical_section(action), priority(1)];
 .
+//TODO: this is not a good solution but at least the other master may start a new auction 
++!bring_block(B,Master,T,MAP,meeting_point(XM,YM)) // I am committed to another task
+    <-
+    .send(Master,achieve,restart_agent);
+.
 
-+!wait_event(E) : E.
-+!wait_event(E) :
++!wait_event(E,A) : E.
++!wait_event(E,A) :
     step(S)
     <-
-    !do(skip,R);
+    !do(skip,_);
+    //!!A;
     .wait( (step(Step) & Step > S) ); //wait for the next step to continue
-    !wait_event(E);
+    !wait_event(E,A);
 .
 
 /**

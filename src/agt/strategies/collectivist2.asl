@@ -45,8 +45,8 @@
         .log(warning,"I want to perform the task ",T);
         
             -exploring;
-			?helper(Helper);
-			
+            ?helper(Helper);
+            
             ?nearest(goal,XG,YG);
             !find_meeting_area(XG,YG,1,XM,YM);
             .send(Helper,achieve,bring_block(B,ME,T,MAP,meeting_point(XM+4,YM)));
