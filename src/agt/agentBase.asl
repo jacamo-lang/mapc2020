@@ -15,6 +15,7 @@
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
+{ include("$moiseJar/asl/org-obedient.asl") }
 { include("taskmanager.asl") }
 { include("simulation/action.asl") }
 { include("exploration/common_exploration.asl") } //common beliefs, rules and plans for all the exploration strategies

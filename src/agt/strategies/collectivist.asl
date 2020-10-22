@@ -23,6 +23,7 @@
 { include("simulation/watch_dog.asl") }
 { include("environment/artifact_simpleCFP.asl") }
 { include("environment/artifact_counter.asl") }
+{ include("organisation/double_players.asl") }
 { include("agentBase.asl") }
 { include("origin_workaround.asl") }
 
@@ -54,19 +55,19 @@
         //TODO: Sometimes an agent is winning two auction as helper giving false hope to one of them         
         if ( bring_block(Helper,block_to(B,ME,T,MAP),_) & Helper \== ME ) { // someone is coming to help me and I won the master's auction
             !close_bring_CFP(block_to(BH,ME,T,MAP));
+            
+            .concat(ME,"_",T,OName);
+            !create_double_org(OName,[
+                g(accept_task(T),[ask_helper_to_meet_at(XM,YM)])
+            ]);
 
             -+performing(T,Helper);
             -exploring;
 
-            ?nearest(goal,XG,YG);
-            !find_meeting_area(XG,YG,1,XM,YM);
-            .send(Helper,achieve,bring_block(B,ME,T,MAP,meeting_point(XM+4,YM)));
-
+            !ask_helper_to_meet_at(XM,YM);
+            
             .concat("[",task(T),",",myposition(XX,YY),",",helper(Helper),",",myreq(IR,JR,BR),"]",C2);
             .save_stats("mastering_task",C2);
-
-            .log(warning,"Accepting task... ",T);
-            !accept_task(T);
 
             .log(warning,"getblock ",req(IR,JR,BR));
             .log(warning,"Setting position for connecting with a helper comming from east");
@@ -268,6 +269,14 @@
     !wait_event(E,A);
 .
 
++!ask_helper_to_meet_at(XM,YM)
+    <-
+    ?nearest(goal,XG,YG);
+    !find_meeting_area(XG,YG,1,XM,YM);
+    .send(Helper,achieve,bring_block(B,ME,T,MAP,meeting_point(XM+4,YM)));
+    !add_obligation(Helper,bring_block(B,ME,T,MAP,meeting_point(XM+4,YM)));
+.
+
 /**
  * For debugging if an unexpected error occurs
 -!P[code(C),code_src(S),code_line(L),error_msg(M)] :
@@ -281,3 +290,4 @@
     .stopMAS(0,1);
 .
 */
+
