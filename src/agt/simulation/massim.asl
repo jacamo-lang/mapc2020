@@ -9,11 +9,20 @@
     step(0) &
     .my_name(NAME) &
     .substring(NAME,TEAM,5,6) &
-    .concat("artGPS",TEAM,ArtGPS) & 
+    .concat("artGPS",TEAM,ArtGPS) &
     .concat("env",TEAM,Env) &
-    teamSize(TS)
+    .term2string(Envterm,Env) &
+    .concat("simpleCFP",TEAM,ArtCFP) &
+    .term2string(ArtCFPterm,ArtCFP) &
+    .concat("stepCounter",TEAM,ArtCounter) &
+    .term2string(ArtCounterTerm,ArtCounter)
     <-
     .log(warning,"****** Initialising agent");
+
+    if ( ID == "1" & focused(Envterm,ArtCounterTerm,_) ) {
+        resetStepCounter(-1);
+    }
+
     .drop_all_events;
     .drop_all_desires;
     .drop_all_intentions;
@@ -25,9 +34,9 @@
     .abolish(myposition(_,_));
     .abolish(origin(_));
     .abolish(edge(_,_,_,_,_,_)); //from stc exploration strategy
-    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol 
+    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol
     .abolish(pending_areyou(_,_,_)); //from meeting protocol
-    .abolish(task(_,_,_,_));    
+    .abolish(task(_,_,_,_));
 
     .concat("simpleCFP",TEAM,ArtCFP);
     .term2string(ArtCFPterm,ArtCFP);
@@ -35,17 +44,17 @@
     if ( focused(Envterm,ArtCFPterm,_) ) {
         removeMyCFPs;
     }
-    
+
     +exploring;
     +myposition(0,0);
-    -+last_node(-1,-1); //from stc strategy 
+    -+last_node(-1,-1); //from stc strategy
 
     !!start;
 .
 
 +simStart : // to avoid a flood of register, only agent1 of each team generate the simStart event
     step(2) &
-    .my_name(NAME) & 
+    .my_name(NAME) &
     .substring(NAME,ID,6) & ID == "1" & // only agenta1 and b1 are writing statistics
     teamSize(TS) &
     vision(V) &
@@ -54,7 +63,7 @@
     -+persistTeamSize(TS);
     .concat("[",teamSize(TS),",",vision(V),",",exploration_strategy(ES),"]",C);
     .save_stats("simStart",C);
-    
+
     .concat("artGPS",TEAM,ArtGPS);
     .term2string(ArtGPSterm,ArtGPS);
     .term2string(Envterm,Env);
@@ -70,19 +79,19 @@
 .
 +simStart : // for the other agents, just write persistTeamSize(TS)
     step(2) &
-    .my_name(NAME) & 
+    .my_name(NAME) &
     .substring(NAME,ID,6) & // only agenta1 and b1 are writing statistics
     teamSize(TS)
     <-
     -+persistTeamSize(TS);
 .
-   
+
 /**
  * The simulator just stopped / end of a round
  */
 +simEnd : // I was expecting this just once at step(749) but I am getting it at every step!
-    step(1) & // This is the first step of the next round (also works for the last round!) 
-    .my_name(NAME) & 
+    step(1) & // This is the first step of the next round (also works for the last round!)
+    .my_name(NAME) &
     .substring(NAME,ID,6) & ID == "1" // only agenta1 and b1 are writing statistics
     <-
     !saveEnd;
@@ -92,7 +101,7 @@
  * End of third round
  */
 +bye :
-    .my_name(NAME) & 
+    .my_name(NAME) &
     .substring(NAME,ID,6) & ID == "1" // only agenta1 and b1 are writing statistics
     <-
     !saveEnd;
