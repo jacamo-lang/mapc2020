@@ -1,8 +1,7 @@
 /************************* master ******************************** */
-+!deliveryrequest(L)
++!deliveryrequest(L,X,Y)
     : true
     <-
-        ?myposition(X,Y);
         ?countblocks(L,QB);
         for ( .member(block(TYPE, QUANTITY),QB) ) {
           QAGENTS=math.ceil(QUANTITY/4);
