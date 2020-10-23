@@ -3,7 +3,7 @@
 # Team A
 for i in {1..50} 
 do
-new=$(printf "eisa%d.json" "$i")
+new=$(printf "eisA%d.json" "$i")
 (printf '{
 "scenario":"test40x40",
 "host":"localhost",
@@ -23,7 +23,7 @@ done
 # Team B
 for i in {1..50} 
 do
-new=$(printf "eisb%d.json" "$i")
+new=$(printf "eisB%d.json" "$i")
 (printf '{
 "scenario":"test40x40",
 "host":"localhost",

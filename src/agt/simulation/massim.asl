@@ -9,29 +9,25 @@
     step(0) &
     .my_name(NAME) &
     .substring(NAME,TEAM,5,6) &
-    .concat("artGPS",TEAM,ArtGPS) & 
+    .substring(NAME,ID,6) & // only agenta1 and b1 are writing statistics
     .concat("env",TEAM,Env) &
-    teamSize(TS)
+    .term2string(Envterm,Env) &
+    .concat("simpleCFP",TEAM,ArtCFP) &
+    .term2string(ArtCFPterm,ArtCFP) &
+    .concat("stepCounter",TEAM,ArtCounter) &
+    .term2string(ArtCounterTerm,ArtCounter)
     <-
     .log(warning,"****** Initialising agent");
+
+    if ( ID == "1" & focused(Envterm,ArtCounterTerm,_) ) {
+        resetStepCounter(-1);
+    }
+    
     .drop_all_events;
     .drop_all_desires;
     .drop_all_intentions;
-
-    .abolish(unwanted_task(_));
-    .abolish(wanted_task(_,_,_));
-    .abolish(gps_map(_,_,_,_));
-    .abolish(exploring);
-    .abolish(myposition(_,_));
-    .abolish(origin(_));
-    .abolish(edge(_,_,_,_,_,_)); //from stc exploration strategy
-    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol 
-    .abolish(pending_areyou(_,_,_)); //from meeting protocol
-    .abolish(task(_,_,_,_));    
-
-    .concat("simpleCFP",TEAM,ArtCFP);
-    .term2string(ArtCFPterm,ArtCFP);
-    .term2string(Envterm,Env);
+    !drop_beliefs;
+    
     if ( focused(Envterm,ArtCFPterm,_) ) {
         removeMyCFPs;
     }
@@ -47,6 +43,13 @@
     step(2) &
     .my_name(NAME) & 
     .substring(NAME,ID,6) & ID == "1" & // only agenta1 and b1 are writing statistics
+    .substring(NAME,TEAM,5,6) &
+    .concat("env",TEAM,Env) &
+    .term2string(Envterm,Env) &
+    .concat("artGPS",TEAM,ArtGPS) &
+    .term2string(ArtGPSterm,ArtGPS) &
+    .concat("simpleCFP",TEAM,ArtCFP) &
+    .term2string(ArtCFPterm,ArtCFP) &
     teamSize(TS) &
     vision(V) &
     exploration_strategy(ES)
@@ -55,26 +58,37 @@
     .concat("[",teamSize(TS),",",vision(V),",",exploration_strategy(ES),"]",C);
     .save_stats("simStart",C);
     
-    .concat("artGPS",TEAM,ArtGPS);
-    .term2string(ArtGPSterm,ArtGPS);
-    .term2string(Envterm,Env);
     if ( focused(Envterm,ArtGPSterm,_) ) {
         resetRP;
     }
 
-    .concat("simpleCFP",TEAM,ArtCFP);
-    .term2string(ArtCFPterm,ArtCFP);
     if ( focused(Envterm,ArtCFPterm,_) ) {
         resetSimpleCFP;
     }
 .
 +simStart : // for the other agents, just write persistTeamSize(TS)
     step(2) &
-    .my_name(NAME) & 
-    .substring(NAME,ID,6) & // only agenta1 and b1 are writing statistics
     teamSize(TS)
     <-
     -+persistTeamSize(TS);
+.
+
+/**
+ * Drop beliefs for a refreshed agent's mind
+ */
++!drop_beliefs
+    <-
+    .abolish(unwanted_task(_));
+    .abolish(wanted_task(_,_,_));
+    .abolish(gps_map(_,_,_,_));
+    .abolish(exploring);
+    .abolish(myposition(_,_));
+    .abolish(origin(_));
+    .abolish(edge(_,_,_,_,_,_)); //from stc exploration strategy
+    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol 
+    .abolish(pending_areyou(_,_,_)); //from meeting protocol
+    .abolish(task(_,_,_,_));    
+    .abolish(performing(_,_));    
 .
    
 /**
