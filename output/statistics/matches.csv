@@ -1,0 +1,6 @@
+date	version	host	rid	asls	agent	event	comment
+2020-10-23 18:32:23	0.5	Akame	100496a15	[src/agt/agentBlockBuilder.asl]	a1	simStart	[teamSize(15),vision(5),exploration_strategy(stc)]
+2020-10-23 18:32:53	0.5	Akame	101988a15	[src/agt/agentBlockBuilder.asl]	a1	simStart	[teamSize(15),vision(5),exploration_strategy(stc)]
+2020-10-23 18:33:16	0.5	Akame	103182a15	[src/agt/agentBlockBuilder.asl]	a1	simStart	[teamSize(15),vision(5),exploration_strategy(stc)]
+2020-10-23 18:33:42	0.5	Akame	103182a15	[src/agt/agentBlockBuilder.asl]	a1	blockAttached	[req(I,J,b1),myposition(-45,-53),success/success]
+2020-10-23 18:33:43	0.5	Akame	103182a15	[src/agt/agentBlockBuilder.asl]	a1	blockAttached	[req(I,J,b1),myposition(-45,-55),success/success]

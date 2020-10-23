@@ -12,22 +12,22 @@
  * existing ones should be also solved
  */
 //dockpoint(B,ID+1,JD):- gps_map(ID,JD,B,"agenta1") &
-//  				  gps_map(ID+1,JD,obstacle,"agenta1") &
-//  				  gps_map(ID+1,JD-1,obstacle,"agenta1") &
-//  				  gps_map(ID+1,JD+1,obstacle,"agenta1") &
-//  				  gps_map(ID+2,JD,obstacle,"agenta1").
+//                    gps_map(ID+1,JD,obstacle,"agenta1") &
+//                    gps_map(ID+1,JD-1,obstacle,"agenta1") &
+//                    gps_map(ID+1,JD+1,obstacle,"agenta1") &
+//                    gps_map(ID+2,JD,obstacle,"agenta1").
 //
 //dockpoint(B,ID,JD-1):- gps_map(ID,JD,B,"agenta1") &
-//  				  gps_map(ID,JD-1,obstacle,"agenta1") &
-//  				  gps_map(ID-1,JD-1,obstacle,"agenta1") &
-//  				  gps_map(ID+1,JD-1,obstacle,"agenta1") &
-//  				  gps_map(ID,JD-2,obstacle,"agenta1").
+//                    gps_map(ID,JD-1,obstacle,"agenta1") &
+//                    gps_map(ID-1,JD-1,obstacle,"agenta1") &
+//                    gps_map(ID+1,JD-1,obstacle,"agenta1") &
+//                    gps_map(ID,JD-2,obstacle,"agenta1").
 //
 //dockpoint(B,ID,JD+1):- gps_map(ID,JD,B,"agenta1") &
-//  				  gps_map(ID,JD+1,obstacle,"agenta1") &
-//  				  gps_map(ID-1,JD+1,obstacle,"agenta1") &
-//  				  gps_map(ID+1,JD+1,obstacle,"agenta1") &
-//  				  gps_map(ID,JD+2,obstacle,"agenta1").
+//                    gps_map(ID,JD+1,obstacle,"agenta1") &
+//                    gps_map(ID-1,JD+1,obstacle,"agenta1") &
+//                    gps_map(ID+1,JD+1,obstacle,"agenta1") &
+//                    gps_map(ID,JD+2,obstacle,"agenta1").
  
 +!get_block(B) :
     myposition(X,Y) &
@@ -52,7 +52,7 @@
     }
 .
 +!get_block(B) :  // In case the agent is far away from B
-	 gps_map(X,Y,B,"agenta1") 
+     gps_map(X,Y,B,"agenta1") 
      <-              
      ?myposition(X0,Y0);
      .print(myposition(X0,Y0)," ==> ", end(X-1,Y));
@@ -60,7 +60,7 @@
      !get_block(B);
 .
 +!get_block(B) : 
-	 not gps_map(X,Y,B,"agenta1")     
+     not gps_map(X,Y,B,"agenta1")     
      <-         
      .print("================= passou batido ====================");
 .

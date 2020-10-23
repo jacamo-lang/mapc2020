@@ -1,5 +1,5 @@
 choosetask(task(NAME,REWARD,DEADLINE,L)) :-
-	  task(NAME,REWARD,DEADLINE,L) &
+      task(NAME,REWARD,DEADLINE,L) &
       L=[req(_,_,TYPE),req(_,_,TYPE)|[]] &
       gps_map(_,_,TYPE,"agenta1") .
 //    task(NAME,REWARD,DEADLINE,L) & ( 

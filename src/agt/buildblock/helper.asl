@@ -7,11 +7,11 @@
     <-
         +serving(AGBM);        
         for (.range(C, 1,QBLOCKS)) {
-        	!do(rotate(ccw),RET);	
-        	!get_block(TYPE);
+            !do(rotate(ccw),RET);   
+            !get_block(TYPE);
         }
         for (.range(C, 1,QBLOCKS)) {
-        	!do(rotate(cw),RET);	
+            !do(rotate(cw),RET);    
         }
         +availableblocks(TYPE,QBLOCKS);
         ?myposition(X0,Y0);
