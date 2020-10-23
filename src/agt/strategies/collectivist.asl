@@ -234,11 +234,12 @@
     .concat("[",meeting_point(XM,YM),",",myposition(XO,YO),"]",C2);
     .save_stats("goto_meeting",C2);
 
-    !goto_XY(XM,YM);
+    while ( not myposition(XM,YM) ) {
+        !goto_XY(XM,YM);
+        !fix_rotation(req(-1,0,B));
+    }
     ?myposition(XMO,YMO);
     .send(Master,tell,helper_at(XMO,YMO));
-
-    !fix_rotation(req(-1,0,B));
     
     .concat("[",myposition(XMO,YMO),",",master(Master),"]",C3);
     .save_stats("waiting_master",C3);
