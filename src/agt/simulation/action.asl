@@ -19,7 +19,6 @@
     S > CS
     <- 
     incStepCounter(CS); // I am the first to realise the clock has changed
-    .wait(10); // First agents that detect the step turn wait a bit to update all percepts
     !do(A,R);
 .
 

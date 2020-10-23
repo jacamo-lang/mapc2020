@@ -26,11 +26,12 @@
 { include("agentBase.asl") }
 { include("origin_workaround.asl") }
 
-+!perform_task(T) : unwanted_task(T). // do nothing
 +!perform_task(T) :
     not accepted(_) &                       // I am not committed
     not .intend(bring_block(_,_,_,_)) &
     not .intend(perform_task(_)) &
+    not performing(_,_,_) &
+    not unwanted_task(T,_) &
     .my_name(ME) &
     task(T,DL,Y,REQs) &
     .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for
@@ -49,15 +50,17 @@
 
         .wait(step(Step) & Step > S); //wait for the next step to continue
 
+        
         //TODO: Sometimes the master or the helper get stuck which compromise the whole task
         //TODO: Sometimes another pair of agents are concurring to this same task and going to same place
         //TODO: Sometimes an agent is winning two auction as helper giving false hope to one of them         
         if ( bring_block(Helper,block_to(B,ME,T,MAP),_) & Helper \== ME ) { // someone is coming to help me and I won the master's auction
             !close_bring_CFP(block_to(BH,ME,T,MAP));
 
-            -+performing(T,Helper);
+            -+performing(T,ME,Helper);
             -exploring;
 
+            //TODO: More than one pair of agents are often competing for the same space, it is better to try other ways to find clear areas 
             ?nearest(goal,XG,YG);
             !find_meeting_area(XG,YG,1,XM,YM);
             .send(Helper,achieve,bring_block(B,ME,T,MAP,meeting_point(XM+4,YM)));
@@ -114,31 +117,38 @@
 
             .log(warning,"Submitting task... ",T);
             !submit_task(T);
-            .broadcast(tell,unwanted_task(T));
+            .broadcast(tell,unwanted_task(T,-1));
 
             // In case submit did not succeed
             .log(warning,"Dropping blocks for ",T);
             !drop_all_blocks;
             removeMyCFPs; // in case the agent did not succeed, another agent can try
 
+            -performing(_,_,_);
             //No matter if it succeed or failed, it is supposed to be ready for another task
             +exploring;
             !explore[critical_section(action), priority(1)];
+            
+        } else {
+            +unwanted_task(T,5);
         }
     }
 .
 +!perform_task(T).// <- .log(warning,"Could not perform ",T).
 -!perform_task(T) :
-    .my_name(ME)
+    .my_name(ME) &
+    performing(_,_,Helper)
     <-
     .log(warning,"Failed on ",perform_task(T)," dropping desire, back to explore.");
     //No matter if it succeed or failed, it is supposed to be ready for another task
     .concat("[",perform_task(T),"]",C);
-    .save_stats("perform_fail",C);
+    .save_stats("master_failed",C);
     .drop_desire(perform_task(_));
     .drop_desire(explore);
     .drop_desire(bring_block(_,_,_,_,_));
     !drop_all_blocks;
+    .send(Helper,achieve,restart_agent);
+    -performing(_,_,_);
     +exploring;
     !explore[critical_section(action), priority(1)];
 .
@@ -168,17 +178,28 @@
  * are the ones that need help, i.e., cannot be performed by an individualist
  */
 +task(T,DL,Y,REQs) :
-    not unwanted_task(T) &
+    not unwanted_task(T,_) &
    .length(REQs) \== 2 // Currently I am focusing only on two blocks tasks that needs help
     <-
-    +unwanted_task(T);
-    //+task(task999,1000,1000,[req(0,1,b0),req(0,2,b0)]);
+    +unwanted_task(T,-1);
 .
-
++task(T,DL,Y,REQs) : //unwanted_task aging
+    unwanted_task(T,N) &
+    N > 0
+    <-
+    -unwanted_task(T,N);
+    +unwanted_task(T,N-1);
+.
++task(T,DL,Y,REQs) : //unwanted_task aged, let us try to perform task again
+    unwanted_task(T,N) &
+    N == 0
+    <-
+    -unwanted_task(T,_);
+.
 +task(T,DL,Y,REQs) :
     exploring &
     not accepted(_) &   // I am not committed
-    not unwanted_task(T) &
+    not unwanted_task(T,_) &
     .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for
     .member(req(IH,JH,BH),REQs) & (math.abs(IH) == 2 | math.abs(JH) == 2) & // Tho simplify, only accepting tasks with blocks on cardeal positions
     known_requirement(T,BR)
@@ -189,15 +210,15 @@
 
 +bring_block(_,_,_) : .intend(bid_to_bring_block(_,_,_,_)). // I am busy
 +bring_block(_,_,_) : .intend(bring_block(_,_,_,_,_)). // I am busy
++bring_block(_,_,_) : performing(_,_,_). // I am busy
 +bring_block(_,block_to(_,ME,_,_),_) : .my_name(ME). // it is me asking for help...
++bring_block(_,block_to(B,Master,T,MAP),_) : not (origin_str(MAP) & gps_map(_,_,B,MAP)). // I can't help
 +bring_block(_,block_to(B,Master,T,MAP),_)
     <-
     !bid_to_bring_block(B,Master,T,MAP);
 .
 
 +!bid_to_bring_block(B,Master,T,MAP) :
-    gps_map(_,_,B,MAP) &
-    origin_str(MAP) & // My map is same of Master's map
     nearest(B,XB,YB) &
     myposition(X,Y) &
     distance(X,Y,XB,YB,D1) &
@@ -209,17 +230,23 @@
     D = D1 + D2;
     setCFP("bring_block",block_to(B,Master,T,MAP),S+D);
 .
-+!bid_to_bring_block(B,Master,T,MAP). // I am busy
 
++!bring_block(B,Master,T,MAP,meeting_point(XM,YM)): // Sorry, I am already committed!
+    performing(_,_,_)
+    <-
+    .send(Master,achieve,restart_agent);
+    .concat("[",bring_block(B,Master,T,MAP,meeting_point(XM,YM)),"]",C);
+    .save_stats("help_denied",C);
+.
 +!bring_block(B,Master,T,MAP,meeting_point(XM,YM)):
     not .intend(bring_block(_,_,_,_,_)) &
-    not performing(_,_) &
+    not performing(_,_,_) &
     myposition(XO,YO) &
     .my_name(ME) &
     step(S)
     <-
+    -+performing(T,Master,ME);
     // remove the auction that lead to this helping plan and other ones to do not give false hope
-    removeMyCFPs;
 
     // In case it is performing a task
     .drop_intention( perform_task(_) );
@@ -249,14 +276,19 @@
     .log(warning,"Dropping blocks for ",T);
     !drop_all_blocks;
 
+    removeMyCFPs;
+    -performing(_,_,_);
     //No matter if it succeed or failed, it is supposed to be ready for another task
     +exploring;
     !explore[critical_section(action), priority(1)];
 .
 //TODO: this is not a good solution but at least the other master may start a new auction 
-+!bring_block(B,Master,T,MAP,meeting_point(XM,YM)) // I am committed to another task
+-!bring_block(B,Master,T,MAP,meeting_point(XM,YM)) // I am committed to another task
     <-
+    -performing(_,_,_);
     .send(Master,achieve,restart_agent);
+    .concat("[",bring_block(B,Master,T,MAP,meeting_point(XM,YM)),"]",C);
+    .save_stats("helper_failed",C);
 .
 
 +!wait_event(E,A) : E.
