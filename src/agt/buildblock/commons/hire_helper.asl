@@ -8,19 +8,19 @@
   * helper(AG), AG is the name of helper builder
   */
 +!hire(AG)
-	: not master(_) & not helper(_)
-		<-
-			.send(AG,askOne,hireyou(_),hireyou(RESULT));
-			if (RESULT) {
-				+helper(AG); 
-				 .print("HELPER ->",AG); //----------- debugger
-			} 					
-		.
+    : not master(_) & not helper(_)
+        <-
+            .send(AG,askOne,hireyou(_),hireyou(RESULT));
+            if (RESULT) {
+                +helper(AG); 
+                 .print("HELPER ->",AG); //----------- debugger
+            }                   
+        .
 +!hire(AG)
-	: master(_) | helper(_)
-		<-	true .
-		
-		
+    : master(_) | helper(_)
+        <-  true .
+        
+        
 @t1[atomic] 
 +?hireyou(RESULT)[source(AGH)]
     :  not master(_) & not helper(_)

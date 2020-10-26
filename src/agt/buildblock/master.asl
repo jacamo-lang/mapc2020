@@ -25,16 +25,16 @@ helpersquantity(1). //number of helpers to hire
 
 /** utilizando o hire_helper */
 +helper(_)
-	: true
-	<-
-		+readytobuild;
-	. 
+    : true
+    <-
+        +readytobuild;
+    . 
 /******* */
 +!gotask 
     : choosetask(task(NAME,REWARD,DEADLINE,L)) //taskcommitment strategy
 
     <-
-    	.print("GO TASK! ",task(NAME,REWARD,DEADLINE,L));
+        .print("GO TASK! ",task(NAME,REWARD,DEADLINE,L));
         !deliveryqueue(L,DQ); //build a queue for deliver blocks of structure
         ?myposition(XM,YM);
         !deliveryrequest(DQ,XM,YM); //Define a quantity of agents and the content of transportation
@@ -42,7 +42,7 @@ helpersquantity(1). //number of helpers to hire
         !releasehelpers; //release occupied agent because the task is over
  .
 +!gotask <- true.
-	 
+     
  
 +!deliveryqueue(L,R)
     :  highX(L,HX) & highY(L,HY) 
@@ -73,8 +73,8 @@ helpersquantity(1). //number of helpers to hire
 +!buildstructure([req(X,Y,TYPE)|L],XM,YM) : true
     <-
         !skipwait(available(TYPE)[source(AGH)]);
-		.send(AGH,achieve,attach(XM+X,YM+Y,TYPE));
-		 !skipwait(atposition(XM+X,YM+Y,TYPE)[source(AGH)]);
+        .send(AGH,achieve,attach(XM+X,YM+Y,TYPE));
+         !skipwait(atposition(XM+X,YM+Y,TYPE)[source(AGH)]);
         /* WHEN THE HELPER IS WORKING CHANGE IT TO ACTION DO */
         .print("DO --->",connect(AGH,X,Y)); 
         !buildstructure(L,XM,YM);
@@ -86,14 +86,14 @@ helpersquantity(1). //number of helpers to hire
     .   
 
 +!skipwait(C)
-	: not C
-	<-
-		!do(skip,R);
-		!skipwait(C);   
-	.
+    : not C
+    <-
+        !do(skip,R);
+        !skipwait(C);   
+    .
 +!skipwait(C)
-	: C
-	<- true.
+    : C
+    <- true.
  
 +!releasehelpers 
     : true
