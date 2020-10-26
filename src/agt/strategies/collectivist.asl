@@ -63,7 +63,7 @@
             //TODO: More than one pair of agents are often competing for the same space, it is better to try other ways to find clear areas 
             ?nearest(goal,XG,YG);
             !find_meeting_area(XG,YG,1,XM,YM);
-            .send(Helper,achieve,bring_block(B,ME,T,MAP,meeting_point(XM+4,YM)));
+            .send(Helper,achieve,bring_block(B,ME,T,MAP,meeting_point(XM+3,YM)));
 
             .concat("[",task(T),",",myposition(XX,YY),",",helper(Helper),",",myreq(IR,JR,BR),"]",C2);
             .save_stats("mastering_task",C2);
@@ -82,8 +82,8 @@
             .concat("[",myposition(XM,YM),",",helper(Helper),"]",C3);
             .save_stats("waiting_helper",C3);
 
-            !wait_event( helper_at(XM+4,YM)[source(Helper)],do(skip,_) );
-            .concat("[",helper_at(XM+4,YM),",",helper(Helper),"]",C4);
+            !wait_event(helper_at(XM+3,YM)[source(Helper)]);
+            .concat("[",helper_at(XM+3,YM),",",helper(Helper),"]",C4);
             .save_stats("assembly_ready",C4);
 
             while ( not thing(3,0,entity,_) & step(AS1) ) {
@@ -270,7 +270,7 @@
     
     .concat("[",myposition(XMO,YMO),",",master(Master),"]",C3);
     .save_stats("waiting_master",C3);
-    !wait_event( connect(B,I,J)[source(Master)],do(skip,_) );
+    !wait_event(connect(B,I,J)[source(Master)]);
 
     // In case submit did not succeed
     .log(warning,"Dropping blocks for ",T);
@@ -291,14 +291,13 @@
     .save_stats("helper_failed",C);
 .
 
-+!wait_event(E,A) : E.
-+!wait_event(E,A) :
++!wait_event(E) : E.
++!wait_event(E) :
     step(S)
     <-
     !do(skip,_);
-    //!!A;
     .wait( (step(Step) & Step > S) ); //wait for the next step to continue
-    !wait_event(E,A);
+    !wait_event(E);
 .
 
 /**
