@@ -17,7 +17,7 @@
 { include("tasks/rotate_block.asl") }
 { include("tasks/drop_block.asl") }
 { include("tasks/submit_task.asl") }
-{ include("tasks/zumbi_mode.asl") }
+{ include("tasks/zombie_mode.asl") }
 { include("walking/common_walking.asl") }
 { include("walking/goto_iaA_star.asl") }
 { include("simulation/watch_dog.asl") }
@@ -88,13 +88,13 @@
 
             while ( not thing(3,0,entity,_) & step(AS1) ) {
                 !do(skip,_);
-                !command_zumbi(Helper,do(move(w),RZZ0));
+                !command_zombie(Helper,do(move(w),RZZ0));
                 .wait( step(NS) & NS > AS1 );
             }
 
             while (not (lastAction(connect) & lastActionResult(success)) & step(AS2)) {
                 !do(connect(Helper,1,0),RMM0);
-                !command_zumbi(Helper,do(connect(ME,-1,0),RZZ1));
+                !command_zombie(Helper,do(connect(ME,-1,0),RZZ1));
                 .concat("[",do(connect(ME,-1,0),RZZ1),"]",C5);
                 .save_stats("do_connect",C5);
                 .wait( step(NS) & NS > AS2 );
@@ -103,9 +103,9 @@
             //TODO: coordination issues since Helper must be successful on detach to make master able to submit 
             while (not thing(4,0,entity,_) & step(AS3) ) {
                 !do(skip,_);
-                !command_zumbi(Helper,do(detach(w),RZZ2));
+                !command_zombie(Helper,do(detach(w),RZZ2));
                 !do(skip,_);
-                !command_zumbi(Helper,do(move(e),RZZ3));
+                !command_zombie(Helper,do(move(e),RZZ3));
                 .wait( step(NS) & NS > AS3 );
             }
 
