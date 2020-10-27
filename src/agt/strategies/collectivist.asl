@@ -92,13 +92,7 @@
                 .wait( step(NS) & NS > AS1 );
             }
 
-            while (not (lastAction(connect) & lastActionResult(success)) & step(AS2)) {
-                !do(connect(Helper,1,0),RMM0);
-                !command_zombie(Helper,do(connect(ME,-1,0),RZZ1));
-                .concat("[",do(connect(ME,-1,0),RZZ1),"]",C5);
-                .save_stats("do_connect",C5);
-                .wait( step(NS) & NS > AS2 );
-            }
+            !synchronous_connect(Helper,1,0,-1,0);
             
             //TODO: coordination issues since Helper must be successful on detach to make master able to submit 
             while (not thing(4,0,entity,_) & step(AS3) ) {
