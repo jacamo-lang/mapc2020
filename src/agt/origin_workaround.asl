@@ -13,4 +13,5 @@
     .term2string(Origin,OriginStr)
     <-
     -+origin_str(OriginStr);
+    setOrigin(OriginStr);
 .
