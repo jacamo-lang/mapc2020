@@ -23,11 +23,12 @@
     !just_do(connect(Z,IM,JM));
     !command_zombie(Z,connect(ME,IZ,JZ));
         
-    .wait(step(NS) & NS > S);
-    .send(Z,askOne,lastAction(ZA),LZA[_]);
-    .send(Z,askOne,lastActionResult(ZR),LZR[_]);
+    .wait(step(NS) & NS > S); // wait massim return with lastActionResult
+    .wait(300); // give a few milli seconds to make sure zombie is also in the new step
     ?lastAction(LA);
     ?lastActionResult(LR);
+    .send(Z,askOne,lastAction(ZA),LZA[_]);
+    .send(Z,askOne,lastActionResult(ZR),LZR[_]);
     .concat("[",lastAction(LA),",",lastActionResult(LR),",",LZA,",",LZR,"]",C);
     .save_stats("do_connect",C);
 
@@ -37,17 +38,17 @@
 .
 
 +!synchronous_detach(Z,DIR):
-    step(S) &
-    .my_name(ME)
+    step(S) 
     <-
     !just_do(skip);
     !command_zombie(Z,detach(DIR));
         
-    .wait(step(NS) & NS > S);
-    .send(Z,askOne,lastAction(ZA),LZA[_]);
-    .send(Z,askOne,lastActionResult(ZR),LZR[_]);
+    .wait(step(NS) & NS > S); // wait massim return with lastActionResult
+    .wait(300); // give a few milli seconds to make sure zombie is also in the new step
     ?lastAction(LA);
     ?lastActionResult(LR);
+    .send(Z,askOne,lastAction(ZA),LZA[_]);
+    .send(Z,askOne,lastActionResult(ZR),LZR[_]);
     .concat("[",lastAction(LA),",",lastActionResult(LR),",",LZA,",",LZR,"]",C);
     .save_stats("do_detach",C);
 
