@@ -86,12 +86,6 @@
             .concat("[",helper_at(XM+3,YM),",",helper(Helper),"]",C4);
             .save_stats("assembly_ready",C4);
 
-            while ( not thing(3,0,entity,_) & step(AS1) ) {
-                !do(skip,_);
-                !command_zombie(Helper,do(move(w),RZZ0));
-                .wait( step(NS) & NS > AS1 );
-            }
-
             !synchronous_connect(Helper,1,0,-1,0);
             
             //TODO: coordination issues since Helper must be successful on detach to make master able to submit 
