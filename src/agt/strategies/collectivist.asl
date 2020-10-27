@@ -258,7 +258,7 @@
     
     .concat("[",myposition(XMO,YMO),",",master(Master),"]",C3);
     .save_stats("waiting_master",C3);
-    !wait_event(connect(B,I,J)[source(Master)]);
+    !wait_event(lastAction(detach) & lastActionResult(success));
 
     // In case submit did not succeed
     .log(warning,"Dropping blocks for ",T);
