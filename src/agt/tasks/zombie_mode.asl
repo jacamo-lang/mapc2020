@@ -1,19 +1,18 @@
 /**
  * Send an achieve performative to a zombie
  */
-+!command_zombie(Z,P) : 
-   step(S)
++!command_zombie(Z,A) 
     <-
-    .log(warning,zombie_do(P,S));
-    .send(Z,achieve,zombie_do(P,S));
-    .concat("[",P,"]",C);
+    .log(warning,zombie_do(A));
+    .send(Z,achieve,zombie_do(A));
+    .concat("[",zombie_do(A),"]",C);
     .save_stats("command_zombie",C);
 .
 
-+!zombie_do(P,S) 
++!zombie_do(A) 
     <-
-    !P;
-    .concat("[",P,"]",C);
+    !do(A,R);
+    .concat("[",do(A,R),"]",C);
     .save_stats("zombie_do",C);
 .
 
@@ -22,8 +21,8 @@
     .my_name(ME)
     <-
     !do(connect(Z,IM,JM),RMM0);
-    !command_zombie(Z,do(connect(ME,IZ,JZ),RZZ1));
-    .concat("[",do(connect(ME,IZ,JZ),RZZ1),"]",C5);
+    !command_zombie(Z,connect(ME,IZ,JZ));
+    .concat("[",connect(ME,IZ,JZ),"]",C5);
     .save_stats("do_connect",C5);
         
    .wait( step(NS) & NS > AS2 );
@@ -31,4 +30,3 @@
         !synchronous_connect(Z,IM,JM,IZ,JZ);
     }
 .
-            

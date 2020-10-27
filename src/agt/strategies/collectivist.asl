@@ -91,9 +91,9 @@
             //TODO: coordination issues since Helper must be successful on detach to make master able to submit 
             while (not thing(4,0,entity,_) & step(AS3) ) {
                 !do(skip,_);
-                !command_zombie(Helper,do(detach(w),RZZ2));
+                !command_zombie(Helper,detach(w));
                 !do(skip,_);
-                !command_zombie(Helper,do(move(e),RZZ3));
+                !command_zombie(Helper,move(e));
                 .wait( step(NS) & NS > AS3 );
             }
 
