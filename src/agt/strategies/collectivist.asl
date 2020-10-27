@@ -83,6 +83,7 @@
             .save_stats("waiting_helper",C3);
 
             !wait_event(helper_at(XM+3,YM)[source(Helper)]);
+            .send(Helper,tell,assembly_ready);
             .concat("[",helper_at(XM+3,YM),",",helper(Helper),"]",C4);
             .save_stats("assembly_ready",C4);
 
@@ -96,6 +97,7 @@
                 !command_zombie(Helper,move(e));
                 .wait( step(NS) & NS > AS3 );
             }
+            .send(Helper,tell,assembly_ends);
 
             // Setting for submit position
             while (not thing(IR,JR,block,BR) & step(AS4) ) {
@@ -234,6 +236,8 @@
     step(S)
     <-
     -+performing(T,Master,ME);
+    .abolish(assembly_ready);
+    .abolish(assembly_ends);
     // remove the auction that lead to this helping plan and other ones to do not give false hope
 
     // In case it is performing a task
@@ -258,7 +262,16 @@
     
     .concat("[",myposition(XMO,YMO),",",master(Master),"]",C3);
     .save_stats("waiting_master",C3);
-    !wait_event(lastAction(detach) & lastActionResult(success));
+    !wait_event(assembly_ready[source(Master)]);
+    
+    /** 
+     * Meanwhile the helper is on zombie mode, so master should give action to it 
+     * every step
+     */
+    .concat("[",master(Master),"]",C4);
+    .save_stats("zombie_on",C4);
+
+    .wait(assembly_ends[source(Master)]);
 
     // In case submit did not succeed
     .log(warning,"Dropping blocks for ",T);
@@ -277,15 +290,6 @@
     .send(Master,achieve,restart_agent);
     .concat("[",bring_block(B,Master,T,MAP,meeting_point(XM,YM)),"]",C);
     .save_stats("helper_failed",C);
-.
-
-+!wait_event(E) : E.
-+!wait_event(E) :
-    step(S)
-    <-
-    !do(skip,_);
-    .wait( (step(Step) & Step > S) ); //wait for the next step to continue
-    !wait_event(E);
 .
 
 /**
