@@ -5,13 +5,16 @@
 /**
  * The simulator just started / new round
  */
+
 +simStart :
     step(0) &
     .my_name(NAME) &
+    .substring(NAME,ID,6) &
     .substring(NAME,TEAM,5,6) &
-    .substring(NAME,ID,6) & // only agenta1 and b1 are writing statistics
     .concat("env",TEAM,Env) &
     .term2string(Envterm,Env) &
+    .concat("artGPS",TEAM,ArtGPS) &
+    .term2string(ArtGPSterm,ArtGPS) &
     .concat("simpleCFP",TEAM,ArtCFP) &
     .term2string(ArtCFPterm,ArtCFP) &
     .concat("stepCounter",TEAM,ArtCounter) &
@@ -23,33 +26,30 @@
         resetStepCounter(-1);
     }
     
+    if ( ID == "1" & focused(Envterm,ArtGPSterm,_) ) {
+        resetRP;
+    }
+
+    if ( ID == "1" & focused(Envterm,ArtCFPterm,_) ) {
+        resetSimpleCFP;
+    }
+
     .drop_all_events;
     .drop_all_desires;
     .drop_all_intentions;
     !drop_beliefs;
-    
-    if ( focused(Envterm,ArtCFPterm,_) ) {
-        removeMyCFPs;
-    }
-    
+
     +exploring;
     +myposition(0,0);
-    -+last_node(-1,-1); //from stc strategy 
+    -+last_node(-1,-1); //from stc strategy
 
     !!start;
 .
 
 +simStart : // to avoid a flood of register, only agent1 of each team generate the simStart event
     step(2) &
-    .my_name(NAME) & 
+    .my_name(NAME) &
     .substring(NAME,ID,6) & ID == "1" & // only agenta1 and b1 are writing statistics
-    .substring(NAME,TEAM,5,6) &
-    .concat("env",TEAM,Env) &
-    .term2string(Envterm,Env) &
-    .concat("artGPS",TEAM,ArtGPS) &
-    .term2string(ArtGPSterm,ArtGPS) &
-    .concat("simpleCFP",TEAM,ArtCFP) &
-    .term2string(ArtCFPterm,ArtCFP) &
     teamSize(TS) &
     vision(V) &
     exploration_strategy(ES)
@@ -57,14 +57,6 @@
     -+persistTeamSize(TS);
     .concat("[",teamSize(TS),",",vision(V),",",exploration_strategy(ES),"]",C);
     .save_stats("simStart",C);
-    
-    if ( focused(Envterm,ArtGPSterm,_) ) {
-        resetRP;
-    }
-
-    if ( focused(Envterm,ArtCFPterm,_) ) {
-        resetSimpleCFP;
-    }
 .
 +simStart : // for the other agents, just write persistTeamSize(TS)
     step(2) &
@@ -90,23 +82,24 @@
     .abolish(task(_,_,_,_));    
     .abolish(performing(_,_));    
 .
-   
+
 /**
  * The simulator just stopped / end of a round
  */
 +simEnd : // I was expecting this just once at step(749) but I am getting it at every step!
-    step(1) & // This is the first step of the next round (also works for the last round!) 
-    .my_name(NAME) & 
+    step(1) & // This is the first step of the next round (also works for the last round!)
+    .my_name(NAME) &
     .substring(NAME,ID,6) & ID == "1" // only agenta1 and b1 are writing statistics
     <-
     !saveEnd;
     .log(warning,"End of round.");
 .
+
 /**
  * End of third round
  */
 +bye :
-    .my_name(NAME) & 
+    .my_name(NAME) &
     .substring(NAME,ID,6) & ID == "1" // only agenta1 and b1 are writing statistics
     <-
     !saveEnd;

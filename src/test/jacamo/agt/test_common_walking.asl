@@ -157,13 +157,13 @@
     !print_agent_with_radius(35,0,MIN_I,1);
     !print_agent_with_radius(38,0,MIN_I,1);
     !find_meeting_area(35,0,1,XM2,YM2);
-    !assert_between(XM2,30,40); //around 35
-    !assert_equals(YM2,-5,5); //around 0
+    !assert_equals(XM2,35,5); //around 35
+    !assert_equals(YM2,0,5); //around 0
 
     // test an area in which the helper would find an obstacle
     !print_agent_with_radius(58,3,MIN_I,1);
     !print_agent_with_radius(61,3,MIN_I,1);
     !find_meeting_area(55,1,1,XM1,YM1);
-    !assert_equals(XM1,53,63); //around 58
-    !assert_equals(YM1,-2,8); //around 3
+    !assert_equals(XM1,58,5); //around 58
+    !assert_equals(YM1,3,5); //around 3
 .

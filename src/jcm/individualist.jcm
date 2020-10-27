@@ -1,21 +1,21 @@
 mas env.connection {
 
-agent agenta : strategies/individualist.asl { 
+agent agentA : strategies/individualist.asl { 
     //ag-bb-class: bb.FullTextPersistentBB
-    join : enva 
+    join : envA 
     instances: 50
 } 
 
-agent agentb: strategies/agent_do_nothing.asl{
-    join: envb
+agent agentB: strategies/agent_do_nothing.asl{
+    join: envB
     instances: 50
 }
 
-workspace enva {
+workspace envA {
 
 }
 
-workspace envb {
+workspace envB {
 }
 
 //platform: jacamo.web.JCMWeb("--main 2181 --restPort 8080") // zookeeper at 2181, rest/web at 8080

@@ -28,6 +28,7 @@
 { include("walking/goto_iaA_star.asl") }
 { include("simulation/watch_dog.asl") }
 { include("environment/artifact_simpleCFP.asl") }
+{ include("environment/artifact_counter.asl") }
 { include("agentBase.asl") }
 { include("origin_workaround.asl") }
 
