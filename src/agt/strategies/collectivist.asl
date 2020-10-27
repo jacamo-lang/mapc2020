@@ -83,9 +83,11 @@
             .save_stats("waiting_helper",C3);
 
             !wait_event(helper_at(XM+3,YM)[source(Helper)]);
-            .send(Helper,tell,assembly_ready);
             .concat("[",helper_at(XM+3,YM),",",helper(Helper),"]",C4);
             .save_stats("assembly_ready",C4);
+            .send(Helper,tell,assembly_ready);
+            
+            !do(skip,_); // Give one step to the zombie get ready
 
             !synchronous_connect(Helper,1,0,-1,0);
             
@@ -257,6 +259,7 @@
     .concat("[",myposition(XMO,YMO),",",master(Master),"]",C3);
     .save_stats("waiting_master",C3);
     !wait_event(assembly_ready[source(Master)]);
+    
     
     /** 
      * Meanwhile the helper is on zombie mode, so master should give action to it 
