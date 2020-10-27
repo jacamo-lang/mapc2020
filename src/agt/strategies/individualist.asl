@@ -30,8 +30,6 @@
 { include("environment/artifact_simpleCFP.asl") }
 { include("environment/artifact_counter.asl") }
 { include("agentBase.asl") }
-{ include("origin_workaround.asl") }
-
 
 +!perform_task(T) :
     not accepted(_) &                       // I am not committed

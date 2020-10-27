@@ -5,7 +5,7 @@
 
 
 known_requirements(T) :- task(T,DL,Y,REQs) &
-                    origin_str(MyMAP) &
+                    origin(MyMAP) &
                     gps_map(_,_,taskboard,MyMAP) &  // I know a taskboard position
                     gps_map(_,_,goal,MyMAP) &       // I know a goal area position
                     .member(req(_,_,B),REQs) &      // For each requirement

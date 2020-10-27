@@ -8,7 +8,7 @@
 +!start
     <-
     -+myposition(0,0);
-    -+origin_str(mymap); 
+    -+origin(mymap); 
 
     ?get_rotation(b(1,0,b0),b(0,1,b0),D0);
     .log(warning,"Rotate a block from 3 o'clock to 6 o'clock got ",D0);

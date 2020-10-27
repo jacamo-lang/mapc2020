@@ -27,7 +27,7 @@ distance(X1,Y1,X2,Y2,D) :-
  */
 nearest(T,X,Y) :-
     myposition(X1,Y1) &
-    origin_str(MyMAP) &
+    origin(MyMAP) &
     .findall(p(D,X2,Y2), gps_map(X2,Y2,T,MyMAP) & distance(X1,Y1,X2,Y2,D), FL) &
     .min(FL,p(_,X,Y))
 .
@@ -51,7 +51,7 @@ nearest(T,X,Y) :-
  */
 nearest_adjacent(T,X,Y,DIR) :-
     myposition(X1,Y1) &
-    origin_str(MyMAP) &
+    origin(MyMAP) &
     .findall(p(D,X2,Y2), gps_map(X2,Y2,T,MyMAP) & distance(X1,Y1,X2,Y2,D), FL) &
     .min(FL,p(_,X3,Y3)) & direction_increment(DIR,I,J) &
     X = X3 + I & Y = Y3 + J
@@ -71,7 +71,7 @@ nearest_adjacent(T,X,Y,DIR) :-
  */
 nearest_neighbour(XP,YP,X,Y) :-
     myposition(X1,Y1) &
-    origin_str(MyMAP) &
+    origin(MyMAP) &
     .findall(p(D,X2,Y2),
         direction_increment(_,I,J) & X2 = XP+I & Y2 = YP + J &
         not gps_map(X2,Y2,obstacle,MyMAP) &
@@ -91,7 +91,7 @@ nearest_neighbour(XP,YP,X,Y) :-
  * perform a task to submit a block b1
  */
 task_shortest_path(B,D) :-
-    origin_str(MyMAP) &
+    origin(MyMAP) &
     (myposition(X1,Y1) & gps_map(_,_,taskboard,MyMAP) & nearest(taskboard,X2,Y2) & distance(X1,Y1,X2,Y2,D12)) &
     (gps_map(_,_,B,MyMAP) & nearest(B,X3,Y3) & distance(X2,Y2,X3,Y3,D23)) &
     (gps_map(_,_,goal,MyMAP) & nearest(goal,X4,Y4) & distance(X3,Y3,X4,Y4,D34)) &
@@ -106,7 +106,7 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
  * If I know the position of at least B, find the nearest and go there!
  */
 +!goto_nearest(B) :
-    origin_str(MyMAP) &
+    origin(MyMAP) &
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
     nearest(B,XN,YN)
@@ -127,7 +127,7 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
  * point and go there!
  */
 +!goto_nearest_neighbour(B) :
-    origin_str(MyMAP) &
+    origin(MyMAP) &
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
     nearest(B,XN,YN) &
@@ -169,7 +169,7 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
  * point and go there!
  */
 +!goto_nearest_adjacent(B,DIR) :
-    origin_str(MyMAP) &
+    origin(MyMAP) &
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
     nearest_adjacent(B,XA,YA,DIR) &
