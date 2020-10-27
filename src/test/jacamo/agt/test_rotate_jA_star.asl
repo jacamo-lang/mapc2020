@@ -8,7 +8,7 @@
 +!test_get_rotation
     <-
     -+myposition(0,0);
-    -+origin_str(mymap); 
+    -+origin(mymap); 
     -+vision(5);
 
     .log(warning,"Rotate a block from 3 o'clock to 6 o'clock");

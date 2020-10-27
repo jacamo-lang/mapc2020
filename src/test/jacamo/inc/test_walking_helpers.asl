@@ -189,7 +189,7 @@ get_printed_object(I,J,MIN_I,O) :-
  */
 +!update_thing_from_gps_map :
     myposition(OX,OY) &
-    origin_str(MyMAP) &
+    origin(MyMAP) &
     vision(V)
     <-
     .abolish(thing(_,_,_,_));

@@ -36,8 +36,8 @@
     .member(req(IH,JH,BH),REQs) & (math.abs(IH) + math.abs(JH)) > 1 & // This is the block that the HELPER must go for
     task_shortest_path(BR,D) &
     step(S) &
-    origin_str(MAP) &
     myposition(XX,YY)     
+    origin(MAP) &
     <-
     if ( DL <= (S + D) ) { // deadline must be greater than step + shortest path
         +unwanted_task(T); // Discard tasks that are going to expire    
@@ -170,7 +170,7 @@
 
 +!bid_to_bring_block(B,Master,T,MAP) :
     gps_map(_,_,B,MAP) &
-    origin_str(MAP) & // My map is same of Master's map
+    origin(MAP) & // My map is same of Master's map
     nearest(B,XB,YB) &
     myposition(X,Y) &
     distance(X,Y,XB,YB,D1) &

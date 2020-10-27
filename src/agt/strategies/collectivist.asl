@@ -24,7 +24,6 @@
 { include("environment/artifact_simpleCFP.asl") }
 { include("environment/artifact_counter.asl") }
 { include("agentBase.asl") }
-{ include("origin_workaround.asl") }
 
 +!perform_task(T) :
     not accepted(_) &                       // I am not committed
@@ -38,7 +37,7 @@
     .member(req(IH,JH,BH),REQs) & (math.abs(IH) + math.abs(JH)) > 1 & // This is the block that the HELPER must go for
     task_shortest_path(BR,D) &
     step(S) &
-    origin_str(MAP) &
+    origin(MAP) &
     myposition(XX,YY)
     <-
     if ( DL <= (S + D) ) { // deadline must be greater than step + shortest path
@@ -198,7 +197,7 @@
 +bring_block(_,_,_) : .intend(bring_block(_,_,_,_,_)). // I am busy
 +bring_block(_,_,_) : performing(_,_,_). // I am busy
 +bring_block(_,block_to(_,ME,_,_),_) : .my_name(ME). // it is me asking for help...
-+bring_block(_,block_to(B,Master,T,MAP),_) : not (origin_str(MAP) & gps_map(_,_,B,MAP)). // I can't help
++bring_block(_,block_to(B,Master,T,MAP),_) : not (origin(MAP) & gps_map(_,_,B,MAP)). // I can't help
 +bring_block(_,block_to(B,Master,T,MAP),_)
     <-
     !bid_to_bring_block(B,Master,T,MAP);
