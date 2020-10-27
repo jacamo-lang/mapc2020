@@ -89,14 +89,8 @@
 
             !synchronous_connect(Helper,1,0,-1,0);
             
-            //TODO: coordination issues since Helper must be successful on detach to make master able to submit 
-            while (not thing(4,0,entity,_) & step(AS3) ) {
-                !do(skip,_);
-                !command_zombie(Helper,detach(w));
-                !do(skip,_);
-                !command_zombie(Helper,move(e));
-                .wait( step(NS) & NS > AS3 );
-            }
+            !synchronous_detach(Helper,w);
+            
             .send(Helper,tell,assembly_ends);
 
             // Setting for submit position

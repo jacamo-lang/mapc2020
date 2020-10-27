@@ -35,3 +35,23 @@
         !synchronous_connect(Z,IM,JM,IZ,JZ);
     }
 .
+
++!synchronous_detach(Z,DIR):
+    step(S) &
+    .my_name(ME)
+    <-
+    !just_do(skip);
+    !command_zombie(Z,detach(DIR));
+        
+    .wait(step(NS) & NS > S);
+    .send(Z,askOne,lastAction(ZA),LZA[_]);
+    .send(Z,askOne,lastActionResult(ZR),LZR[_]);
+    ?lastAction(LA);
+    ?lastActionResult(LR);
+    .concat("[",lastAction(LA),",",lastActionResult(LR),",",LZA,",",LZR,"]",C);
+    .save_stats("do_detach",C);
+
+    if (not (lastAction(skip) & lastActionResult(success) & lastAction(detach) == LZA & lastActionResult(success) == LZR)) {
+        !synchronous_detach(Z,DIR);
+    }
+.
