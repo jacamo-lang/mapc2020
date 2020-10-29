@@ -174,19 +174,41 @@ is_meeting_area(X,Y,R) :-
     !goto_XY(XT,YT);
 .
 +!goto_nearest_neighbour(B) :
+    B = taskboard &
     thing(I,J,B,_) &
     distance(0,0,I,J,1)
     <-
     !do(skip,R);
     .log(warning,"I am already at a neighbour of ",B," : ",thing(I,J,B,_),", skip: ",R);
 .
++!goto_nearest_neighbour(B) :
+    thing(I,J,dispenser,B) &
+    distance(0,0,I,J,1)
+    <-
+    !do(skip,R);
+    .log(warning,"I am already at a neighbour of ",B," : ",thing(I,J,dispenser,B),", skip: ",R);
+.
 //TODO: Sometimes the agent is not mapping correctly, it is thinking it is in another X,Y
++!goto_nearest_neighbour(B):
+    B = taskboard &
+    myposition(X,Y) &
+    gps_map(_,_,B,MyMAP) &
+    nearest(B,XN,YN) &
+    nearest_neighbour(XN,YN,X,Y) &  // I think I am at the nearest neighbour
+    not thing(XN-X,YN-Y,B,_) & // But, in fact, there is not a thing in the position it is supposed to be
+    distance(X,Y,XN,YN,DIST)
+    <-
+    .log(warning,"I am lost looking for ",B," : ",myposition(X,Y)," : ",distance(X,Y,XN,YN,DIST));
+    +status(lost);
+    !do(skip,R);
+.
 +!goto_nearest_neighbour(B) :
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
     nearest(B,XN,YN) &
     nearest_neighbour(XN,YN,X,Y) &  // I think I am at the nearest neighbour
-    not thing(XN-X,YN-Y,B,_) // But, in fact, there is not a thing in the position it is supposed to be
+    not thing(XN-X,YN-Y,_,B) & // But, in fact, there is not a thing in the position it is supposed to be
+    distance(X,Y,XN,YN,DIST)
     <-
     .log(warning,"I am lost looking for ",B," : ",myposition(X,Y)," : ",distance(X,Y,XN,YN,DIST));
     +status(lost);
@@ -213,19 +235,30 @@ is_meeting_area(X,Y,R) :-
  * i.e., I should be seeing the target object, if not, I am lost!
  */
 +!goto_nearest_adjacent(B,DIR) :
+    B = taskboard &
     thing(I,J,B,_) &
     direction_increment(DIR,I,J)
     <-
     !do(skip,R);
     .log(warning,"I am already at an adjacent of ",B," : ",thing(I,J,B,_),", skip: ",R);
 .
++!goto_nearest_adjacent(B,DIR) :
+    thing(I,J,dispenser,B) &
+    direction_increment(DIR,I,J)
+    <-
+    !do(skip,R);
+    .log(warning,"I am already at an adjacent of ",B," : ",thing(I,J,dispenser,B),", skip: ",R);
+.
 /**
  * If DIST from myposition and the target is 0 and I am not seeing the target, at the
  * supposed position I am lost!
  */
-+!goto_nearest_adjacent(B,DIR)
++!goto_nearest_adjacent(B,DIR):
+    myposition(X,Y) &
+    .findall(t(I,J,T,TT),thing(I,J,T,TT),LT) &
+    .findall(g(It,Jt,T,TT),gps_map(X+It,Jt+Y,T,TT) & .range(It,-5,5) & .range(Jt,-5,5),LG)
     <-
-    .log(warning,"I was doing ",goto_nearest_adjacent(B,DIR)," when I realised I am lost.");
+    .log(warning,"I was doing ",goto_nearest_adjacent(B,DIR)," when I realised I am lost. ",myposition(X,Y),", things: ",LT,", gps: ",LG);
     +status(lost);
     !do(skip,R);
 .
