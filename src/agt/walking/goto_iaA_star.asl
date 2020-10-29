@@ -12,7 +12,7 @@
  * this agent has attached, i.e., only maps blocks that are obstacles
  */
 gps_map(XB,YB,block(B),MyMAP) :-
-    origin_str(MyMAP) &
+    origin(MyMAP) &
     thing(I,J,block,B) &
     not attached(I,J) &
     myposition(X,Y) &
@@ -22,7 +22,7 @@ gps_map(XB,YB,block(B),MyMAP) :-
  * Map as gps_map(X,Y,entity(E),MyMAP) other agents
  */
 gps_map(XB,YB,entity(E),MyMAP) :-
-    origin_str(MyMAP) &
+    origin(MyMAP) &
     thing(I,J,entity,E) &
     (I \== 0 | J \== 0) &
     myposition(X,Y) &
@@ -39,7 +39,7 @@ gps_map(XB,YB,entity(E),MyMAP) :-
 +!goto(X,Y,RET):
     myposition(OX,OY) &
     step(S) &
-    origin_str(MyMAP)
+    origin(MyMAP)
     <-
     .findall(gps_map(XG,YG,OG,MyMAP),gps_map(XG,YG,OG,MyMAP),LG);
     .findall(attached(I,J),attached(I,J),LA);

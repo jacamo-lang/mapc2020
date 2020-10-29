@@ -1,6 +1,7 @@
 package localPositionSystem;
 
 import cartago.*;
+import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Atom;
 
 /**
@@ -46,11 +47,11 @@ public class lps extends Artifact {
     @OPERATION
     void mark(int i, int j, String type, String mapId) {     
         if(!type.equals("self")) {
-            ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,mapId);
+            ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,ASSyntax.createAtom(mapId));
             if(prop==null) 
-                defineObsProperty("gps_map",i,j,new Atom(type),mapId);
+                defineObsProperty("gps_map",i,j,ASSyntax.createAtom(type),ASSyntax.createAtom(mapId));
             else 
-                prop.updateValues(i,j,new Atom(type),mapId);
+                prop.updateValues(i,j,ASSyntax.createAtom(type),ASSyntax.createAtom(mapId));
         }
     }
     
@@ -59,10 +60,10 @@ public class lps extends Artifact {
      */
     @OPERATION
     void replaceMap(String oldMapId, String newMapId) {
-        ObsProperty prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
+        ObsProperty prop = this.getObsPropertyByTemplate("gps_map", null, null, null, ASSyntax.createAtom(oldMapId));
         while (prop != null) {
-            this.removeObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
-            prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
+            this.removeObsPropertyByTemplate("gps_map", null, null, null, ASSyntax.createAtom(oldMapId));
+            prop = this.getObsPropertyByTemplate("gps_map", null, null, null, ASSyntax.createAtom(oldMapId));
         }
         // signal("replace_map",oldMapId,newMapId);
     }
@@ -76,10 +77,9 @@ public class lps extends Artifact {
 
     @OPERATION
     void unmark(int i, int j, String type, String mapId) {   
-        Atom aType = new Atom(type);
-        ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,aType,mapId);
+        ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,ASSyntax.createAtom(type),ASSyntax.createAtom(mapId));
         if(prop!=null) 
-            this.removeObsPropertyByTemplate("gps_map", i,j,aType,mapId);             
+            this.removeObsPropertyByTemplate("gps_map", i,j,ASSyntax.createAtom(type),ASSyntax.createAtom(mapId));             
         if (viewOn != 0) {
             this.view.unmark(i, j);
         }        
