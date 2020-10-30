@@ -49,12 +49,17 @@ nearest(T,X,Y) :-
  * the nearest taskboard this agent know (based on its gps_map(_,_,_,_)
  * and myposition(_,_) beliefs plus the given direction DIR
  */
+//TODO: it checks whether the adjacent is not an obstacle but it is not checking whether the target is reachable
 nearest_adjacent(T,X,Y,DIR) :-
     myposition(X1,Y1) &
     origin(MyMAP) &
-    .findall(p(D,X2,Y2), gps_map(X2,Y2,T,MyMAP) & distance(X1,Y1,X2,Y2,D), FL) &
-    .min(FL,p(_,X3,Y3)) & direction_increment(DIR,I,J) &
-    X = X3 + I & Y = Y3 + J
+    .findall(
+        p(D,X3,Y3), 
+        gps_map(X2,Y2,T,MyMAP) & distance(X1,Y1,X2,Y2,D) & 
+        direction_increment(DIR,I,J) & X3 = X2 + I & Y3 = Y2 + J & not gps_map(X3,Y3,obstacle,MyMAP), 
+        FL
+    ) &
+    .min(FL,p(_,X,Y))
 .
 
 /**
