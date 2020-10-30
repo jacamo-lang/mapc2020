@@ -49,12 +49,17 @@ nearest(T,X,Y) :-
  * the nearest taskboard this agent know (based on its gps_map(_,_,_,_)
  * and myposition(_,_) beliefs plus the given direction DIR
  */
+//TODO: it checks whether the adjacent is not an obstacle but it is not checking whether the target is reachable
 nearest_adjacent(T,X,Y,DIR) :-
     myposition(X1,Y1) &
     origin(MyMAP) &
-    .findall(p(D,X2,Y2), gps_map(X2,Y2,T,MyMAP) & distance(X1,Y1,X2,Y2,D), FL) &
-    .min(FL,p(_,X3,Y3)) & direction_increment(DIR,I,J) &
-    X = X3 + I & Y = Y3 + J
+    .findall(
+        p(D,X3,Y3), 
+        gps_map(X2,Y2,T,MyMAP) & distance(X1,Y1,X2,Y2,D) & 
+        direction_increment(DIR,I,J) & X3 = X2 + I & Y3 = Y2 + J & not gps_map(X3,Y3,obstacle,MyMAP), 
+        FL
+    ) &
+    .min(FL,p(_,X,Y))
 .
 
 /**
@@ -131,7 +136,7 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
     nearest(B,XN,YN) &
-    distance(X,Y,XN,YN,DIST) & DIST > 1 &
+    direction_increment(_,I,J) & not (X+I = XN & Y+J = YN) & // I am not at a neighbour
     nearest_neighbour(XN,YN,XT,YT)
     <-
     .log(warning,"Going to neighbour of ",nearest(B,XN,YN)," : ",distance(X,Y,XT,YT,DIST));
@@ -141,47 +146,30 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
             !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
             // A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance
         }
-        .log(warning,"No success on: ",goto(XT,YT,RET)," ",myposition(X1,Y1));
+        .log(warning,"No success on: ",goto(XT,YT,RET)," ",myposition(X1,Y1)," ",goto_nearest_neighbour(B));
     }
 .
+/**
+ * I am at a neighbour of a taskboard or a dispenser of B
+ */
 +!goto_nearest_neighbour(B) :
-    B = taskboard &
-    thing(I,J,B,_) &
-    distance(0,0,I,J,1)
+    ((B = taskboard & thing(I,J,B,_)) | thing(I,J,dispenser,B)) &
+    direction_increment(_,I,J)
     <-
     !do(skip,R);
-    .log(warning,"I am already at a neighbour of ",B," : ",thing(I,J,B,_),", skip: ",R);
+    .log(warning,"I am already at a neighbour of ",B," : ",thing(I,J,B,T),", skip: ",R);
 .
-+!goto_nearest_neighbour(B) :
-    thing(I,J,dispenser,B) &
-    distance(0,0,I,J,1)
-    <-
-    !do(skip,R);
-    .log(warning,"I am already at a neighbour of ",B," : ",thing(I,J,dispenser,B),", skip: ",R);
-.
-//TODO: Sometimes the agent is not mapping correctly, it is thinking it is in another X,Y
+/**
+ * I am supposed to be at a neighbour of B but it is not here.
+ * My map and/or myposition(X,Y) is wrong, i.e., I am lost!
+ */
 +!goto_nearest_neighbour(B):
-    B = taskboard &
     myposition(X,Y) &
-    gps_map(_,_,B,MyMAP) &
-    nearest(B,XN,YN) &
-    nearest_neighbour(XN,YN,X,Y) &  // I think I am at the nearest neighbour
-    not thing(XN-X,YN-Y,B,_) & // But, in fact, there is not a thing in the position it is supposed to be
-    distance(X,Y,XN,YN,DIST)
+    origin(MyMAP) & gps_map(_,_,B,MyMAP) & // I am sure I know where to find B
+    .findall(g(It,Jt,T,TT),gps_map(X+It,Jt+Y,T,TT) & .range(It,-5,5) & .range(Jt,-5,5),LG) & // This is what I believe
+    .findall(t(I,J,B,T),thing(I,J,B,T),LT) // This is what I see
     <-
-    .log(warning,"I am lost looking for ",B," : ",myposition(X,Y)," : ",distance(X,Y,XN,YN,DIST));
-    +status(lost);
-    !do(skip,R);
-.
-+!goto_nearest_neighbour(B) :
-    myposition(X,Y) &
-    gps_map(_,_,B,MyMAP) &
-    nearest(B,XN,YN) &
-    nearest_neighbour(XN,YN,X,Y) &  // I think I am at the nearest neighbour
-    not thing(XN-X,YN-Y,_,B) & // But, in fact, there is not a thing in the position it is supposed to be
-    distance(X,Y,XN,YN,DIST)
-    <-
-    .log(warning,"I am lost looking for ",B," : ",myposition(X,Y)," : ",distance(X,Y,XN,YN,DIST));
+    .log(warning,"I was doing ",goto_nearest_neighbour(B)," when I realised I am lost. ",myposition(X,Y),", things: ",LT,", gps: ",LG);
     +status(lost);
     !do(skip,R);
 .
@@ -195,32 +183,27 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
     nearest_adjacent(B,XA,YA,DIR) &
-    distance(X,Y,XA,YA,DIST) & DIST > 0
+    direction_increment(DIR,I,J) & not (X+I = XA & Y+J = YA) // I am not at the target position
     <-
-    .log(warning,"Going to adjacent of ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));
+    .log(warning,"Going to ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));
     !goto(XA,YA,RET);
     if (RET \== success & myposition(X1,Y1)) {
         if(RET==no_route){
             !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
             // A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance
         }
-        .log(warning,"No success on: ",goto(XA,YA,RET)," ",myposition(X1,Y1));
+        .log(warning,"No success on: ",goto(XA,YA,RET)," ",myposition(X1,Y1)," ",nearest_adjacent(B,XA,YA,DIR));
     }
 .
+/**
+ * I am at the adjacent of a taskboard or a dispenser of B
+ */
 +!goto_nearest_adjacent(B,DIR) :
-    B = taskboard &
-    thing(I,J,B,_) &
+    ((B = taskboard & thing(I,J,B,_)) | thing(I,J,dispenser,B)) &
     direction_increment(DIR,I,J)
     <-
     !do(skip,R);
     .log(warning,"I am already at an adjacent of ",B," : ",thing(I,J,B,_),", skip: ",R);
-.
-+!goto_nearest_adjacent(B,DIR) :
-    thing(I,J,dispenser,B) &
-    direction_increment(DIR,I,J)
-    <-
-    !do(skip,R);
-    .log(warning,"I am already at an adjacent of ",B," : ",thing(I,J,dispenser,B),", skip: ",R);
 .
 /**
  * If DIST from myposition and the target is 0 and I am not seeing the target, at the
@@ -228,8 +211,9 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
  */
 +!goto_nearest_adjacent(B,DIR):
     myposition(X,Y) &
-    .findall(t(I,J,T,TT),thing(I,J,T,TT),LT) &
-    .findall(g(It,Jt,T,TT),gps_map(X+It,Jt+Y,T,TT) & .range(It,-5,5) & .range(Jt,-5,5),LG)
+    origin(MyMAP) & gps_map(_,_,B,MyMAP) & // I am sure I know where to find B
+    .findall(g(It,Jt,T,TT),gps_map(X+It,Jt+Y,T,TT) & .range(It,-5,5) & .range(Jt,-5,5),LG) & // This is what I believe
+    .findall(t(I,J,B,T),thing(I,J,B,T),LT) // This is what I see
     <-
     .log(warning,"I was doing ",goto_nearest_adjacent(B,DIR)," when I realised I am lost. ",myposition(X,Y),", things: ",LT,", gps: ",LG);
     +status(lost);
