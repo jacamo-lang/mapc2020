@@ -22,7 +22,7 @@ public class GuiText {
         String aux = input.nextLine();
         if (aux.toLowerCase().equals("s"))
             browser = true;
-        control.start(simulation, browser);
+        control.start(simulation, browser, false);
     }
 
     public List<String> listFiles() {

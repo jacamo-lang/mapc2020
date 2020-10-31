@@ -35,7 +35,7 @@ public class Gui extends JFrame
                 @Override
                 public void actionPerformed(ActionEvent e) {                    
                     frame.dispose();
-                    control.start(simulations.getSelectedItem().toString(), browser.isSelected());
+                    control.start(simulations.getSelectedItem().toString(), browser.isSelected(), false);
                 }
             }));
 

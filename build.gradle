@@ -90,6 +90,19 @@ task run (type: JavaExec, dependsOn: 'classes') {
     classpath sourceSets.main.runtimeClasspath
 }
 
+task testGoal (type: JavaExec, dependsOn: 'classes') {
+    group      ' MAPC'
+    description 'run teams'
+    doFirst {
+        mkdir 'log'
+    }
+    standardInput = System.in
+    jvmArgs = ['-Xss15m']
+    main 'runMAPC2020.RunTeam'
+    args = ['src/jcm/individualist.jcm','autoRun']
+    classpath sourceSets.main.runtimeClasspath
+}
+
 task playground (type: JavaExec, dependsOn: 'classes') {
     group      ' MAPC'
     description 'run teams'
