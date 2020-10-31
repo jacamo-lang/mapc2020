@@ -1,4 +1,4 @@
-mas env.connection {
+mas individualist {
 
 agent agentA : strategies/individualist.asl { 
     //ag-bb-class: bb.FullTextPersistentBB
