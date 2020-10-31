@@ -6,7 +6,7 @@ defaultTasks 'run'
 
 apply plugin: 'java'
 
-version '0.8'
+version '0.9'
 group   'org.jacamo.mapc'
 
 sourceCompatibility = 1.13
@@ -99,7 +99,7 @@ task testGoal (type: JavaExec, dependsOn: 'classes') {
     standardInput = System.in
     jvmArgs = ['-Xss15m']
     main 'runMAPC2020.RunTeam'
-    args = ['src/jcm/individualist.jcm','autoRun']
+    args = ['src/jcm/individualist.jcm']
     classpath sourceSets.main.runtimeClasspath
 }
 

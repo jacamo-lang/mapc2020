@@ -12,17 +12,16 @@
     .my_name(NAME) &
     .substring(NAME,ID,5) &
     .concat("art",ID,Art) &
+    .term2string(Artterm,Art) &
     team(T) &
     .concat("env",T,Env) &
-    focused(Env,Art).
+    .term2string(Envterm,Env) &
+    focused(Envterm,Artterm).
 
 +!make_eis :
     .my_name(NAME) &
     .substring(NAME,ID,5) &
-    //.substring(NAME,TEAM,5,6) &
     .concat("art",ID,Art) &
-    //.upper_case(TEAM,TTEAM) &
-    //.concat("clientconf/eis",TTEAM,"config.json",EIS)
     .concat("clientconf/eis",ID,".json",EIS)
     <-
     makeArtifact(Art,"connection.EISAccess",[EIS],ArtId);
