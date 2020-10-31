@@ -51,7 +51,7 @@ public class Statistics {
         this.fields.add("host");
         this.fields.add("rid");
         this.fields.add("asls");
-        this.fields.add("team");
+        this.fields.add("agent");
         this.fields.add("event");
         this.fields.add("comment");
     }
@@ -99,9 +99,9 @@ public class Statistics {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             line.put("date", formatter.format(new Date()));
             line.put("host", InetAddress.getLocalHost().getHostName());
-            line.put("rid", String.valueOf(ProcessHandle.current().pid()) + data.get("team") + data.get("teamSize"));
+            line.put("rid", String.valueOf(ProcessHandle.current().pid()) + data.get("agent").substring(5, 6) + data.get("teamSize"));
             line.put("asls", JaCaMoLauncher.getRunner().getProject().getAllASFiles().toString());
-            line.put("team", data.get("team"));
+            line.put("agent", data.get("agent").substring(5));
             line.put("event", data.get("event"));
             line.put("comment", data.get("comment"));
             line.put("version", getVersionFromPropertiesFile());

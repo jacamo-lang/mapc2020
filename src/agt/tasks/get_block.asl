@@ -23,13 +23,13 @@
         .log(warning,"I have attached a block ",B);
         .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,BB), L);
         .findall(t(I,J,T),thing(I,J,T,_), LT);
-        .concat("[",req(I,J,B),",",agent(ME),",",myposition(X,Y),",",a(L),",",t(LT),",",R0,"/",R1,"]",STR);
+        .concat("[",req(I,J,B),",",myposition(X,Y),",",R0,"/",R1,"]",STR);
         .save_stats("blockAttached",STR);
     } else {
         .log(warning,"Could not request/attach block ",B, "::",R0,"/",R1," my position: (",X,",",Y,"), target (",I,",",J,")");
         .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,BB), L);
         .findall(t(I,J,T),thing(I,J,T,_), LT);
-        .concat("[",req(I,J,B),",",agent(ME),",",myposition(X,Y),",",a(L),",",t(LT),",",R0,"/",R1,"]",STR);
+        .concat("[",req(I,J,B),",",myposition(X,Y),",",R0,"/",R1,"]",STR);
         .save_stats("errorOnAttach",STR);
     }
 .

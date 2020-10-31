@@ -25,7 +25,7 @@ max_no_action_in_a_row(1).
     C >= M
     <-
     .log(severe,"****** Restarting due to no_action!");
-    .concat("[",no_action(ME),"]",STR);
+    .concat("[",no_action(ME),",",step(S),"]",STR);
     .save_stats("restarted",STR);
     !restart_agent;
 .
@@ -74,12 +74,14 @@ max_no_action_in_a_row(1).
 /**
  * Return to individual reseted map considering this as 0,0 position
  */
+@[atomic]
 +status(lost) :
     .my_name(ME) &
-    .term2string(ME,MEStr)
+    .term2string(ME,MEStr) &
+    step(S)
     <-
     .log(severe,"****** Restarting because I am lost!");
-    .concat("[",lost(ME),"]",STR);
+    .concat("[",lost(ME),",",step(S),"]",STR);
     .save_stats("restarted",STR);
     .abolish(gps_map(_,_,_,ME));
     .abolish(gps_map(_,_,_,MEStr));

@@ -25,9 +25,9 @@
             !fix_rotation(req(RI,RJ,B));
         } else {
             .log(warning,"Could not rotate ",B," (",I,",",J,") to (",RI,",",RJ,") dir: ",DIR);
-            .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,BB), L);
-            .findall(t(I,J,T),thing(I,J,T,_), LT);
-            .concat("[",req(I,J,B),",",agent(ME),",",a(L),",",t(LT),",",R,"]",STR);
+            .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,BB),L);
+            .findall(t(I,J,T,TT),thing(I,J,T,TT),LT);
+            .concat("[",req(I,J,B),",",a(L),",",t(LT),",",R,"]",STR);
             .save_stats("errorOnRotate",STR);
         }
     } else { // could not find a valid rotation, try to randomly dodge

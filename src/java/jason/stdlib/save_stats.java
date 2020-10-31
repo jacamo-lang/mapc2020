@@ -42,7 +42,7 @@ public class save_stats extends DefaultInternalAction {
             Statistics s = Statistics.getInstance();
             
             Map<String, String> data = new HashMap<>();
-            data.put("team", ts.getAgArch().getAgName().substring(5, 6));
+            data.put("agent", ts.getAgArch().getAgName());
 
             Iterator<Literal> it = ts.getAg().getBB().iterator();
             while (it.hasNext()) {
