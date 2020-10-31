@@ -72,7 +72,6 @@
 
             //No matter if it succeed or failed, it is supposed to be ready for another task
             +exploring;
-            !explore[critical_section(action), priority(1)];
         } else {
             +unwanted_task(T);
         }
@@ -88,7 +87,6 @@
     //No matter if it succeed or failed, it is supposed to be ready for another task
     .drop_desire(perform_task(_));
     +exploring;
-    !explore[critical_section(action), priority(1)];
 .
 
 /**
