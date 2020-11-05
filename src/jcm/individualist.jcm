@@ -1,10 +1,14 @@
-mas env.connection {
+mas individualist {
 
 agent agentA : strategies/individualist.asl { 
     //ag-bb-class: bb.FullTextPersistentBB
     join : envA 
     instances: 50
 } 
+
+agent watchA0 : statistics/individualist_watcher.asl {
+    join : envA
+}
 
 agent agentB: strategies/agent_do_nothing.asl{
     join: envB

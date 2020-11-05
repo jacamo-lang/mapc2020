@@ -112,8 +112,6 @@
             -performing(_,_,_);
             //No matter if it succeed or failed, it is supposed to be ready for another task
             +exploring;
-            !explore[critical_section(action), priority(1)];
-            
         } else {
             +unwanted_task(T,5);
         }
@@ -277,7 +275,6 @@
     -performing(_,_,_);
     //No matter if it succeed or failed, it is supposed to be ready for another task
     +exploring;
-    !explore[critical_section(action), priority(1)];
 .
 //TODO: this is not a good solution but at least the other master may start a new auction 
 -!bring_block(B,Master,T,MAP,meeting_point(XM,YM)) // I am committed to another task
@@ -287,17 +284,3 @@
     .concat("[",bring_block(B,Master,T,MAP,meeting_point(XM,YM)),"]",C);
     .save_stats("helper_failed",C);
 .
-
-/**
- * For debugging if an unexpected error occurs
--!P[code(C),code_src(S),code_line(L),error_msg(M)] :
-    true//disabled //
-    <-
-    .log(warning,"...");
-    .log(warning,"...");
-    .log(severe,"Fail on event '",C,"' of '",S,"' at line ",L,", Message: ",M);
-    .log(warning,"...");
-    .log(warning,"...");
-    .stopMAS(0,1);
-.
-*/

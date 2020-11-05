@@ -22,6 +22,15 @@
     <-
     .log(warning,"****** Initialising agent");
 
+    .drop_all_events;
+    .drop_all_desires;
+    .drop_all_intentions;
+    !drop_beliefs;
+
+    +exploring;
+    +myposition(0,0);
+    -+last_node(-1,-1); //from stc strategy
+
     if ( ID == "1" & focused(Envterm,ArtCounterTerm,_) ) {
         resetStepCounter(-1);
     }
@@ -33,16 +42,7 @@
     if ( ID == "1" & focused(Envterm,ArtCFPterm,_) ) {
         resetSimpleCFP;
     }
-
-    .drop_all_events;
-    .drop_all_desires;
-    .drop_all_intentions;
-    !drop_beliefs;
-
-    +exploring;
-    +myposition(0,0);
-    -+last_node(-1,-1); //from stc strategy
-
+    
     !!start;
 .
 
@@ -103,7 +103,17 @@
     .substring(NAME,ID,6) & ID == "1" // only agenta1 and b1 are writing statistics
     <-
     !saveEnd;
+    .drop_all_events;
+    .drop_all_desires;
+    .drop_all_intentions;
+
     .stopMAS(3000);
+.
++bye
+    <-
+    .drop_all_events;
+    .drop_all_desires;
+    .drop_all_intentions;
 .
 
 +!saveEnd :

@@ -1,4 +1,4 @@
-mas env.connection {
+mas collectivist {
 
 agent agentA : strategies/collectivist.asl { 
     //ag-bb-class: bb.FullTextPersistentBB

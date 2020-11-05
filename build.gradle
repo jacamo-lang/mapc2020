@@ -6,7 +6,7 @@ defaultTasks 'run'
 
 apply plugin: 'java'
 
-version '0.7'
+version '0.9'
 group   'org.jacamo.mapc'
 
 sourceCompatibility = 1.13
@@ -88,6 +88,19 @@ task run (type: JavaExec, dependsOn: 'classes') {
     jvmArgs = ['-Xss15m','-Djava.awt.headless=true']
     main 'runMAPC2020.RunTeam'
     args = ['src/jcm/collectivist.jcm']
+    classpath sourceSets.main.runtimeClasspath
+}
+
+task testGoal (type: JavaExec, dependsOn: 'classes') {
+    group      ' MAPC'
+    description 'run teams'
+    doFirst {
+        mkdir 'log'
+    }
+    standardInput = System.in
+    jvmArgs = ['-Xss15m']
+    main 'runMAPC2020.RunTeam'
+    args = ['src/jcm/individualist.jcm']
     classpath sourceSets.main.runtimeClasspath
 }
 
