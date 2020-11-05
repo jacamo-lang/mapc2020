@@ -49,7 +49,7 @@
      */
     if (system.time - T0 > 1800) {
         .concat("[",req(I,J,B),",",myposition(X,Y),",",R0,"/",R1,"]",STR);
-        .save_stats("excessivePostpones",STR);
+        .save_stats("excessiveDelay",STR);
     }
 
     .wait(200);
@@ -77,7 +77,7 @@
 
 +!just_do(A):  
     step(S) &
-    common_step(CS) &
+    common_step(CS,_) &
     S > CS
     <- 
     incStepCounter(CS); // I am the first to realise the clock has changed
@@ -86,7 +86,7 @@
 
 +!just_do(A)
     <-
-    .wait( step(S) & common_step(S) ); // wait to be synchronized with common clock
+    .wait( step(S) & common_step(S,_) ); // wait to be synchronized with common clock
     
     action(A);
 .
