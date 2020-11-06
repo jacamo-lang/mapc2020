@@ -2,6 +2,11 @@
  * Helpful plans for testing walking functions
  */
 
+get_printed_object(I,J,MIN_I,O) :-
+    line(J,L) &
+    .substring( L, O, I - MIN_I, I - MIN_I + 1)
+.
+
 +!build_map(MIN_I)
     <-
     .findall(J,gps_map(I,J,O,_),LJ);
@@ -67,6 +72,30 @@
         }
     }
     +line(J,RF);
+.
+
+
++!update_line_conditional(I,J,MIN_I,O,O1,O2) :
+    get_printed_object(I,J,MIN_I,OO) 
+    <-
+    if ( OO \== O ) {
+        !update_line(I,J,MIN_I,O1); 
+    } else {
+        !update_line(I,J,MIN_I,O2);
+    }
+.
+
++!print_agent_with_radius(I,J,MIN_I,R)
+    <- 
+    for ( .range(II,-R,R) ) {
+        if (II == 0) {
+            for ( .range(JJ,-R,R) ) {
+                !update_line_conditional(I+II,J+JJ,MIN_I,"#","C","B");
+            }
+        } else {
+            !update_line_conditional(I+II,J,MIN_I,"#","C","B");
+        }
+    }
 .
 
 +!print_map :

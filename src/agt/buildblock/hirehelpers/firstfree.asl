@@ -8,7 +8,7 @@
 
 /***************************** common ****************************** */
 //R=0 means agent is a buildmaster
-buildmaster(R) :- helpersquantity(Q) & id(ID) & R = ID mod Q.
+buildmaster(R) :- helpersquantity(Q) & id(ID) & R = ID mod Q+1.
 
 id(AUX) :- name(NAME) & 
           .delete("agenta",NAME,ID) &

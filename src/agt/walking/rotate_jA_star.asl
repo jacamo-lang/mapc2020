@@ -32,7 +32,7 @@ rotate(ccw,-1,0,1,0). // 9  o'clock -> 6 o'clock
 rotate(ccw,0,-1,-1,0).// 12  o'clock -> 9 o'clock
 
 /**
- * Get the necessary rotation moviment to get from b(I,J,B) to
+ * Get the necessary rotation movement to get from b(I,J,B) to
  * b(II,JJ,B). If more than one movement is needed, it returns
  * the next.
  */

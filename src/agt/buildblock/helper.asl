@@ -5,10 +5,18 @@
 
 +!bring(TYPE,QBLOCKS,X,Y)[source(AGBM)] :  true
     <-
-        +serving(AGBM);
-        .print("--- GO TO THE DISPENSER AND GET BLOCKS---");
+        +serving(AGBM);        
+        for (.range(C, 1,QBLOCKS)) {
+            !do(rotate(ccw),RET);   
+            !get_block(TYPE);
+        }
+        for (.range(C, 1,QBLOCKS)) {
+            !do(rotate(cw),RET);    
+        }
         +availableblocks(TYPE,QBLOCKS);
-        .print("--- GOTO THE BUILD MASTER --->");       
+        ?myposition(X0,Y0);
+        .print(myposition(X0,Y0)," ==> ", end(X,Y));
+        !goto(X,Y,RET);
         .send(AGBM,tell,available(TYPE));
     .   
 

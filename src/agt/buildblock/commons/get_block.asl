@@ -11,7 +11,25 @@
  *it is possible to have requerements of multiple blocks, so, the position of
  * existing ones should be also solved
  */
-+!get_block(req(I,J,B)) :
+//dockpoint(B,ID+1,JD):- gps_map(ID,JD,B,"agenta1") &
+//                    gps_map(ID+1,JD,obstacle,"agenta1") &
+//                    gps_map(ID+1,JD-1,obstacle,"agenta1") &
+//                    gps_map(ID+1,JD+1,obstacle,"agenta1") &
+//                    gps_map(ID+2,JD,obstacle,"agenta1").
+//
+//dockpoint(B,ID,JD-1):- gps_map(ID,JD,B,"agenta1") &
+//                    gps_map(ID,JD-1,obstacle,"agenta1") &
+//                    gps_map(ID-1,JD-1,obstacle,"agenta1") &
+//                    gps_map(ID+1,JD-1,obstacle,"agenta1") &
+//                    gps_map(ID,JD-2,obstacle,"agenta1").
+//
+//dockpoint(B,ID,JD+1):- gps_map(ID,JD,B,"agenta1") &
+//                    gps_map(ID,JD+1,obstacle,"agenta1") &
+//                    gps_map(ID-1,JD+1,obstacle,"agenta1") &
+//                    gps_map(ID+1,JD+1,obstacle,"agenta1") &
+//                    gps_map(ID,JD+2,obstacle,"agenta1").
+ 
++!get_block(B) :
     myposition(X,Y) &
     (thing(ID,JD,dispenser,B) & distance(0,0,ID,JD,1) & direction_increment(DD,ID,JD)) & // direction of the dispenser
     not attached(ID,JD) &
@@ -33,11 +51,18 @@
         .save_stats("errorOnAttach",STR);
     }
 .
-+!get_block(req(I,J,B)) :  // In case the agent is far away from B
-     step(S) &
-     direction_increment(DIR,I,J)
-     <-
-     !goto_nearest_adjacent(B,DIR);
-     .wait(step(Step) & Step > S); //wait for the next step to continue
-     !get_block(req(I,J,B));
++!get_block(B) :  // In case the agent is far away from B
+     gps_map(X,Y,B,"agenta1") 
+     <-              
+     ?myposition(X0,Y0);
+     .print(myposition(X0,Y0)," ==> ", end(X-1,Y));
+     !goto(X-1,Y,RET);
+     !get_block(B);
 .
++!get_block(B) : 
+     not gps_map(X,Y,B,"agenta1")     
+     <-         
+     .print("================= passou batido ====================");
+.
+
+

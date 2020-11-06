@@ -1,6 +1,8 @@
-{ include("buildblock/builderstrategies/onetypebyhelper.asl") }
-{ include("buildblock/hirehelpers/firstfree.asl") }
-{ include("buildblock/taskselect/rewardbyblock.asl") }
+{ include("buildblock/builderstrategies/oneagent.asl") }
+{ include("tasks/hire_helper.asl")}
+//{ include("buildblock/hirehelpers/firstfree.asl") }
+{ include("buildblock/taskselect/twoblocks.asl") }
+
 
 //-- build list a summarized list of blocks by quantity --
 countblocks([],[]).
@@ -19,26 +21,28 @@ highY(L,math.abs(Y)):- .member(req(_,Y,_),L) &
              not (.member(req(_,Y1,_),L) & math.abs(Y)<math.abs(Y1)).
 //-------------------------------------------------------
 
-helpersquantity(3). //number of helpers to hire
+helpersquantity(1). //number of helpers to hire
 
-!preload.
-
-+!preload
-    :true
-    <-  
-        .wait(name(_));
-        !hire;
-    .
-
+/** utilizando o hire_helper */
++helper(_)
+    : true
+    <-
+        +readytobuild;
+    . 
+/******* */
 +!gotask 
     : choosetask(task(NAME,REWARD,DEADLINE,L)) //taskcommitment strategy
 
     <-
+        .print("GO TASK! ",task(NAME,REWARD,DEADLINE,L));
         !deliveryqueue(L,DQ); //build a queue for deliver blocks of structure
-        !deliveryrequest(DQ); //Define a quantity of agents and the content of transportation
-        !buildstructure(DQ); //Build the structure
+        ?myposition(XM,YM);
+        !deliveryrequest(DQ,XM,YM); //Define a quantity of agents and the content of transportation
+        !buildstructure(DQ,XM,YM); //Build the structure
         !releasehelpers; //release occupied agent because the task is over
  .
++!gotask <- true.
+     
  
 +!deliveryqueue(L,R)
     :  highX(L,HX) & highY(L,HY) 
@@ -66,23 +70,31 @@ helpersquantity(3). //number of helpers to hire
         R=[];
     .
     
-+!buildstructure([req(X,Y,TYPE)|L]) : true
++!buildstructure([req(X,Y,TYPE)|L],XM,YM) : true
     <-
-        .wait(available(TYPE)[source(AGH)]);
-        ?myposition(X0,Y0);
-        .send(AGH,achieve,attach(X0+X,Y0+Y,TYPE));
-        .wait(atposition(X0+X,Y0+Y,TYPE)[source(AGH)]);
-        
+        !skipwait(available(TYPE)[source(AGH)]);
+        .send(AGH,achieve,attach(XM+X,YM+Y,TYPE));
+         !skipwait(atposition(XM+X,YM+Y,TYPE)[source(AGH)]);
         /* WHEN THE HELPER IS WORKING CHANGE IT TO ACTION DO */
         .print("DO --->",connect(AGH,X,Y)); 
-        !buildstructure(L);
+        !buildstructure(L,XM,YM);
     .
 
-+!buildstructure([]) 
++!buildstructure([],_,_) 
     <-
         true
     .   
-    
+
++!skipwait(C)
+    : not C
+    <-
+        !do(skip,R);
+        !skipwait(C);   
+    .
++!skipwait(C)
+    : C
+    <- true.
+ 
 +!releasehelpers 
     : true
     <-

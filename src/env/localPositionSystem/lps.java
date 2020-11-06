@@ -56,6 +56,19 @@ public class lps extends Artifact {
     }
     
     /**
+     * Add as observable property to register which map the agent is on
+     */
+    @OPERATION
+    void setOrigin(String mapId) {
+        String agent = getCurrentOpAgentId().getAgentName();
+        ObsProperty prop = this.getObsPropertyByTemplate("origin",ASSyntax.createAtom(agent),null);
+        if(prop==null) 
+            defineObsProperty("origin",ASSyntax.createAtom(agent),ASSyntax.createAtom(mapId));
+        else 
+            prop.updateValues(ASSyntax.createAtom(agent),ASSyntax.createAtom(mapId));
+    }
+
+    /**
      * Remove all the objects of the mapId
      */
     @OPERATION

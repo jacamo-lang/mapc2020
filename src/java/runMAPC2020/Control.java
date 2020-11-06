@@ -14,6 +14,8 @@ public class Control {
             @Override
             public void run() {
                 try {
+                    System.out.println("Starting simulation....");
+
                     // Wait for jacamo
                     boolean waitAgents = true;
                     while (waitAgents) {
@@ -32,8 +34,8 @@ public class Control {
                     s.prepareMatchesStatsFile();
 
                     // Start the server
-                    //Server.main(new String[] { "-conf", "serverconf/SampleQualification.json", "--monitor" });
-                    Server.main(new String[] { "-conf", "serverconf/SampleConfig.json", "--monitor" });
+                    Server.main(new String[] { "-conf", "serverconf/SampleQualification.json", "--monitor" });
+                    //Server.main(new String[] { "-conf", "serverconf/SampleConfig.json", "--monitor" });
                     
                     // abre o browser automaticamente
                     if (browser && Desktop.isDesktopSupported()) {
@@ -47,7 +49,6 @@ public class Control {
                 }
             }
         }).start();
-
         try {
             // altere a string pra carregar diferentes simulacoes
             JaCaMoLauncher.main(new String[] { Simulation });

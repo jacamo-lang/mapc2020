@@ -222,7 +222,10 @@ adapt_coordinate_map(A,B) :- B=A.
        replaceMap(OL,ORIGIN); //remove the old map from the shared representation
        .abolish(map(OL,_,_,_));      
        //?step(S); .print("... SYNC areyou origin: ", ORIGIN, " Agent: ", AG, " Step ", S, "");
-       !after_sync(PID). 
+       !after_sync(PID);
+       !hire(AG). /** alteracao */
+       
+-!hire(AG)<-true.        
 
 
 //If the agent has not updated its position in the current step, ignore the synchronization

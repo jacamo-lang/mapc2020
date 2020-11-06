@@ -79,7 +79,7 @@ nearest_neighbour(XP,YP,X,Y) :-
     myposition(X1,Y1) &
     origin(MyMAP) &
     .findall(p(D,X2,Y2),
-        direction_increment(_,I,J) & X2 = XP+I & Y2 = YP + J &
+        direction_increment(_,I,J) & X2 = XP+I & Y2 = YP+J &
         not gps_map(X2,Y2,obstacle,MyMAP) &
         distance(X1,Y1,X2,Y2,D), FL
     ) & .min(FL,p(_,X,Y))
@@ -104,9 +104,42 @@ task_shortest_path(B,D) :-
     D = D12 + D23 + D34
 .
 
-is_walkable(I,J) :- not thing(I,J,obstacle,_) &
-                    not thing(I,J,entity,_) &
-                    not (thing(I,J,block,B) & not attached(I,J)).
+/**
+ * Unifies when the position is clear for walk, used for close/visible areas
+ */
+is_walkable(I,J) :-
+    not thing(I,J,obstacle,_) &
+    not thing(I,J,entity,_) &
+    not ( thing(I,J,block,_) & not attached(I,J) )
+.
+
+/**
+ * Unifies when the X,Y and its surrounding positions are clear for walk,
+ * used for far areas (mapped by gps_map, not necessarily visible).
+ */
+is_walkable_area(X,Y,R) :-
+    not gps_map(X,Y,obstacle,MyMAP) &
+    .findall(p(XX,YY),
+        .range(It,1,R) &
+        .member(DIR,[n,s,w,e]) &
+        direction_increment(DIR,I,J) &
+        origin(MyMAP) &
+        XX = (I * It) + X &
+        YY = (J * It) + Y &
+        gps_map(XX,YY,obstacle,MyMAP), L) &
+    //.log(warning,L) &
+    .length(L) == 0
+.
+
+/**
+ * Check if both master and helper have space for a meeting considering
+ * X,Y the position for the master and considering the helper will be placed
+ * on the right hand side of master. It is used R as the radius (stack of blocks)
+ * for both agents since they may need to rotate.
+ */
+is_meeting_area(X,Y,R) :-
+    is_walkable_area(X,Y,R) & is_walkable_area(1+(2*R)+X,Y,R)
+.
 
 /**
  * If I know the position of at least B, find the nearest and go there!
@@ -176,8 +209,9 @@ is_walkable(I,J) :- not thing(I,J,obstacle,_) &
 .
 
 /**
- * If I know the position of at least B, find the nearest neighbour
- * point and go there!
+ * If I know the position of at least B, find the nearest adjacent
+ * point and go there! Only execute if myposition is not the target
+ * position.
  */
 +!goto_nearest_adjacent(B,DIR) :
     origin(MyMAP) &

@@ -39,8 +39,8 @@
         resetRP;
     }
 
-    if ( focused(Envterm,ArtCFPterm,_) ) {
-        removeMyCFPs;
+    if ( ID == "1" & focused(Envterm,ArtCFPterm,_) ) {
+        resetSimpleCFP;
     }
     
     !!start;
@@ -77,10 +77,10 @@
     .abolish(myposition(_,_));
     .abolish(origin(_));
     .abolish(edge(_,_,_,_,_,_)); //from stc exploration strategy
-    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol
+    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol 
     .abolish(pending_areyou(_,_,_)); //from meeting protocol
-    .abolish(task(_,_,_,_));
-    .abolish(performing(_,_));
+    .abolish(task(_,_,_,_));    
+    .abolish(performing(_,_));    
 .
 
 /**
@@ -121,7 +121,7 @@
     score(S)
     <-
     .concat("[",score(S),",",ranking(R),"]",C);
-    .save_stats("simEnd",C);
+    .save_stats("simEnd  ",C);
     -ranking(R);
     -score(R);
 .

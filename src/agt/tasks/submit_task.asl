@@ -15,7 +15,10 @@
         .save_stats("taskSubmitted",STR);
         .broadcast(tell,unwanted_task(T));
     } else {
-        .fail;
+        //A submit may fail for instance if another agent already submitted T
+        .log(warning,"Fail on submitting ",T," ",R0);
+        .concat("[",task(T,DL,Y,REQs),",",return(R0),"]",STR);
+        .save_stats("submit_failed",STR);
     }
  .
  +!submit_task(T) :  // In case the agent is far away from goal area
@@ -30,12 +33,4 @@
 +!submit_task(T) // Should not occur
     <-
     .log(warning,"Could not find a proper plan to ",submit_task(T));
-.
-
-/**
- * A submit may fail for instance if another agent already submitted T
- */
--!submit_task(T) // Fail on submitting task
-    <-
-    .log(warning,"Fail on submitting ",T);
 .
