@@ -49,7 +49,7 @@
      */
     if (system.time - T0 > 1800) {
         .concat("[",req(I,J,B),",",myposition(X,Y),",",R0,"/",R1,"]",STR);
-        .save_stats("excessiveDelay",STR);
+        .save_stats("excessive_delay",STR);
     }
 
     .wait(200);

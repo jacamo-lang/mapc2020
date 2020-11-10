@@ -26,7 +26,7 @@ max_no_action_in_a_row(1).
     <-
     .log(severe,"****** Restarting due to no_action!");
     .concat("[",no_action(ME),",",step(S),"]",STR);
-    .save_stats("restarted",STR);
+    .save_stats("restarted_noact",STR);
     !restart_agent;
 .
 /**
@@ -83,7 +83,7 @@ max_no_action_in_a_row(1).
     <-
     .log(severe,"****** Restarting because I am lost!");
     .concat("[",lost(ME),",",step(S),"]",STR);
-    .save_stats("restarted",STR);
+    .save_stats("restarted_lost",STR);
     .abolish(gps_map(_,_,_,ME));
     .abolish(gps_map(_,_,_,MEStr));
     removeMyCFPs;
