@@ -303,7 +303,7 @@ is_meeting_area(X,Y,R) :-
 +!find_meeting_area(X,Y,R,XM,YM)
     <-
     //Try a random position from the desired point
-    -+desired_meeting_point(math.floor(math.random(11)) - 5 + X,math.floor(math.random(10)) - 5 + Y,R);
+    -+desired_meeting_point(math.floor(math.random(11)) - 5 + X,math.floor(math.random(11)) - 5 + Y,R);
     -+find_meeting_iterator(0);
     while ( find_meeting_iterator(I) & (I < 10) ) {
         if ( desired_meeting_point(DX,DY,R) & is_meeting_area(DX,DY,R) ) {

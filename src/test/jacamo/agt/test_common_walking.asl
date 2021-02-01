@@ -241,16 +241,18 @@
 +!test_find_meeting_area(MIN_I)
     <-
     // test a completely clear meeting area
-    !print_agent_with_radius(35,0,MIN_I,1);
-    !print_agent_with_radius(38,0,MIN_I,1);
     !find_meeting_area(35,0,1,XM2,YM2);
-    !assert_equals(XM2,35,5); //around 35
-    !assert_equals(YM2,0,5); //around 0
+    !assert_equals(35,XM2,10); //around 35
+    !assert_equals(0,YM2,10); //around 0
+    !print_agent_with_radius(XM2,YM2,MIN_I,1);
+    !print_agent_with_radius(XM2+3,YM2,MIN_I,1);
 
     // test an area in which the helper would find an obstacle
-    !print_agent_with_radius(58,3,MIN_I,1);
-    !print_agent_with_radius(61,3,MIN_I,1);
     !find_meeting_area(55,1,1,XM1,YM1);
-    !assert_equals(XM1,58,5); //around 58
-    !assert_equals(YM1,3,5); //around 3
+    !assert_equals(55,XM1,10); //around 55
+    !assert_equals(1,YM1,10); //around 1
+    !print_agent_with_radius(XM1,YM1,MIN_I,1);
+    !print_agent_with_radius(XM1+3,YM1,MIN_I,1);
+
+    !print_map;
 .
