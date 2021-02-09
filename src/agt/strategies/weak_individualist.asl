@@ -23,7 +23,6 @@
 { include("simulation/watch_dog.asl") }
 { include("environment/artifact_simpleCFP.asl") }
 { include("agentBase.asl") }
-{ include("origin_workaround.asl") }
 
 
 +!perform_task(T) :

@@ -11,7 +11,7 @@
     .abolish(accepted(_));
     !do(submit(T),R0);
     if (R0 == success) {
-        .log(warning,"I've submitted task ",T);    
+        .log(warning,"I've submitted task ",T);
         .concat("[",task(T,DL,Y,REQs),"]",STR);
         .save_stats("taskSubmitted",STR);
         .broadcast(tell,unwanted_task(T));
