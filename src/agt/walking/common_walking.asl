@@ -218,6 +218,7 @@ is_meeting_area(X,Y,R) :-
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
     nearest_adjacent(B,XA,YA,DIR) &
+    distance(X,Y,XA,YA,DIST) &
     direction_increment(DIR,I,J) & not (X+I = XA & Y+J = YA) // I am not at the target position
     <-
     .log(warning,"Going to ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));
