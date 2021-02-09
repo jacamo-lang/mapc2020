@@ -53,7 +53,7 @@
         //TODO: Sometimes the master or the helper get stuck which compromise the whole task
         //TODO: Sometimes another pair of agents are concurring to this same task and going to same place
         //TODO: Sometimes an agent is winning two auction as helper giving false hope to one of them         
-        if ( bring_block(Helper,block_to(B,ME,T,MAP),_) & Helper \== ME ) { // someone is coming to help me and I won the master's auction
+        if ( bring_block(Helper,block_to(BH,ME,T,MAP),_) & Helper \== ME ) { // someone is coming to help me and I won the master's auction
             !close_bring_CFP(block_to(BH,ME,T,MAP));
 
             -+performing(T,ME,Helper);
@@ -62,7 +62,7 @@
             //TODO: More than one pair of agents are often competing for the same space, it is better to try other ways to find clear areas 
             ?nearest(goal,XG,YG);
             !find_meeting_area(XG,YG,1,XM,YM);
-            .send(Helper,achieve,bring_block(B,ME,T,MAP,meeting_point(XM+3,YM)));
+            .send(Helper,achieve,bring_block(BH,ME,T,MAP,meeting_point(XM+3,YM)));
 
             .concat("[",task(T),",",myposition(XX,YY),",",helper(Helper),",",myreq(IR,JR,BR),"]",C2);
             .save_stats("mastering_task",C2);
