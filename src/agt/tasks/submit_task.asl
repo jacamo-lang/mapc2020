@@ -5,7 +5,8 @@
 
 +!submit_task(T) : //thing(0,1,block,b1)
     task(T,DL,Y,REQs) &
-    goal(0,0)         // I am over a goal
+    goal(0,0) &        // I am over a goal
+    step(S)
     <-
     .abolish(accepted(_));
     !do(submit(T),R0);
@@ -17,7 +18,7 @@
     } else {
         //A submit may fail for instance if another agent already submitted T
         .log(warning,"Fail on submitting ",T," ",R0);
-        .concat("[",task(T,DL,Y,REQs),",",return(R0),"]",STR);
+        .concat("[",task(T,DL,Y,REQs),",",return(R0),",",step(S),"]",STR);
         .save_stats("submit_failed",STR);
     }
  .

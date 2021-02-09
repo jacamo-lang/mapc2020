@@ -48,7 +48,7 @@
      * problematic because it may lose steps and have no enough time for other actions.
      */
     if (system.time - T0 > 1800) {
-        .concat("[",req(I,J,B),",",myposition(X,Y),",",R0,"/",R1,"]",STR);
+        .concat("[",current_intentions(L),"]",STR);
         .save_stats("excessive_delay",STR);
     }
 

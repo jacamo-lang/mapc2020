@@ -19,7 +19,8 @@
     !do(accept(T),R0);
     if (R0 == success) {
         .log(warning,"Task ",T," accepted!");
-        .concat("[",task(T,DL,Y,REQs),"]",STR);
+        ?accepted(LT);
+        .concat("[",task(T,DL,Y,REQs),",",accepted(LT),"]",STR);
         .save_stats("taskAccepted",STR);
     } else {
         .log(warning,"Could not accept task ",T);
