@@ -27,9 +27,6 @@
 
 +!perform_task(T) :
     not accepted(_) &                       // I am not committed
-    not .intend(bring_block(_,_,_,_)) &
-    not .intend(perform_task(_)) &
-    not performing(_,_,_) &
     not unwanted_task(T,_) &
     .my_name(ME) &
     task(T,DL,Y,REQs) &
@@ -41,119 +38,96 @@
     myposition(XX,YY)
     <-
     if ( DL <= (S + D) ) { // deadline must be greater than step + shortest path
-        +unwanted_task(T); // Discard tasks that are going to expire
+        +unwanted_task(T,-1); // Discard tasks that are going to expire
     } else {
         .log(warning,"I want to perform the task ",T);
 
-        setCFP("bring_block",block_to(BH,ME,T,MAP),9999); // Start the CFP with a very high offer
-
-        .wait(step(Step) & Step > S); //wait for the next step to continue
-
-        
-        //TODO: Sometimes the master or the helper get stuck which compromise the whole task
-        //TODO: Sometimes another pair of agents are concurring to this same task and going to same place
-        //TODO: Sometimes an agent is winning two auction as helper giving false hope to one of them         
-        if ( bring_block(Helper,block_to(B,ME,T,MAP),_) & Helper \== ME ) { // someone is coming to help me and I won the master's auction
-            !close_bring_CFP(block_to(BH,ME,T,MAP));
-
-            -+performing(T,ME,Helper);
-            -exploring;
-
-            //TODO: More than one pair of agents are often competing for the same space, it is better to try other ways to find clear areas 
-            ?nearest(goal,XG,YG);
-            !find_meeting_area(XG,YG,1,XM,YM);
-            .send(Helper,achieve,bring_block(B,ME,T,MAP,meeting_point(XM+3,YM)));
-
-            .concat("[",task(T),",",myposition(XX,YY),",",helper(Helper),",",myreq(IR,JR,BR),"]",C2);
-            .save_stats("mastering_task",C2);
-
-            .log(warning,"Accepting task... ",T);
-            !accept_task(T);
-
-            .log(warning,"getblock ",req(IR,JR,BR));
-            .log(warning,"Setting position for connecting with a helper comming from east");
-            !get_block(req(1,0,BR));
-
-            while ( not myposition(XM,YM) ) {
-                !goto_XY(XM,YM);
-                !fix_rotation(req(1,0,BR));
-            }
-            .concat("[",myposition(XM,YM),",",helper(Helper),"]",C3);
-            .save_stats("waiting_helper",C3);
-
-            !wait_event(helper_at(XM+3,YM)[source(Helper)]);
-            .concat("[",helper_at(XM+3,YM),",",helper(Helper),"]",C4);
-            .save_stats("assembly_ready",C4);
-            .send(Helper,tell,assembly_ready);
-            
-            !do(skip,_); // Give one step to the zombie get ready
-
-            !synchronous_connect(Helper,1,0,-1,0);
-            
-            !synchronous_detach(Helper,w);
-            
-            .send(Helper,tell,assembly_ends);
-
-            // Setting for submit position
-            while (not thing(IR,JR,block,BR) & step(AS4) ) {
-                !fix_rotation(req(IR,JR,BR));
-                .wait( step(NS) & NS > AS4 );
-            }
-
-            .log(warning,"Submitting task... ",T);
-            !submit_task(T);
-            .broadcast(tell,unwanted_task(T,-1));
-
-            // In case submit did not succeed
-            .log(warning,"Dropping blocks for ",T);
-            !drop_all_blocks;
-            removeMyCFPs; // in case the agent did not succeed, another agent can try
-
-            -performing(_,_,_);
-            //No matter if it succeed or failed, it is supposed to be ready for another task
-            +exploring;
-        } else {
-            +unwanted_task(T,5);
-        }
+        .send(coordinator,achieve,find_helper(BH,ME,T,MAP));
     }
 .
 +!perform_task(T).// <- .log(warning,"Could not perform ",T).
 -!perform_task(T) :
-    .my_name(ME) &
-    performing(_,_,Helper)
+    .my_name(ME)
     <-
     .log(warning,"Failed on ",perform_task(T)," dropping desire, back to explore.");
     //No matter if it succeed or failed, it is supposed to be ready for another task
     .concat("[",perform_task(T),"]",C);
     .save_stats("master_failed",C);
-    .drop_desire(perform_task(_));
     .drop_desire(explore);
-    .drop_desire(bring_block(_,_,_,_,_));
     !drop_all_blocks;
-    .send(Helper,achieve,restart_agent);
-    -performing(_,_,_);
     +exploring;
     !explore[critical_section(action), priority(1)];
 .
 
-// solve conflict in which I am master of an auction and helper of another agent
-+!close_bring_CFP(block_to(B,ME,T,MAP)) :
++!master(T,Helper):
+    .my_name(ME) &
+    task(T,DL,Y,REQs) &
+    .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for
+    .member(req(IH,JH,BH),REQs) & (math.abs(IH) + math.abs(JH)) > 1 & // This is the block that the HELPER must go for
+    step(S) &
+    origin(MAP) &
+    myposition(XX,YY)
+    <-
+    -exploring;
+
+    //TODO: More than one pair of agents are often competing for the same space, it is better to try other ways to find clear areas
+    ?nearest(goal,XG,YG);
+    !find_meeting_area(XG,YG,1,XM,YM);
+    .send(Helper,achieve,bring_block(BH,ME,T,MAP,meeting_point(XM+3,YM)));
+
+    .concat("[",task(T),",",myposition(XX,YY),",",helper(Helper),",",myreq(IR,JR,BR),"]",C2);
+    .save_stats("mastering_task",C2);
+
+    .log(warning,"Accepting task... ",T);
+    !accept_task(T);
+
+    .log(warning,"getblock ",req(IR,JR,BR));
+    .log(warning,"Setting position for connecting with a helper comming from east");
+    !get_block(req(1,0,BR));
+
+    while ( not myposition(XM,YM) ) {
+        !goto_XY(XM,YM);
+        !fix_rotation(req(1,0,BR));
+    }
+    .concat("[",myposition(XM,YM),",",helper(Helper),"]",C3);
+    .save_stats("waiting_helper",C3);
+
+    !wait_event(helper_at(XM+3,YM)[source(Helper)]);
+    .concat("[",helper_at(XM+3,YM),",",helper(Helper),"]",C4);
+    .save_stats("assembly_ready",C4);
+    .send(Helper,tell,assembly_ready);
+
+    !do(skip,_); // Give one step to the zombie get ready
+
+    !synchronous_connect(Helper,1,0,-1,0);
+
+    !synchronous_detach(Helper,w);
+
+    .send(Helper,tell,assembly_ends);
+
+    // Setting for submit position
+    while (not thing(IR,JR,block,BR) & step(AS4) ) {
+        !fix_rotation(req(IR,JR,BR));
+        .wait( step(NS) & NS > AS4 );
+    }
+
+    .log(warning,"Submitting task... ",T);
+    !submit_task(T);
+    .broadcast(tell,unwanted_task(T,-1));
+
+    // In case submit did not succeed
+    .log(warning,"Dropping blocks for ",T);
+    !drop_all_blocks;
+    removeMyCFPs; // in case the agent did not succeed, another agent can try
+
+    //No matter if it succeed or failed, it is supposed to be ready for another task
+    +exploring;
+.
+
++origin(MAP):
     .my_name(ME)
     <-
-    if (bring_block(ME,block_to(_,AnotherMaster,_,_),_) ) {
-        if (ME < AnotherMaster) {
-            .drop_intention( bid_to_bring_block(_,_,_,_) );
-            .drop_intention( bring_block(_,_,_,_,_) );
-            .concat("[",bring_block(ME,block_to(_,AnotherMaster,_,_),_),"]",C);
-            .save_stats("dropped_bring",C);
-        } else {
-            .drop_intention( perform_task(_) );
-            .concat("[",bring_block(ME,block_to(_,Master,_,_),_),",",bring_block(Master,block_to(_,ME,_,_),_),"]",C);
-            .save_stats("dropped_mastering",C);
-            .fail;
-        }
-    }
-    setCFP("bring_block",block_to(B,ME,T,MAP),-1);
+    .send(coordinator,achieve,inform_map(ME,MAP));
 .
 
 /**
@@ -191,52 +165,16 @@
     !!perform_task(T);
 .
 
-+bring_block(_,_,_) : .intend(bid_to_bring_block(_,_,_,_)). // I am busy
-+bring_block(_,_,_) : .intend(bring_block(_,_,_,_,_)). // I am busy
-+bring_block(_,_,_) : performing(_,_,_). // I am busy
-+bring_block(_,block_to(_,ME,_,_),_) : .my_name(ME). // it is me asking for help...
-+bring_block(_,block_to(B,Master,T,MAP),_) : not (origin(MAP) & gps_map(_,_,B,MAP)). // I can't help
-+bring_block(_,block_to(B,Master,T,MAP),_)
-    <-
-    !bid_to_bring_block(B,Master,T,MAP);
-.
-
-+!bid_to_bring_block(B,Master,T,MAP) :
-    nearest(B,XB,YB) &
-    myposition(X,Y) &
-    distance(X,Y,XB,YB,D1) &
-    step(S)
-    <-
-    // for the auction, it is used the current position of master
-    .send(Master,askOne,myposition(XM,YM),myposition(XM,YM));
-    ?distance(XB,YB,XM,YM,D2);
-    D = D1 + D2;
-    setCFP("bring_block",block_to(B,Master,T,MAP),S+D);
-.
-
-+!bring_block(B,Master,T,MAP,meeting_point(XM,YM)): // Sorry, I am already committed!
-    performing(_,_,_)
-    <-
-    .send(Master,achieve,restart_agent);
-    .concat("[",bring_block(B,Master,T,MAP,meeting_point(XM,YM)),"]",C);
-    .save_stats("help_denied",C);
-.
 +!bring_block(B,Master,T,MAP,meeting_point(XM,YM)):
-    not .intend(bring_block(_,_,_,_,_)) &
-    not performing(_,_,_) &
     myposition(XO,YO) &
     .my_name(ME) &
     step(S)
     <-
-    -+performing(T,Master,ME);
+    -exploring;
+
     .abolish(assembly_ready);
     .abolish(assembly_ends);
     // remove the auction that lead to this helping plan and other ones to do not give false hope
-
-    // In case it is performing a task
-    .drop_intention( perform_task(_) );
-    
-    -exploring;
 
     .concat("[",block_to(B,Master,T,MAP),",",step(S),",",myposition(XO,YO),",",meeting_point(XM,YM),"]",C1);
     .save_stats("helping_task",C1);
@@ -252,14 +190,14 @@
     }
     ?myposition(XMO,YMO);
     .send(Master,tell,helper_at(XMO,YMO));
-    
+
     .concat("[",myposition(XMO,YMO),",",master(Master),"]",C3);
     .save_stats("waiting_master",C3);
     !wait_event(assembly_ready[source(Master)]);
-    
-    
-    /** 
-     * Meanwhile the helper is on zombie mode, so master should give action to it 
+
+
+    /**
+     * Meanwhile the helper is on zombie mode, so master should give action to it
      * every step
      */
     .concat("[",master(Master),"]",C4);
@@ -272,15 +210,6 @@
     !drop_all_blocks;
 
     removeMyCFPs;
-    -performing(_,_,_);
     //No matter if it succeed or failed, it is supposed to be ready for another task
     +exploring;
-.
-//TODO: this is not a good solution but at least the other master may start a new auction 
--!bring_block(B,Master,T,MAP,meeting_point(XM,YM)) // I am committed to another task
-    <-
-    -performing(_,_,_);
-    .send(Master,achieve,restart_agent);
-    .concat("[",bring_block(B,Master,T,MAP,meeting_point(XM,YM)),"]",C);
-    .save_stats("helper_failed",C);
 .

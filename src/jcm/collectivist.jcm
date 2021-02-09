@@ -1,6 +1,8 @@
 mas collectivist {
 
-agent agentA : strategies/collectivist.asl { 
+agent coordinator : strategies/collectivist_coordinator.asl
+
+agent agentA : strategies/collectivist.asl {
     //ag-bb-class: bb.FullTextPersistentBB
     join : envA 
     instances: 50
