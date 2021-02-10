@@ -22,6 +22,7 @@
 { include("walking/goto_iaA_star.asl") }
 { include("simulation/watch_dog.asl") }
 { include("environment/artifact_counter.asl") }
+{ include("environment/artifact_simpleCFP.asl") }
 { include("agentBase.asl") }
 
 +!perform_task(T) :
@@ -58,7 +59,7 @@
     !explore[critical_section(action), priority(1)];
 .
 
-+!master(T,Helper):
++!master_task(T,Helper):
     .my_name(ME) &
     task(T,DL,Y,REQs) &
     .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for
@@ -208,5 +209,15 @@
     !drop_all_blocks;
 
     //No matter if it succeed or failed, it is supposed to be ready for another task
+    +exploring;
+.
+
++!drop_task
+    <-
+    .log(severe,"****** Dropping task:  dropping all desires, intentions, events and blocks!");
+    .drop_all_events;
+    .drop_all_desires;
+    .drop_all_intentions;
+    !drop_all_blocks;
     +exploring;
 .
