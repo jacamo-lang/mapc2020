@@ -85,13 +85,13 @@
     .log(warning,"Setting position for connecting with a helper comming from east");
     !get_block(req(1,0,BR));
 
+    while ( not thing(1,0,block,BR) & step(AS3) ) {
+        !fix_rotation(req(1,0,BR));
+        .wait( step(NS) & NS > AS3 );
+    }
     while ( not myposition(XM,YM) & step(AS2) ) {
         !goto_XY(XM,YM);
         .wait( step(NS) & NS > AS2 );
-    }
-    while (not thing(1,0,block,BR) & step(AS3) ) {
-        !fix_rotation(req(1,0,BR));
-        .wait( step(NS) & NS > AS3 );
     }
     .concat("[",myposition(XM,YM),",",helper(Helper),"]",C3);
     .save_stats("waiting_helper",C3);
@@ -187,13 +187,13 @@
     .concat("[",meeting_point(XM,YM),",",myposition(XO,YO),"]",C2);
     .save_stats("goto_meeting",C2);
 
+    while ( not thing(-1,0,block,B) & step(AS3) ) {
+        !fix_rotation(req(-1,0,B));
+        .wait( step(NS) & NS > AS3 );
+    }
     while ( not myposition(XM,YM) & step(AS2) ) {
         !goto_XY(XM,YM);
         .wait( step(NS) & NS > AS2 );
-    }
-    while (not thing(-1,0,block,B) & step(AS3) ) {
-        !fix_rotation(req(-1,0,B));
-        .wait( step(NS) & NS > AS3 );
     }
     ?myposition(XMO,YMO);
     .send(Master,tell,helper_at(XMO,YMO));
