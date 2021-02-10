@@ -160,6 +160,11 @@ is_meeting_area(X,Y,R) :-
         .log(warning,"No success on: ",goto(XN,YN,RET)," ",myposition(X1,Y1));
     }
 .
+-!goto_nearest(B) // no_route for previous apttent, maybe a moving object was on the way
+    <-
+    !do(skip,R);
+    !!goto_nearest(B); // Try again
+.
 
 /**
  * If I know the position of at least B, find the nearest neighbour

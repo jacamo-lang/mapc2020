@@ -26,3 +26,5 @@
     <-
     .abolish(status(_,performing(T),_));
 .
+
++!areyou(_,_,_,_,_,_,_,_) <- true.
