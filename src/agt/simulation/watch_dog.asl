@@ -51,13 +51,14 @@ max_no_action_in_a_row(1).
 @restart_agent[atomic]
 +!restart_agent
     <-
-    .log(severe,"****** Restarting:  dropping all desires, intentions, events and blocks!");
+    .log(severe,"****** Restarting: dropping all desires, intentions, events and blocks!");
     .drop_all_events;
     .drop_all_desires;
     .drop_all_intentions;
     !drop_all_blocks;
     !!restart;
     -+no_action_step_count(S,0);
+    -+status(restarted);
 .
 
 /**

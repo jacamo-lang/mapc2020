@@ -134,6 +134,11 @@
     <-
     .send(coordinator,achieve,inform_map(ME,MAP));
 .
++status(restarted):
+    .my_name(ME)
+    <-
+    .send(coordinator,tell,restarted(ME));
+.
 
 /**
  * Tasks in which one req (math.abs(I) + math.abs(J)) is greater than  1

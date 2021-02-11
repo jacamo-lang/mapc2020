@@ -1,6 +1,6 @@
 /**
-*/
-
+ * The coordinator uses agents in the same map to make teams
+ */
 +!inform_map(AG,MAP)
      <-
      -map(AG,_);
@@ -8,16 +8,15 @@
 .
 
 /**
- * The map of the master/helper has changed. Did it reset? Found another map?
- * If the another agent has not the same map, a current commited task cannot
+ * The master or helper has restarted. A current commited task cannot
  * be kept.
  */
-+map(AG,MAP):
-    (status(AG,performing(_),team(AG,Helper)) & not map(Helper,MAP)) |
-    (status(AG,performing(_),team(Master,AG)) & not map(Master,MAP))
++restarted(AG):
+    status(AG,performing(_),team(Master,Helper))
     <-
-    .send(AG,achieve,drop_task);
+    .send(Master,achieve,drop_task);
     .send(Helper,achieve,drop_task);
+    -status(_,performing(_),team(Master,Helper));
 .
 
 @[atomic]
