@@ -29,7 +29,10 @@
 
     +exploring;
     +myposition(0,0);
-    -+last_node(-1,-1); //from stc strategy
+    -+last_node(-1,-1); //for stc exploration strategy
+    -+current_moving_step(99); //for stc exploration strategy
+    -+forward; //for stc strategy
+    -+current_direction_stc(0); //for stc exploration strategy
 
     if ( ID == "1" & focused(Envterm,ArtCounterTerm,_) ) {
         resetStepCounter(-1);
