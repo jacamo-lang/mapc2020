@@ -27,7 +27,7 @@
 
 +!perform_task(T) :
     not accepted(_) &                       // I am not committed
-    not unwanted_task(T,_) &
+    not unwanted_task(T) &
     .my_name(ME) &
     task(T,DL,Y,REQs) &
     .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for
@@ -38,7 +38,7 @@
     myposition(XX,YY)
     <-
     if ( DL <= (S + D) ) { // deadline must be greater than step + shortest path
-        +unwanted_task(T,-1); // Discard tasks that are going to expire
+        +unwanted_task(T); // Discard tasks that are going to expire
     } else {
         .log(warning,"I want to perform the task ",T);
 
@@ -117,7 +117,7 @@
 
     .log(warning,"Submitting task... ",T);
     !submit_task(T);
-    .broadcast(tell,unwanted_task(T,-1));
+    .broadcast(tell,unwanted_task(T));
 
     // In case submit did not succeed
     .log(warning,"Dropping blocks for ",T);
@@ -138,28 +138,15 @@
  * are the ones that need help, i.e., cannot be performed by an individualist
  */
 +task(T,DL,Y,REQs) :
-    not unwanted_task(T,_) &
+    not unwanted_task(T) &
    .length(REQs) \== 2 // Currently I am focusing only on two blocks tasks that needs help
     <-
-    +unwanted_task(T,-1);
-.
-+task(T,DL,Y,REQs) : //unwanted_task aging
-    unwanted_task(T,N) &
-    N > 0
-    <-
-    -unwanted_task(T,N);
-    +unwanted_task(T,N-1);
-.
-+task(T,DL,Y,REQs) : //unwanted_task aged, let us try to perform task again
-    unwanted_task(T,N) &
-    N == 0
-    <-
-    -unwanted_task(T,_);
+    +unwanted_task(T);
 .
 +task(T,DL,Y,REQs) :
     exploring &
     not accepted(_) &   // I am not committed
-    not unwanted_task(T,_) &
+    not unwanted_task(T) &
     .member(req(IR,JR,BR),REQs) & (math.abs(IR) + math.abs(JR)) == 1 & // This is the block that the master must go for
     .member(req(IH,JH,BH),REQs) & (math.abs(IH) == 2 | math.abs(JH) == 2) & // Tho simplify, only accepting tasks with blocks on cardeal positions
     known_requirement(T,BR)
