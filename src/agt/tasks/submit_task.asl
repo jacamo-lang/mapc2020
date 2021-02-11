@@ -24,6 +24,24 @@
  .
  +!submit_task(T) :  // In case the agent is far away from goal area
      step(S) &
+     not goal(0,0) &
+     direction_increment(D,I,J) &
+     goal(I,J)
+     <-
+     .log(warning,"Doing one step towards a goal area to submit ",T);
+     !do(move(D),R);
+     if (R == success) {
+         !mapping(success,_,D);
+     } else {
+         .log(warning,"Fail on doing one step towards a goal area: ",D);
+     }
+     .wait(step(Step) & Step > S); //wait for the next step to continue
+     .concat("[",task(T,DL,Y,REQs),",",return(R),",",step(S),"]",STR);
+     .save_stats("one_step_fix",STR);
+     !submit_task(T);
+ .
+ +!submit_task(T) :  // In case the agent is far away from goal area
+     step(S) &
      not goal(0,0)
      <-
      .log(warning,"Going to a goal to submit ",T);
