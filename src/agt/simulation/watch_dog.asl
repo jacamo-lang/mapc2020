@@ -12,7 +12,7 @@
 { include("tasks/drop_block.asl") }
 
 no_action_step_count(-1,0). // oldest consecutive no_action step, count of no_action
-max_no_action_in_a_row(1).
+max_no_action_in_a_row(3).
 
 /**
  * An excessive no_actions in a row was detected
@@ -51,13 +51,14 @@ max_no_action_in_a_row(1).
 @restart_agent[atomic]
 +!restart_agent
     <-
-    .log(severe,"****** Restarting:  dropping all desires, intentions, events and blocks!");
+    .log(severe,"****** Restarting: dropping all desires, intentions, events and blocks!");
     .drop_all_events;
     .drop_all_desires;
     .drop_all_intentions;
     !drop_all_blocks;
     !!restart;
     -+no_action_step_count(S,0);
+    -+status(restarted);
 .
 
 /**

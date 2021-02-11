@@ -160,6 +160,11 @@ is_meeting_area(X,Y,R) :-
         .log(warning,"No success on: ",goto(XN,YN,RET)," ",myposition(X1,Y1));
     }
 .
+-!goto_nearest(B) // no_route for previous apttent, maybe a moving object was on the way
+    <-
+    !do(skip,R);
+    !!goto_nearest(B); // Try again
+.
 
 /**
  * If I know the position of at least B, find the nearest neighbour
@@ -218,6 +223,7 @@ is_meeting_area(X,Y,R) :-
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
     nearest_adjacent(B,XA,YA,DIR) &
+    distance(X,Y,XA,YA,DIST) &
     direction_increment(DIR,I,J) & not (X+I = XA & Y+J = YA) // I am not at the target position
     <-
     .log(warning,"Going to ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));
@@ -303,7 +309,7 @@ is_meeting_area(X,Y,R) :-
 +!find_meeting_area(X,Y,R,XM,YM)
     <-
     //Try a random position from the desired point
-    -+desired_meeting_point(math.floor(math.random(11)) - 5 + X,math.floor(math.random(10)) - 5 + Y,R);
+    -+desired_meeting_point(math.floor(math.random(11)) - 5 + X,math.floor(math.random(11)) - 5 + Y,R);
     -+find_meeting_iterator(0);
     while ( find_meeting_iterator(I) & (I < 10) ) {
         if ( desired_meeting_point(DX,DY,R) & is_meeting_area(DX,DY,R) ) {
