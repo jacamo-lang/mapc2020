@@ -119,6 +119,8 @@
     !submit_task(T);
     .broadcast(tell,unwanted_task(T));
 
+    .send(coordinator,tell,task_done(T,ME,Helper));
+
     // In case submit did not succeed
     .log(warning,"Dropping blocks for ",T);
     !drop_all_blocks;

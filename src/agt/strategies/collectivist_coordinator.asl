@@ -32,6 +32,11 @@
     .send(AG,achieve,master_task(T,Helper));
 .
 
++task_done(T,ME,Helper)
+    <-
+    -status(_,performing(T),team(Master,Helper));
+.
+
 +!find_helper(BH,AG,T,MAP). // there is no helper
 
 // Someone has achieve this task or it is not necessary anymore
