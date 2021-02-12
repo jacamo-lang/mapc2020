@@ -13,12 +13,15 @@ new=$(printf "eisA%d.json" "$i")
 "times":false,
 "notifications":false,
 "queued":false,
-"entities": [
-{"name":"connectionA%d", "username": "agentA%d", "password": "1", "print-iilang":false, "print-json":false}
-  ]
+"entities": [{"name":"agentJaCaMo_Builders%d", "username": "agentA%d", "password": "1", "print-iilang":false, "print-json":false}]
 }
 ' "$i" "$i") > $new
 done
+
+#For qualification
+#"host":"agentcontest1.in.tu-clausthal.de",
+#"entities": [{"name":"agentA%d", "username": "agentJaCaMo_Builders%d", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}]
+
 
 # Team B
 for i in {1..50} 
