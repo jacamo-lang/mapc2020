@@ -5,9 +5,9 @@ agent coordinator : strategies/collectivist_coordinator.asl
 agent agentA : strategies/collectivist.asl {
     //ag-bb-class: bb.FullTextPersistentBB
     join : envA
-    instances: 20
+    instances: 50
 }
-
+/*
 agent agentA21 : strategies/explorer.asl {
     join : envA
 }
@@ -127,7 +127,7 @@ agent agentA49 : strategies/agent_do_nothing.asl {
 agent agentA50 : strategies/agent_do_nothing.asl {
     join : envA
 }
-
+*/
 workspace envA {
 
 }
