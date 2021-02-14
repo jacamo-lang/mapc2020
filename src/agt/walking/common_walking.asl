@@ -206,12 +206,18 @@ is_meeting_area(X,Y,R) :-
     myposition(X,Y) &
     origin(MyMAP) & gps_map(_,_,B,MyMAP) & // I am sure I know where to find B
     .findall(g(It,Jt,T,TT),gps_map(X+It,Jt+Y,T,TT) & .range(It,-5,5) & .range(Jt,-5,5),LG) & // This is what I believe
-    .findall(t(I,J,B,T),thing(I,J,B,T),LT) // This is what I see
+    .findall(t(I,J,B,T),thing(I,J,B,T),LT) // This is what I see    
+    & step(Step) & update_position_step(Step) //I am lost if I have already updated my vision in the current step
     <-
     .log(warning,"I was doing ",goto_nearest_neighbour(B)," when I realised I am lost. ",myposition(X,Y),", things: ",LT,", gps: ",LG);
     +status(lost);
     !do(skip,R);
 .
+
++!goto_nearest_neighbour(B) : not(step(S) & update_position_step(S)) // wait for updating my vision in the current step to check whether I am lost
+   <- 
+      .wait(step(Step) & update_position_step(UStep) & UStep>=Step);
+      !goto_nearest_neighbour(B). 
 
 /**
  * If I know the position of at least B, find the nearest adjacent
@@ -261,11 +267,19 @@ is_meeting_area(X,Y,R) :-
     origin(MyMAP) & gps_map(_,_,B,MyMAP) & // I am sure I know where to find B
     .findall(g(It,Jt,T,TT),gps_map(X+It,Jt+Y,T,TT) & .range(It,-5,5) & .range(Jt,-5,5),LG) & // This is what I believe
     .findall(t(I,J,B,T),thing(I,J,B,T),LT) // This is what I see
+    & step(Step) & update_position_step(Step) //I am lost if I have already updated my vision in the current step
     <-
     .log(warning,"I was doing ",goto_nearest_adjacent(B,DIR)," when I realised I am lost. ",myposition(X,Y),", things: ",LT,", gps: ",LG);
     +status(lost);
     !do(skip,R);
 .
+
+
++!goto_nearest_adjacent(B,DIR) : not(step(S) & update_position_step(S)) // wait for updating my vision in the current step to check whether I am lost
+   <- 
+      .wait(step(Step) & update_position_step(UStep) & UStep>= Step);
+      !goto_nearest_adjacent(B,DIR). 
+
 
 /**
  * goto XY, skip if no_route
