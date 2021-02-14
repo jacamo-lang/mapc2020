@@ -166,6 +166,8 @@ adapt_coordinate_map(A,B) :- B=A.
 //areyou/7 - Case 1.1: ignore self areyou
 +!areyou(RX,RY,AX,AY,SCENE,PID,STEP,MapId)[source(AG)] : .my_name(AG).
 
++!areyou(XR,YR,AX,AY,[],PID,STEP,MapId) : not exploring.
+
 //+!areyou(XR,YR,AX,AY,SCENE,PID,STEP,MapId)[source(AG)] : not(originlead(MapId))
    //<- .print("############ Received areyou from ", AG, " MapId: ", MapId, "  -  Step: ", STEP).
 //   .
@@ -185,6 +187,8 @@ adapt_coordinate_map(A,B) :- B=A.
 +!areyou(RX,RY,AX,AY,SCENE,PID,STEP,MapId)[source(AG)] 
    <- //.print("2 Received areyou from ", AG, " MapId: ", MapId, "  -  Step: ", STEP,"/",S, " PID: ", PID);
       !areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId).
+
++!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId) : not exploring.
 
 //areyou/8 - Case 1: The agent is in the same step as the sender but the position has not been updated in the current step -> wait for updating the position
 +!areyou(RX,RY,AX,AY,SCENE,PID,STEP,AG,MapId): step(S) & S<=STEP & update_position_step(U) & U<S
