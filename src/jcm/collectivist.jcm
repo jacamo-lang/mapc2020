@@ -7,6 +7,12 @@ agent agentA : strategies/collectivist.asl {
     join : envA
     instances: 50
 }
+
+agent agentB : strategies/agent_do_nothing.asl {
+    join : envB
+    instances: 50
+}
+
 /*
 agent agentA21 : strategies/explorer.asl {
     join : envA
