@@ -81,6 +81,21 @@ public class lps extends Artifact {
         // signal("replace_map",oldMapId,newMapId);
     }
     
+    /**
+     * Remove all the objects of the mapId
+     * dx,dy: displacement from oldMapId to newMapId
+     */
+    @OPERATION
+    void replaceMap(String oldMapId, String newMapId, int dx, int dy, String agentId) {
+        ObsProperty prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
+        while (prop != null) {
+            this.removeObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
+            prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
+        }
+         signal("replace_map", new Atom(oldMapId), new Atom(newMapId),dx,dy);
+         log("replace map " + oldMapId + " to " +  newMapId  + " agent: " + oldMapId);
+    }
+    
     @OPERATION
     void unmark(int i, int j) {     
         if (viewOn != 0) {
