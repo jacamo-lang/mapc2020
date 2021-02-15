@@ -10,6 +10,12 @@ agent agentA : strategies/collectivist.asl {
     // Usually it is "agentA" for local tests and "agentJaCaMo_Builders" for remotes
     beliefs: massim_prefix("agentA")
 }
+
+agent agentB : strategies/agent_do_nothing.asl {
+    join : envB
+    instances: 50
+}
+
 /*
 agent agentA21 : strategies/explorer.asl {
     join : envA

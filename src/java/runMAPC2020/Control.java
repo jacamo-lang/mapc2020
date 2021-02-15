@@ -34,8 +34,8 @@ public class Control {
                     s.prepareMatchesStatsFile();
 
                     // Start the server
-                    Server.main(new String[] { "-conf", "serverconf/SampleQualification.json", "--monitor" });
-                    //Server.main(new String[] { "-conf", "serverconf/SampleConfig.json", "--monitor" });
+                    //Server.main(new String[] { "-conf", "serverconf/SampleQualification.json", "--monitor" });
+                    Server.main(new String[] { "-conf", "serverconf/SampleConfig.json", "--monitor" });
                     
                     // abre o browser automaticamente
                     if (browser && Desktop.isDesktopSupported()) {
