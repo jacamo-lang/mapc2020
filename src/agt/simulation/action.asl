@@ -39,7 +39,7 @@
  */
 +!do(A,R):
     .findall(I,.intention(I,running),L) & .length(L) > 1 &
-    common_step(_,T0) & system.time - T0 < 2000
+    common_step(_,T0) & system.time - T0 < 3000
     <-
     .log(warning,"Postponing action. Current Intentions: ",L);
 
@@ -47,7 +47,7 @@
      * It means the agent is spending too much time doing other actions which may be
      * problematic because it may lose steps and have no enough time for other actions.
      */
-    if (system.time - T0 > 1800) {
+    if (system.time - T0 > 2800) {
         .concat("[",current_intentions(L),"]",STR);
         .save_stats("excessive_delay",STR);
     }
