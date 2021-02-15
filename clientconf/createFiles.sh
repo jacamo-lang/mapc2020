@@ -13,7 +13,7 @@ new=$(printf "eisA%d.json" "$i")
 "times":false,
 "notifications":false,
 "queued":false,
-"entities": [{"name":"agentJaCaMo_Builders%d", "username": "agentA%d", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}]
+"entities": [{"name":"agentA%d", "username": "agentJaCaMo_Builders%d", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}]
 }
 ' "$i" "$i") > $new
 done

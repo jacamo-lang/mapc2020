@@ -7,5 +7,5 @@
 "times":false,
 "notifications":false,
 "queued":false,
-"entities": [{"name":"agentJaCaMo_Builders12", "username": "agentA12", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}]
+"entities": [{"name":"agentA12", "username": "agentJaCaMo_Builders12", "password": "8P7bgZhC", "print-iilang":false, "print-json":false}]
 }
