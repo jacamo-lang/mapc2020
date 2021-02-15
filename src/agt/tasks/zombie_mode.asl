@@ -18,9 +18,13 @@
 
 +!synchronous_connect(Z,IM,JM,IZ,JZ):
     step(S) &
-    .my_name(ME)
+    .my_name(MEE) &
+    .substring(MEE,ID,6) &
+    .concat("agentJaCaMo_Builders",ID,ME) &
+    .substring(Z,IDZ,6) &
+    .concat("agentJaCaMo_Builders",IDZ,ZZ)
     <-
-    !just_do(connect(Z,IM,JM));
+    !just_do(connect(ZZ,IM,JM));
     !command_zombie(Z,connect(ME,IZ,JZ));
         
     .wait(step(NS) & NS > S); // wait massim return with lastActionResult
