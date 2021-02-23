@@ -12,7 +12,7 @@
 { include("tasks/drop_block.asl") }
 
 no_action_step_count(-1,0). // oldest consecutive no_action step, count of no_action
-max_no_action_in_a_row(3).
+max_no_action_in_a_row(1).
 
 /**
  * An excessive no_actions in a row was detected
