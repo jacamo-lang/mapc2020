@@ -41,7 +41,7 @@
         +unwanted_task(T); // Discard tasks that are going to expire
     } else {
         .log(warning,"I want to perform the task ",T);
-
+        .abolish(pending_isme(_,_,_,_,_,_,_,_,_)); // discard pending map synchronizations
         .send(coordinator,achieve,find_helper(BH,ME,T,MAP));
     }
 .
