@@ -329,21 +329,25 @@ is_meeting_area(X,Y,R) :-
 +!find_meeting_area(X,Y,R,XM,YM)
     <-
     //Try a random position from the desired point
-    -+desired_meeting_point(math.floor(math.random(11)) - 5 + X,math.floor(math.random(11)) - 5 + Y,R);
-    -+find_meeting_iterator(0);
+    +desired_meeting_point(math.floor(math.random(11)) - 5 + X,math.floor(math.random(11)) - 5 + Y,R);
+    +find_meeting_iterator(0);
     while ( find_meeting_iterator(I) & (I < 10) ) {
-        if ( desired_meeting_point(DX,DY,R) & is_meeting_area(DX,DY,R) ) {
+        ?desired_meeting_point(DX,DY,R);
+        if (is_meeting_area(DX,DY,R) ) {
             +found_meeting_point(DX,DY);
             -+find_meeting_iterator(10); // finish
         } else {
-            ?desired_meeting_point(DX,DY,R);
+            .abolish(desired_meeting_point(_,_,_));
             if (I mod 2 == 0) {
-                -+desired_meeting_point(DX+1,DY,R);
+                +desired_meeting_point(DX+1,DY,R);
             } else {
-                -+desired_meeting_point(DX,DY+1,R);
+                +desired_meeting_point(DX,DY+1,R);
             }
             -+find_meeting_iterator(I+1);
         }
     }
     ?found_meeting_point(XM,YM);
+    .abolish(desired_meeting_point(_,_,_));
+    .abolish(find_meeting_iterator(_));
+    .abolish(found_meeting_point(_,_));
 .
