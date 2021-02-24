@@ -57,9 +57,12 @@
             for ( .member(req(IR,JR,BR),REQs) ) {
                 .log(warning,"getblock ",req(IR,JR,BR));
                 !get_block(req(IR,JR,BR));
-                
-                .log(warning,"Setting position of the requirement for ",req(IR,JR,BR));
-                !fix_rotation(req(IR,JR,BR));
+
+                while ( not thing(IR,JR,block,BR) & step(SRot) ) {
+                    .log(warning,"Setting position of the requirement for ",req(IR,JR,BR));
+                    !fix_rotation(req(IR,JR,BR));
+                    .wait( step(NS) & NS > SRot );
+                }
             }
 
             .log(warning,"Submitting task... ",T);
