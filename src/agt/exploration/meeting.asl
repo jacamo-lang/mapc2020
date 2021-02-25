@@ -19,7 +19,7 @@
   */
 
 field_size(70). //size of the field
-field_center(C) :- field_size(S) & C=S div 2.
+field_center(C):-field_size(S)&C=(S)div(2).
 
 steps_for_sync(4). /* Number of steps to wait for answers of possible neighbours */
 
@@ -61,8 +61,8 @@ checkscene ([]):-true.
 
 //adapt a coordinate A to to a new value B that fits with the field size
 adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & (A>=C) & AA=A-S & adapt_coordinate_map(AA,B).
-adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & (A<C*-1) & AA=A+S & adapt_coordinate_map(AA,B).
-adapt_coordinate_map(A,B) :- B=A.                                             
+adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & (A<(C*-1)) & AA=A+S & adapt_coordinate_map(AA,B).
+adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1) &  B=A.                                             
 
 //+origin(O) <- .print("++++++++++++++++++++++++++++ origin", O).
 
@@ -78,7 +78,8 @@ adapt_coordinate_map(A,B) :- B=A.
 +!do_replace_map(OldMapId, NewMapId): origin(O) & compare_bels(OldMapId,O) & 
                                       to_replace_map(OldMapId, NewMapId, Dx, Dy,S) &  
                                       step(Step)&update_position_step(Step)&myposition(X,Y)
-   <- -+myposition(X+Dx,Y+Dy);
+   <- .abolish(pending_isme(_,_,_,_,_,_,_,_,_)); //discard pending synchronizations after sync
+      -+myposition(X+Dx,Y+Dy);
       -+origin(NewMapId);      
       -to_replace_map(OldMapId, NewMapId, Dx, Dy,S); 
       .print(">>>> I should replaceMap from ", OldMapId, " to ", NewMapId, " - Step: ", S,"/",Step, ". Moved from(",X,",",Y,") to(",X+Dx,",",Y+Dy,") - (",Dx,",",Dy,")");
@@ -261,14 +262,14 @@ adapt_coordinate_map(A,B) :- B=A.
 +!sync_areyou(PID) : pending_areyou(PID,S,L)  &
                      step(Step) & steps_for_sync(SS) & Step-S <= SS //the minimum number of steps has not been achieved
    <-  .wait(step(SNext) & SNext>Step);
-       !!sync_areyou(PID).
+       !sync_areyou(PID).
        
 //Case 1.1: the minimum number of steps has not been achieved but the position has not been updated in the current step
 +!sync_areyou(PID) : pending_areyou(PID,S,L)  &
                      step(Step) & steps_for_sync(SS) & Step-S > SS & //the minimum number of steps has been achieved 
                      not(update_position_step(Step)) //the position has not been updated in the current step
    <-  .wait(step(Current)&update_position_step(Supdate)&Supdate>=Current);
-       !!sync_areyou(PID).      
+       !sync_areyou(PID).      
        
 //Case 2: the minimum number of steps has been achieved and there is a potential neighbour - the neighbour is achieved and must sync  
 +!sync_areyou(PID) : pending_areyou(PID,S,L)  &
@@ -299,7 +300,7 @@ adapt_coordinate_map(A,B) :- B=A.
 +!sync_isme(PID)[source(AG)] : pending_isme(PID,MX,MY,AG,RX,RY,AX,AY,Map)  & origin(OL) & not (originlead(OL)) & myposition(Xnow,Ynow)  &  
                                step(Step) & update_position_step(Step) //synchronize only if the agent has updated its position in the current step
                                & originlead(Map)            
-   <-  .abolish(pending_isme(_,_,_,_,_,_,_,_)); //discard pending synchronizations after synching
+   <-  
        .abolish(update_position_step(_));
        .perceive;
        .abolish(goal(_,_)); .abolish(obstacle(_,_)); .abolish(thing(_,_,_,_)); 
@@ -312,16 +313,19 @@ adapt_coordinate_map(A,B) :- B=A.
        OMY=AY+RY;  
        OLDORIGINX=OMX-MX; //origin of the agent with respect to the origin of AG
        OLDORIGINY=OMY-MY;                     
-       .my_name(NAG);   
+       .my_name(NAG);
+       -+origin(ORIGIN);   
        for (gps_map(X,Y,TYPE,MapId) & compare_bels(MapId,OL) & OL\==ORIGIN){
            !sync_mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG,ORIGIN);
-           //.print("...ARE YOU - mark(", OLDORIGINX+X,",",OLDORIGINY+Y,",",TYPE,",", MapId,") OldMap: ", OL, " OldOrigin: (",OLDORIGINX,",",OLDORIGINY,")  Original Pos:(",X,",",Y,")  Current Pos: (",OMX + (Xnow-MX),",",OMY + (Ynow-MY),")  My Pos: (",MX,",",MY,")- PID: ", PID);
+           //.print("...ARE YOU 1- mark(", OLDORIGINX+X,",",OLDORIGINY+Y,",",TYPE,",", MapId,") OldMap: ", OL, " OldOrigin: (",OLDORIGINX,",",OLDORIGINY,")  Original Pos:(",X,",",Y,")  Current Pos: (",OMX + (Xnow-MX),",",OMY + (Ynow-MY),")  My Pos: (",MX,",",MY,")- PID: ", PID);
        }       
-       -+origin(ORIGIN);
+       //-+origin(ORIGIN);
        .my_name(Me);
        replaceMap(OL,ORIGIN,AX+RX-MX,AY+RY-MY,Me); //remove the old map from the shared representation
        .abolish(map(OL,_,_,_));      
-       ?step(S); .print("... SYNC areyou origin: ", ORIGIN, " Agent: ", AG, " Step ", S, " from(",Xnow_2,",",Ynow_2,") to (",AX+RX + (Xnow_2-MX),",",AY+RY + (Ynow_2-MY)," - PID: ", PID);
+       ?step(S); .print("... SYNC areyou origin: ", ORIGIN, " Agent: ", AG, " Step ", S, " from(",Xnow_2,",",Ynow_2,") to (",AX+RX + (Xnow_2-MX),",",AY+RY + (Ynow_2-MY)," - PID: ", PID); 
+       .abolish(pending_isme(_,_,_,_,_,_,_,_,_)); //discard pending synchronizations after sync
+       .abolish(to_replace_map(_,_,_,_,_)); //discard map replacement after sync            
        !after_sync(PID). 
 
 
@@ -338,8 +342,7 @@ adapt_coordinate_map(A,B) :- B=A.
                                step(Step) & update_position_step(Step) //synchronize only if the agent has updated its position in the current step
                                //& not originlead(Map) 
                                & ORIGIN < OL           
-   <-  .abolish(pending_isme(_,_,_,_,_,_,_,_)); //discard pending synchronizations after synching
-       .abolish(update_position_step(_));
+   <-  .abolish(update_position_step(_));
        .perceive;
        .abolish(goal(_,_)); .abolish(obstacle(_,_)); .abolish(thing(_,_,_,_)); 
       
@@ -352,15 +355,18 @@ adapt_coordinate_map(A,B) :- B=A.
        OLDORIGINX=OMX-MX; //origin of the agent with respect to the origin of AG
        OLDORIGINY=OMY-MY;                     
        .my_name(NAG);   
+       -+origin(ORIGIN);       
        for (gps_map(X,Y,TYPE,MapId) & compare_bels(MapId,OL) & OL\==ORIGIN){
            !sync_mark(OLDORIGINX+X,OLDORIGINY+Y,TYPE, NAG,ORIGIN,PID);
-           //.print("...ARE YOU - mark(", OLDORIGINX+X,",",OLDORIGINY+Y,",",TYPE,",", MapId,") OldMap: ", OL, " OldOrigin: (",OLDORIGINX,",",OLDORIGINY,")  Original Pos:(",X,",",Y,")  Current Pos: (",OMX + (Xnow-MX),",",OMY + (Ynow-MY),")  My Pos: (",MX,",",MY,")- PID: ", PID);
+           //.print("...ARE YOU 2 - mark(", OLDORIGINX+X,",",OLDORIGINY+Y,",",TYPE,",", MapId,") OldMap: ", OL, " OldOrigin: (",OLDORIGINX,",",OLDORIGINY,")  Original Pos:(",X,",",Y,")  Current Pos: (",OMX + (Xnow-MX),",",OMY + (Ynow-MY),")  My Pos: (",MX,",",MY,")- PID: ", PID);
        }       
-       -+origin(ORIGIN);
+       //-+origin(ORIGIN);
        .my_name(Me);
        replaceMap(OL,ORIGIN,AX+RX-MX,AY+RY-MY,Me); //remove the old map from the shared representation
        .abolish(map(OL,_,_,_));      
        ?step(S); .print("... SYNC 2 areyou origin: ", OL, " New Map: ",ORIGIN ," Agent: ", AG, " Step ", S, " from(",Xnow_2,",",Ynow_2,") to (",AX+RX + (Xnow_2-MX),",",AY+RY + (Ynow_2-MY),") - PID: ", PID);
+       .abolish(pending_isme(_,_,_,_,_,_,_,_,_));  //discard pending synchronizations after synching             
+       .abolish(to_replace_map(_,_,_,_,_)); //discard map replacement after sync   
        !after_sync(PID).
        
 //If the agent has not updated its position in the current step, ignore the synchronization
@@ -374,11 +380,34 @@ adapt_coordinate_map(A,B) :- B=A.
 //when testing (STC mainly) under a known field size, must adapt the coordinates
 +!sync_mark(X,Y,Type,Agent,MapId,PID) : testing_exploration & 
                                     field_size(S) & S >0 & field_center(C) &
-                                    field_center(C) & (math.abs(X)>C | math.abs(Y)>C) &
+                                    (math.abs(X)>C | math.abs(Y)>C) &
                                     adapt_coordinate_map(X,XX) & adapt_coordinate_map(Y,YY) &
                                     step(Step)   
-   <- .concat(Agent, " Sync - Step: ", " PID: ", PID, Step, Legend);
+   <- 
+      .concat(Agent, " Sync - Step: ", " PID: ", PID, Step, Legend);      
+      .print("sync mark 1");
+      !sync_mark(XX,YY,Type,Legend,MapId, PID).                                    
+
+
+
+//when testing (STC mainly) under a known field size, must adapt the coordinates
++!sync_mark(X,Y,Type,Agent,MapId) : testing_exploration & 
+                                    field_size(S) & S >0 & field_center(C) &
+                                    (math.abs(X)>C | math.abs(Y)>C) &
+                                    adapt_coordinate_map(X,XX) & adapt_coordinate_map(Y,YY) &
+                                    step(Step)   
+   <- 
+      .concat(Agent, " Sync - Step: ", " PID: ", PID, Step, Legend);
+      .print("sync mark 2 X: ", X, ", Y: ", Y, " XX: ", XX, "YY: ", YY, " Type: ", Type, "  Map: ", MapId);      
       !sync_mark(XX,YY,Type,Legend,MapId).                                    
+
+
++!sync_mark(X,Y,Type,Agent,MapId,PID) : originlead(MapId)
+   <- mark(X,Y,Type,Agent,0,MapId).
+
++!sync_mark(X,Y,Type,Agent,MapId,PID) : not(originlead(MapId))
+   <- mark(X,Y,Type,MapId). 
+
 
 
 +!sync_mark(X,Y,Type,Agent,MapId) : originlead(MapId)
@@ -388,11 +417,7 @@ adapt_coordinate_map(A,B) :- B=A.
    <- mark(X,Y,Type,MapId). 
 
 
-+!sync_mark(X,Y,Type,Agent,MapId,PID) : originlead(MapId)
-   <- mark(X,Y,Type,Agent,0,MapId).
 
-+!sync_mark(X,Y,Type,Agent,MapId,PID) : not(originlead(MapId))
-   <- mark(X,Y,Type,MapId). 
 
 
 
