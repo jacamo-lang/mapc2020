@@ -9,7 +9,6 @@
  * 
  */
  
- 
  /*
   * Cluster formation
   * 
