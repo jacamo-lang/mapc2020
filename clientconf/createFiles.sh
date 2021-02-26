@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Team A
-for i in {1..50} 
+for i in {1..50}
 do
 new=$(printf "eisA%d.json" "$i")
 (printf '{
@@ -13,10 +13,14 @@ new=$(printf "eisA%d.json" "$i")
 "times":false,
 "notifications":false,
 "queued":false,
-"entities": [{"name":"agentJaCaMo_Builders%d", "username": "agentA%d", "password": "1", "print-iilang":false, "print-json":false}]
+"entities": [{"name":"agentA%d", "username": "agentA%d", "password": "1", "print-iilang":false, "print-json":false}]
 }
 ' "$i" "$i") > $new
 done
+
+#For local tests
+#"host":"localhost",
+#"entities": [{"name":"agentA%d", "username": "agentA%d", "password": "1", "print-iilang":false, "print-json":false}]
 
 #For qualification
 #"host":"agentcontest1.in.tu-clausthal.de",
@@ -24,7 +28,7 @@ done
 
 
 # Team B
-for i in {1..50} 
+for i in {1..50}
 do
 new=$(printf "eisB%d.json" "$i")
 (printf '{
@@ -42,4 +46,3 @@ new=$(printf "eisB%d.json" "$i")
 }
 ' "$i" "$i") > $new
 done
-

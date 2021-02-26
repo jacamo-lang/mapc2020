@@ -6,6 +6,9 @@ agent agentA : strategies/collectivist.asl {
     //ag-bb-class: bb.FullTextPersistentBB
     join : envA
     instances: 50
+    // massim_prefix should be the username prefix used on clientconf
+    // Usually it is "agentA" for local tests and "agentJaCaMo_Builders" for remotes
+    beliefs: massim_prefix("agentA")
 }
 
 agent agentB : strategies/agent_do_nothing.asl {

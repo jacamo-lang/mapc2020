@@ -18,7 +18,9 @@
     } else {
         //A submit may fail for instance if another agent already submitted T
         .log(warning,"Fail on submitting ",T," ",R0);
-        .concat("[",task(T,DL,Y,REQs),",",return(R0),",",step(S),"]",STR);
+        .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
+        .findall(t(I,J,T,TT),thing(I,J,T,TT),LT);
+        .concat("[",task(T,DL,Y,REQs),",",return(R0),",",step(S),",",a(L),",",t(LT),"]",STR);
         .save_stats("submit_failed",STR);
     }
  .
