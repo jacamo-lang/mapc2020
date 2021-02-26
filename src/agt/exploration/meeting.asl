@@ -17,6 +17,7 @@
   * 2. Include the map id in the areyou request
   *
   */
+{ include("exploration/findMapSize.asl") }
 
 field_size(70). //size of the field
 field_center(C) :- field_size(S) & C=S div 2.
@@ -217,6 +218,10 @@ adapt_coordinate_map(A,B) :- B=A.
         +pending_isme(PID,MX,MY,AG,RX,RY,AX,AY,MapId);
         .send( AG,achieve, isme(PID) );
         .print("1. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")   Step: ", S,"/",STEP);
+        
+       //calcular o raio do mapa
+       +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a interação
+       !checkPosition(PID,STEP,MapId); // coleta os dados do agente vizinho.
         .
 
 //Case 3: the agent is already synchronized: returns an isme message to avoid a false positive, but does not add the pending_isme belief to not sync again
@@ -227,6 +232,10 @@ adapt_coordinate_map(A,B) :- B=A.
     <-
         .send( AG,achieve, isme(PID) );
         .print("2. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")    Step: ", S,"/",STEP);
+       
+       //calcular o raio do mapa 
+       +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a interação
+       !checkPosition(PID,STEP,MapId); //verifica se é possivel coletar os dados do agente vizinho.
         .
 
 
@@ -238,6 +247,10 @@ adapt_coordinate_map(A,B) :- B=A.
     <-
         .send( AG,achieve, isme(PID) );
         .print("3. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")    Step: ", S,"/",STEP);
+        
+        //calcular o raio do mapa 
+       +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a interação
+       !checkPosition(PID,STEP,MapId); //verifica se é possivel coletar os dados do agente vizinho.
         .
 
 +!do_areyou(_,_,_,_,_,_,_,_,_).
@@ -280,6 +293,11 @@ adapt_coordinate_map(A,B) :- B=A.
        .send( Ag, achieve, sync_isme(PID)); //sends a message to the neighbour to update its coordinates
        //.send( Ag, achieve, sync_isme(PID)); //sends a message to the neighbour to update its coordinates
        //-pending_areyou(PID,S,L). //the update of this PID is no longer pending
+       
+       //CALCULO DO RAIO- se o outro agente for realmente um vizinho, manda ele executar mapSize.
+       ?name(AgentName);
+       ?origin(ORIGIN);
+       .send(Ag, achieve, mapSize(PID,AgentName,ORIGIN));
        .
 
 //Case 3: the minimum number of steps has been achieved and there is zero or more than one potential neighbours
