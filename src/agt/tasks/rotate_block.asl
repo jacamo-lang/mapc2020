@@ -27,7 +27,8 @@
             .log(warning,"Could not rotate ",B," (",I,",",J,") to (",RI,",",RJ,") dir: ",DIR);
             .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
             .findall(t(I,J,T,TT),thing(I,J,T,TT),LT);
-            .concat("[",req(I,J,B),",",DIR,",",a(L),",",t(LT),",",R,"]",STR);
+            RW = is_walkable(I,J);
+            .concat("[",req(I,J,B),",",DIR,",",a(L),",",t(LT),",",R,",",RW,"]",STR);
             .save_stats("errorOnRotate",STR);
         }
     } else { // could not find a valid rotation, try to randomly dodge
