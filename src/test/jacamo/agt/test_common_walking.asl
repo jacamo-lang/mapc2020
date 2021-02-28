@@ -22,6 +22,7 @@
 
     !print_map;
 
+    !test_is_walkable(MIN_I);
     !test_is_walkable_area(MIN_I);
     !test_is_meeting_area(MIN_I);
     !test_find_meeting_area(MIN_I);
@@ -202,6 +203,42 @@
     //!update_line(0,-10,MIN_I,"k");
     ?task_shortest_path(tstB,D);
     !assert_equals(55,D);
+.
+
+/**
+ * is walkable test
+ */
++!test_is_walkable(MIN_I)
+    <-
+    // test a completely clear area with radius = 1 surrounding 0,0
+    !update_line(25,-18,MIN_I,"Y");
+    +thing(0,0,entity,a);
+    !update_line(25,-17,MIN_I,"b");
+    +thing(0,1,block,b0);
+    +attached(0,1);
+    // the position this agent is should not be walkable
+    !assert_false(is_walkable(0,0));
+    // the position an attached block is whould be walkable
+    !assert_true(is_walkable(0,1));
+
+    // the position of a dropped block (not attaced), should not be walkabe
+    !update_line(24,-18,MIN_I,"d");
+    +thing(-1,0,block,b1);
+    !assert_false(is_walkable(-1,0));
+
+    // there is another agent with a block
+    +thing(3,3,entity,b);
+    !update_line(28,-15,MIN_I,"x");
+    +thing(3,4,block,b2);
+    !update_line(28,-14,MIN_I,"d");
+    !assert_false(is_walkable(3,3));
+    !assert_false(is_walkable(3,4));
+
+    // other random close spots are free
+    !assert_true(is_walkable(2,2));
+    !assert_true(is_walkable(2,-2));
+    !assert_true(is_walkable(-2,2));
+    !assert_true(is_walkable(-2,-2));
 .
 
 /**
