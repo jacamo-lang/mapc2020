@@ -63,15 +63,16 @@
     .log(warning,"Could not find a proper plan to ",submit_task(T));
 .
 -!submit_task(T): // It is probably due fail on goto_nearest
+    task(T,DL,Y,REQs) &
     step(S)
     <-
     !do(skip,R);
     .wait(step(Step) & Step > S); //wait for the next step to continue
     //A submit may fail for instance if another agent already submitted T
-    .log(warning,"Retrying to submit ",T," ",R0);
+    .log(warning,"Retrying to submit ",T);
     .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
-    .findall(t(I,J,T,TT),thing(I,J,T,TT),LT);
-    .concat("[",task(T,DL,Y,REQs),",",return(R0),",",step(S),",",a(L),",",t(LT),"]",STR);
+    .findall(t(I,J,Thing,TT),thing(I,J,Thing,TT),LT);
+    .concat("[",task(T,DL,Y,REQs),",",step(S),",",a(L),",",t(LT),"]",STR);
     .save_stats("submit_retry",STR);
     !submit_task(T);
 .
