@@ -45,10 +45,17 @@ nearest(T,X,Y) :-
 nearest_walkable(T,X,Y) :-
     myposition(X1,Y1) &
     origin(MyMAP) &
-    .findall(p(D,X2,Y2), gps_map(X2,Y2,T,MyMAP) & is_walkable(X2-X1,Y2-Y1) & distance(X1,Y1,X2,Y2,D), FL) &
+    .findall(
+        p(D,X2,Y2),
+        gps_map(X2,Y2,T,MyMAP) &
+        is_walkable(X2-X1,Y2-Y1) &
+        (   // there is nothing attached or if there is something the spot is also walkable
+            not attached(I,J) | (attached(I,J) & is_walkable(X2-X1+I,Y2-Y1+J))
+        ) &
+        distance(X1,Y1,X2,Y2,D),
+        FL) &
     .min(FL,p(_,X,Y))
 .
-
 
 /**
  * Returns the coordinates X,Y that leaves thing T at direction DIR, i.e.,
