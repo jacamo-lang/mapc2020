@@ -33,6 +33,31 @@ nearest(T,X,Y) :-
 .
 
 /**
+ * Return the coordinates X,Y of the nearest and walkable specific thing
+ * on the map. It uses the vision of the agent to check if it is walkable.
+ * For instance, the closest goal spot that is beiong occulied by an agent
+ * will be ignored, the rule should return one of its free neighbour.
+ *
+ * For instance: ?nearest(taskboard,X,Y) has unified in X,Y
+ * the nearest taskboard this agent know (based on its gps_map(_,_,_,_)
+ * and myposition(_,_) beliefs
+ */
+nearest_walkable(T,X,Y) :-
+    myposition(X1,Y1) &
+    origin(MyMAP) &
+    .findall(
+        p(D,X2,Y2),
+        gps_map(X2,Y2,T,MyMAP) &
+        is_walkable(X2-X1,Y2-Y1) &
+        (   // there is nothing attached or if there is something the spot is also walkable
+            not attached(I,J) | (attached(I,J) & is_walkable(X2-X1+I,Y2-Y1+J))
+        ) &
+        distance(X1,Y1,X2,Y2,D),
+        FL) &
+    .min(FL,p(_,X,Y))
+.
+
+/**
  * Returns the coordinates X,Y that leaves thing T at direction DIR, i.e.,
  * returns the adjacent of the specific thing in which the thing is at DIR
  * of this adjacent
@@ -148,9 +173,9 @@ is_meeting_area(X,Y,R) :-
     origin(MyMAP) &
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
-    nearest(B,XN,YN)
+    nearest_walkable(B,XN,YN)
     <-
-    .log(warning,"Going to ",nearest(B,XN,YN)," from ",myposition(X,Y));
+    .log(warning,"Going to ",nearest_walkable(B,XN,YN)," from ",myposition(X,Y));
     !goto(XN,YN,RET);
     if (RET \== success & myposition(X1,Y1)) {
         if(RET == no_route){
@@ -160,11 +185,6 @@ is_meeting_area(X,Y,R) :-
         .log(warning,"No success on: ",goto(XN,YN,RET)," ",myposition(X1,Y1));
     }
 .
-//-!goto_nearest(B) // no_route for previous apttent, maybe a moving object was on the way
-//    <-
-//    !do(skip,R);
-//    !goto_nearest(B); // Try again
-//.
 
 /**
  * If I know the position of at least B, find the nearest neighbour
@@ -174,11 +194,11 @@ is_meeting_area(X,Y,R) :-
     origin(MyMAP) &
     myposition(X,Y) &
     gps_map(_,_,B,MyMAP) &
-    nearest(B,XN,YN) &
+    nearest_walkable(B,XN,YN) &
     direction_increment(_,I,J) & not (X+I = XN & Y+J = YN) & // I am not at a neighbour
     nearest_neighbour(XN,YN,XT,YT)
     <-
-    .log(warning,"Going to neighbour of ",nearest(B,XN,YN)," : ",distance(X,Y,XT,YT,DIST));
+    .log(warning,"Going to neighbour of ",nearest_walkable(B,XN,YN)," : ",distance(X,Y,XT,YT,DIST));
     !goto(XT,YT,RET);
     if (RET \== success & myposition(X1,Y1)) {
         if(RET==no_route){
@@ -206,7 +226,7 @@ is_meeting_area(X,Y,R) :-
     myposition(X,Y) &
     origin(MyMAP) & gps_map(_,_,B,MyMAP) & // I am sure I know where to find B
     .findall(g(It,Jt,T,TT),gps_map(X+It,Jt+Y,T,TT) & .range(It,-5,5) & .range(Jt,-5,5),LG) & // This is what I believe
-    .findall(t(I,J,B,T),thing(I,J,B,T),LT) // This is what I see    
+    .findall(t(I,J,B,T),thing(I,J,B,T),LT) // This is what I see
     & step(Step) & update_position_step(Step) //I am lost if I have already updated my vision in the current step
     <-
     .log(warning,"I was doing ",goto_nearest_neighbour(B)," when I realised I am lost. ",myposition(X,Y),", things: ",LT,", gps: ",LG);
@@ -215,9 +235,9 @@ is_meeting_area(X,Y,R) :-
 .
 
 +!goto_nearest_neighbour(B) : not(step(S) & update_position_step(S)) // wait for updating my vision in the current step to check whether I am lost
-   <- 
+   <-
       .wait(step(Step) & update_position_step(UStep) & UStep>=Step);
-      !goto_nearest_neighbour(B). 
+      !goto_nearest_neighbour(B).
 
 /**
  * If I know the position of at least B, find the nearest adjacent
@@ -232,20 +252,20 @@ is_meeting_area(X,Y,R) :-
     distance(X,Y,XA,YA,DIST) &
     direction_increment(DIR,I,J) & not (X+I = XA & Y+J = YA) // I am not at the target position
     <-
-    .log(warning,"Going to ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));    
+    .log(warning,"Going to ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));
     if (XA==X&YA==Y) { //the agent is in the nearest adjacent - nothing to do
             .log(warning,"I am in ", nearest_adjacent(B,XA,YA,DIR));
-            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)               
+            !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
     }  else{ //ToDo: rewrite this ugly plan to avoid if and else
-        !goto(XA,YA,RET);   
-          
+        !goto(XA,YA,RET);
+
        if (RET \== success & myposition(X1,Y1)) {
            if(RET==no_route){
                !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
                // A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance
            }
            .log(warning,"No success on: ",goto(XA,YA,RET)," ",myposition(X1,Y1)," ",nearest_adjacent(B,XA,YA,DIR));
-       }    
+       }
     }
 .
 /**
@@ -276,9 +296,9 @@ is_meeting_area(X,Y,R) :-
 
 
 +!goto_nearest_adjacent(B,DIR) : not(step(S) & update_position_step(S)) // wait for updating my vision in the current step to check whether I am lost
-   <- 
+   <-
       .wait(step(Step) & update_position_step(UStep) & UStep>= Step);
-      !goto_nearest_adjacent(B,DIR). 
+      !goto_nearest_adjacent(B,DIR).
 
 
 /**

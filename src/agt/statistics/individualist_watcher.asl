@@ -41,8 +41,9 @@ exploration_strategy(none).
     +relevant_task(T,DL,REQs);
 .
 
-+relevant_task(T,DL,REQs)
++relevant_task(T,DL,REQs):
+    step(S)
     <-
-    .concat("[",task(T,DL,REQs),"]",STR);
+    .concat("[",task(T,DL,REQs),",",step(S),"]",STR);
     .save_stats("relevantTask",STR);
 .
