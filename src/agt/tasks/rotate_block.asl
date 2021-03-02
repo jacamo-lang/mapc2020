@@ -32,7 +32,8 @@
             .save_stats("errorOnRotate",STR);
         }
     } else { // could not find a valid rotation, try to randomly dodge
-        .nth(math.floor(math.random(4)),[n,s,w,e],DIRECTION);
+        .findall(D,direction_increment(D,Ip,Jp) & not thing(Ip,Jp,_,_) & not obstacle(Ip,Jp),LD);
+        .nth(math.floor(math.random(.length(LD))),LD,DIRECTION);
         !do(move(DIRECTION),R);
         if (R == success) {
             !mapping(success,_,DIRECTION);
@@ -48,8 +49,9 @@
 .
 +!fix_rotation(req(_,_,B)) // If other plans fail
     <-
-    .findall(b(I,J,B),attached(I,J) & thing(I,J,block,B),L);
-    .log(warning,"No plans to rotate ",B,". Attached blocks: ",L);
+    .findall(b(I,J,B),attached(I,J) & thing(I,J,block,B),LA);
+    .findall(b(I,J,B),attached(I,J),LT);
+    .log(warning,"No plans to rotate ",B,". Attached: ",LA," - ",LT);
 .
 
 +!rotate(DIR) :
