@@ -208,8 +208,13 @@ get_printed_object(I,J,MIN_I,O) :-
     vision(V)
     <-
     .abolish(thing(_,_,_,_));
+    .abolish(obstacle(_,_));
     for ( gps_map(X,Y,O,MyMAP) & math.abs(OX-X) <= V & math.abs(OY-Y) <= V ) {
-        +thing(X-OX,Y-OY,O,_); 
+        if (O == obstacle) {
+            +obstacle(X-OX,Y-OY);
+        } else {
+            +thing(X-OX,Y-OY,O,_);
+        }
     }
     for (attached(IB,JB)) {
         +thing(IB,JB,block,b0);
@@ -221,6 +226,7 @@ get_printed_object(I,J,MIN_I,O) :-
     <-
     .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
     .findall(t(I,J,T,TT),thing(I,J,T,TT),LT);
-    .concat("[",a(L),",",t(LT),"]",STR);
+    .findall(o(I,J),obstacle(I,J),LO);
+    .concat("[",a(L),",",t(LT),",",o(LO),"]",STR);
     .print(STR);
 .
