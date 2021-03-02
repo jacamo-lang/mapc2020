@@ -126,11 +126,6 @@ get_printed_object(I,J,MIN_I,O) :-
 
 +!add_test_plans_do(MIN_I)
     <-
-    +direction_increment(n,0,-1);
-    +direction_increment(s,0,1);
-    +direction_increment(w,-1,0);
-    +direction_increment(e,1,0);
-    
     .add_plan({
         +!do(move(DIR),success) :
             myposition(OX,OY) &

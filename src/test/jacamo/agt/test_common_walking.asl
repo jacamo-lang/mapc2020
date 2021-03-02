@@ -20,7 +20,7 @@
     !testNearestAdjacent;
     !test_task_shortest_path;
 
-    !print_map;
+    //!print_map;
 
     !test_is_walkable(MIN_I);
     !test_is_walkable_area(MIN_I);
@@ -28,7 +28,7 @@
     !test_find_meeting_area(MIN_I);
     
     !test_nearest_walkable(MIN_I);
-    !print_map;
+    //!print_map;
 .
 
 /**
@@ -189,7 +189,7 @@
     !assert_equals(40,X7);
     !assert_equals(12,Y7);
 
-    !print_map;
+    //!print_map;
 .
 
 
@@ -296,7 +296,7 @@
     !print_agent_with_radius(XM1,YM1,MIN_I,1);
     !print_agent_with_radius(XM1+3,YM1,MIN_I,1);
 
-    !print_map;
+    //!print_map;
 .
 
 /**
@@ -305,6 +305,7 @@
 @[atomic]
 +!test_nearest_walkable(MIN_I)
     <-
+    //!print_map;
     // test a completely clear area with radius = 1 surrounding 0,0
     -+myposition(40,-8);
     !update_line(40,-8,MIN_I,"Y");
@@ -328,10 +329,10 @@
     !assert_equals(-9,Y2,0);
 
     // Althout we don't have obstacle in goals, let us say we have some
-    +thing(4,-1,obstacle,_);
-    +thing(5,-2,obstacle,_);
-    +thing(5,-1,obstacle,_);
-    +thing(5,0,obstacle,_);
+    +obstacle(4,-1);
+    +obstacle(5,-2);
+    +obstacle(5,-1);
+    +obstacle(5,0);
     !update_line(44,-9,MIN_I,"o");
     !update_line(45,-10,MIN_I,"o");
     !update_line(45,-9,MIN_I,"o");
@@ -341,5 +342,6 @@
     !assert_equals(45,X3,0);
     !assert_equals(-7,Y3,0);
 
+    //!print_map;
     .abolish(thing(_,_,_,_));
 .

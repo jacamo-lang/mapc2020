@@ -87,7 +87,7 @@
     !print_map;
     // 6 o'clock -> 12  o'clock (with obstacles on 3 and 9 o'clock)
     !update_thing_from_gps_map;
-    .print("---");
+
     !list_vision;
     !fix_rotation(req(0,-1,b0));
     ?myposition(X0,Y0);
