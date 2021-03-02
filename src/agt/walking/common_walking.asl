@@ -126,7 +126,7 @@ task_shortest_path(B,D) :-
  * Unifies when the position is clear for walk, used for close/visible areas
  */
 is_walkable(I,J) :-
-    not thing(I,J,obstacle,_) &
+    not obstacle(I,J) &
     not thing(I,J,entity,_) &
     not ( thing(I,J,block,_) & not attached(I,J) )
 .
