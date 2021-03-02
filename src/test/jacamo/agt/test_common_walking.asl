@@ -208,6 +208,7 @@
 /**
  * is walkable test
  */
+ @[atomic]
 +!test_is_walkable(MIN_I)
     <-
     // test a completely clear area with radius = 1 surrounding 0,0
@@ -239,6 +240,9 @@
     !assert_true(is_walkable(2,-2));
     !assert_true(is_walkable(-2,2));
     !assert_true(is_walkable(-2,-2));
+
+    .abolish(thing(_,_,_,_));
+    .abolish(attached(_,_));
 .
 
 /**
@@ -298,6 +302,7 @@
 /**
  * nearest walkable test
  */
+@[atomic]
 +!test_nearest_walkable(MIN_I)
     <-
     // test a completely clear area with radius = 1 surrounding 0,0
@@ -335,4 +340,6 @@
     ?nearest_walkable(goal,X3,Y3);
     !assert_equals(45,X3,0);
     !assert_equals(-7,Y3,0);
+
+    .abolish(thing(_,_,_,_));
 .

@@ -216,3 +216,11 @@ get_printed_object(I,J,MIN_I,O) :-
     }
 
 .
+
++!list_vision
+    <-
+    .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
+    .findall(t(I,J,T,TT),thing(I,J,T,TT),LT);
+    .concat("[",a(L),",",t(LT),"]",STR);
+    .print(STR);
+.
