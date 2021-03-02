@@ -1,6 +1,10 @@
 /**
  * Helpful plans for testing walking functions
  */
+direction_increment(n,0,-1).
+direction_increment(s,0,1).
+direction_increment(w,-1,0).
+direction_increment(e,1,0).
 
 get_printed_object(I,J,MIN_I,O) :-
     line(J,L) &
@@ -174,6 +178,17 @@ get_printed_object(I,J,MIN_I,O) :-
     }, self, begin);
 .
 
++!add_test_plan_mapping
+    <-
+    .add_plan({ +!mapping(success,_,DIR):
+        myposition(X,Y) &
+        direction_increment(DIR,I,J)
+        <-
+        -+myposition(X+I,Y+J);
+        !update_thing_from_gps_map;
+    }, self, begin);
+.
+
 +!add_test_plans_sincMap
     <-
     .add_plan({
@@ -196,4 +211,8 @@ get_printed_object(I,J,MIN_I,O) :-
     for ( gps_map(X,Y,O,MyMAP) & math.abs(OX-X) <= V & math.abs(OY-Y) <= V ) {
         +thing(X-OX,Y-OY,O,_); 
     }
+    for (attached(IB,JB)) {
+        +thing(IB,JB,block,b0);
+    }
+
 .
