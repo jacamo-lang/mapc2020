@@ -36,18 +36,26 @@
         }
     } else { // could not find a valid rotation, try to randomly dodge
         .findall(D,direction_increment(D,Ip,Jp) & not thing(Ip,Jp,_,_) & not obstacle(Ip,Jp),LD);
-        .nth(math.floor(math.random(.length(LD))),LD,DIRECTION);
-        !do(move(DIRECTION),R);
-        if (R == success) {
-            !mapping(success,_,DIRECTION);
-            .log(warning,"Due to no_rotation, dodged to ",DIRECTION);
-            .wait(step(Step) & Step > S); //wait for the next step to continue
-            !fix_rotation(req(RI,RJ,B));
+        if (.length(LD) > 0) {
+            .nth(math.floor(math.random(.length(LD))),LD,DIRECTION);
+            !do(move(DIRECTION),R);
+            if (R == success) {
+                !mapping(success,_,DIRECTION);
+                .log(warning,"Due to no_rotation, dodged to ",DIRECTION);
+                .wait(step(Step) & Step > S); //wait for the next step to continue
+                !fix_rotation(req(RI,RJ,B));
+            } else {
+                .log(warning,"Could not dodge to ",DIRECTION);
+                .wait(step(Step) & Step > S); //wait for the next step to continue
+                !fix_rotation(req(RI,RJ,B));
+            }
         } else {
-            .log(warning,"Could not dodge to ",DIRECTION);
-            .wait(step(Step) & Step > S); //wait for the next step to continue
-            !fix_rotation(req(RI,RJ,B));
-        }    
+            .log(warning,"Could not dodge to rotate ",B," (",I,",",J,") to (",RI,",",RJ,") dir: ",DIR);
+            .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
+            .findall(t(I,J,T,TT),thing(I,J,T,TT),LT);
+            .concat("[",req(RI,RJ,B),",",DIR,",",a(L),",",t(LT),",",R,"]",STR);
+            .save_stats("dodgeNoScape",STR);
+        }
     }
 .
 +!fix_rotation(req(_,_,B)) // If other plans fail
