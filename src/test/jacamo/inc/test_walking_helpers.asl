@@ -1,6 +1,10 @@
 /**
  * Helpful plans for testing walking functions
  */
+direction_increment(n,0,-1).
+direction_increment(s,0,1).
+direction_increment(w,-1,0).
+direction_increment(e,1,0).
 
 get_printed_object(I,J,MIN_I,O) :-
     line(J,L) &
@@ -122,11 +126,6 @@ get_printed_object(I,J,MIN_I,O) :-
 
 +!add_test_plans_do(MIN_I)
     <-
-    +direction_increment(n,0,-1);
-    +direction_increment(s,0,1);
-    +direction_increment(w,-1,0);
-    +direction_increment(e,1,0);
-    
     .add_plan({
         +!do(move(DIR),success) :
             myposition(OX,OY) &
@@ -174,6 +173,17 @@ get_printed_object(I,J,MIN_I,O) :-
     }, self, begin);
 .
 
++!add_test_plan_mapping
+    <-
+    .add_plan({ +!mapping(success,_,DIR):
+        myposition(X,Y) &
+        direction_increment(DIR,I,J)
+        <-
+        -+myposition(X+I,Y+J);
+        !update_thing_from_gps_map;
+    }, self, begin);
+.
+
 +!add_test_plans_sincMap
     <-
     .add_plan({
@@ -193,15 +203,25 @@ get_printed_object(I,J,MIN_I,O) :-
     vision(V)
     <-
     .abolish(thing(_,_,_,_));
+    .abolish(obstacle(_,_));
     for ( gps_map(X,Y,O,MyMAP) & math.abs(OX-X) <= V & math.abs(OY-Y) <= V ) {
-        +thing(X-OX,Y-OY,O,_); 
+        if (O == obstacle) {
+            +obstacle(X-OX,Y-OY);
+        } else {
+            +thing(X-OX,Y-OY,O,_);
+        }
     }
+    for (attached(IB,JB)) {
+        +thing(IB,JB,block,b0);
+    }
+
 .
 
 +!list_vision
     <-
     .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
     .findall(t(I,J,T,TT),thing(I,J,T,TT),LT);
-    .concat("[",a(L),",",t(LT),"]",STR);
+    .findall(o(I,J),obstacle(I,J),LO);
+    .concat("[",a(L),",",t(LT),",",o(LO),"]",STR);
     .print(STR);
 .

@@ -20,7 +20,7 @@
     !testNearestAdjacent;
     !test_task_shortest_path;
 
-    !print_map;
+    //!print_map;
 
     !test_is_walkable(MIN_I);
     !test_is_walkable_area(MIN_I);
@@ -28,7 +28,8 @@
     !test_find_meeting_area(MIN_I);
     
     !test_nearest_walkable(MIN_I);
-    !print_map;
+    !test_nearest_walkable_situation(MIN_I);
+    //!print_map;
 .
 
 /**
@@ -189,7 +190,7 @@
     !assert_equals(40,X7);
     !assert_equals(12,Y7);
 
-    !print_map;
+    //!print_map;
 .
 
 
@@ -296,7 +297,7 @@
     !print_agent_with_radius(XM1,YM1,MIN_I,1);
     !print_agent_with_radius(XM1+3,YM1,MIN_I,1);
 
-    !print_map;
+    //!print_map;
 .
 
 /**
@@ -305,6 +306,7 @@
 @[atomic]
 +!test_nearest_walkable(MIN_I)
     <-
+    //!print_map;
     // test a completely clear area with radius = 1 surrounding 0,0
     -+myposition(40,-8);
     !update_line(40,-8,MIN_I,"Y");
@@ -328,10 +330,10 @@
     !assert_equals(-9,Y2,0);
 
     // Althout we don't have obstacle in goals, let us say we have some
-    +thing(4,-1,obstacle,_);
-    +thing(5,-2,obstacle,_);
-    +thing(5,-1,obstacle,_);
-    +thing(5,0,obstacle,_);
+    +obstacle(4,-1);
+    +obstacle(5,-2);
+    +obstacle(5,-1);
+    +obstacle(5,0);
     !update_line(44,-9,MIN_I,"o");
     !update_line(45,-10,MIN_I,"o");
     !update_line(45,-9,MIN_I,"o");
@@ -342,4 +344,57 @@
     !assert_equals(-7,Y3,0);
 
     .abolish(thing(_,_,_,_));
+    .abolish(obstacle(_,_));
+.
+
+/**
+ * nearest walkable test on a specific situation
+ */
+@[atomic]
++!test_nearest_walkable_situation(MIN_I)
+    <-
+    // goal area
+    +gps_map(50,-23,goal,agenta0);
+    +gps_map(51,-24,goal,agenta0);
+    +gps_map(51,-23,goal,agenta0);
+    +gps_map(51,-22,goal,agenta0);
+    +gps_map(52,-23,goal,agenta0);
+    !update_line(50,-23,MIN_I,"g");
+    !update_line(51,-24,MIN_I,"g");
+    !update_line(51,-23,MIN_I,"g");
+    !update_line(51,-22,MIN_I,"g");
+    !update_line(52,-23,MIN_I,"g");
+
+    // the agent
+    -+myposition(46,-20);
+    +thing(0,0,entity,a);
+    +thing(0,1,block,b2);
+    +attached(0,1);
+    !update_line(46,-20,MIN_I,"A");
+    !update_line(46,-19,MIN_I,"b");
+
+    // other agents
+    +thing(1,1,entity,b);
+    !update_line(47,-19,MIN_I,"B");
+    +thing(2,1,entity,b);
+    !update_line(48,-19,MIN_I,"B");
+    +thing(3,1,entity,b);
+    !update_line(49,-19,MIN_I,"B");
+    +thing(2,0,entity,b);
+    !update_line(48,-20,MIN_I,"B");
+    +thing(3,0,entity,b);
+    !update_line(49,-20,MIN_I,"B");
+    +thing(3,-1,entity,b);
+    !update_line(49,-21,MIN_I,"B");
+    +thing(4,-2,entity,b);
+    !update_line(50,-22,MIN_I,"B");
+
+    ?nearest(goal,X1,Y1);
+    !assert_equals(50,X1);
+    !assert_equals(-23,Y1);
+    ?nearest_walkable(goal,X2,Y2);
+    !assert_equals(51,X2);
+    !assert_equals(-22,Y2);
+
+    //!print_map;
 .
