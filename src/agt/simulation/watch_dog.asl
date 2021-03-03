@@ -93,3 +93,20 @@ max_no_action_in_a_row(3).
     .abolish(status(lost));
     !!restart_agent;
 .
+
+/**
+ * Return to individual reseted map considering this as 0,0 position
+ */
+@[atomic]
++status(tardy) :
+    .my_name(ME) &
+    .term2string(ME,MEStr) &
+    step(S)
+    <-
+    .log(severe,"****** Restarting because I am tardy!");
+    .concat("[",tardy(ME),",",step(S),"]",STR);
+    .save_stats("restarted_tardy",STR);
+    removeMyCFPs;
+    .abolish(status(tardy));
+    !!restart_agent;
+.
