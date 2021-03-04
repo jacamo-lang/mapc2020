@@ -4,9 +4,9 @@
 <-.print("# Raioy: ",Ry).
 
 
-+!mapSize(PID,AgentName,ORIGIN) : agentA_data(PID,RX,RY,AX,AY,MapId,S) & //dados do agente que começou a interação
++!mapSize(PID,AgentName,ORIGIN) : agentA_data(PID,RX,RY,AX,AY,MapId,S) & //dados do agente que comeÃ§ou a interaÃ§Ã£o
                                   my_data(PID,MX,MY) &  //meus dados
-                                  origin(ORIGIN)  //está no mesmo mapa do outro agente     
+                                  origin(ORIGIN)  //estÃ¡ no mesmo mapa do outro agente     
    <- 
    !update_raioX(math.abs(MX-(AX+RX)));
    !update_raioY(math.abs(MY-(AY+RY))).
@@ -16,9 +16,15 @@
 
 +!update_raioX(CalcX) : CalcX == 0.
 
-+!update_raioX(CalcX) : CalcX \== 0 & not raioX(_)
++!update_raioX(CalcX) : CalcX \== 0 & 
+                        //not raioX(_) &
+                        not raioX(CalcX) & //se o valor calculado Ã© novo
+                        step(S) & .my_name(Me)
 <-  +raioX(CalcX);
-    .broadcast (tell,raioX(CalcX)).
+    //.send(explorationMonitor,tell,raioX(CalcX,S,Me)); //for testing 
+    setMapSize("x",CalcX);
+    //.broadcast (tell,raioX(CalcX));
+    .
 /* 
 +!update_raioX(CalcX) : CalcX \== 0 & raioX(Rx) & CalcX < Rx
 <-  //updateRaioX(Rx, CalcX);
@@ -30,9 +36,15 @@
 
 +!update_raioY(CalcY) : CalcY == 0.
 
-+!update_raioY(CalcY) : CalcY \== 0 & not raioY(_)
++!update_raioY(CalcY) : CalcY \== 0 & 
+                        //not raioY(_)&
+                        not raioY(CalcY)& //se o valor calculado Ã© novo
+                        step(S) & .my_name(Me)
 <-  +raioY(CalcY);
-    .broadcast (tell,raioY(CalcY)).
+    //.send(explorationMonitor,tell,raioY(CalcY,S,Me));
+    setMapSize("y",CalcY);
+    //.broadcast (tell,raioY(CalcY));
+    .
 
 /* 
 +!update_raioY(CalcY) : CalcY \== 0 & raioY(Yx) & CalcY < Ry

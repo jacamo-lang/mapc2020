@@ -76,6 +76,12 @@
     .abolish(unwanted_task(_));
     .abolish(wanted_task(_,_,_));
     .abolish(gps_map(_,_,_,_));
+    .abolish(raioX(_)); //from map size finding
+    .abolish(raioY(_)); //from map size finding
+    .abolish(raioX(_,_,_)); //from map size finding
+    .abolish(raioY(_,_,_)); //from map size finding
+    .abolish(my_data(_,_,_)); //from map size finding
+    .abolish(agentA_data(_,_,_,_,_,_,_)); //from map size finding
     .abolish(exploring);
     .abolish(myposition(_,_));
     .abolish(origin(_));
