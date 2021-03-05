@@ -69,6 +69,8 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
 
 +replace_map(OldMapId, NewMapId, Dx, Dy) : origin(O) & compare_bels(OldMapId,O) & step(S)
    <- +to_replace_map(OldMapId, NewMapId, Dx, Dy,S);
+       .abolish(agentA_data(_,_,_,_,_,_,_)); //discard map size data 
+       .abolish(my_data(_,_,_)); //discard map size data
       !do_replace_map(OldMapId, NewMapId).
       /*.wait(step(Step)&update_position_step(Step)&myposition(X,Y)); //wait for the consistent position belief
       -+myposition(X+Dx,Y+Dy);
@@ -221,7 +223,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
         .print("1. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")   Step: ", S,"/",STEP);
         
        //calcular o raio do mapa
-       +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a interação
+       +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a interaï¿½ï¿½o
        !checkPosition(PID,STEP,MapId); // coleta os dados do agente vizinho.
         .
 
@@ -235,8 +237,8 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
         .print("2. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")    Step: ", S,"/",STEP);
        
        //calcular o raio do mapa 
-       +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a interação
-       !checkPosition(PID,STEP,MapId); //verifica se é possivel coletar os dados do agente vizinho.
+       +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a interaï¿½ï¿½o
+       !checkPosition(PID,STEP,MapId); //verifica se ï¿½ possivel coletar os dados do agente vizinho.
         .
 
 
@@ -250,8 +252,8 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
         .print("3. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")    Step: ", S,"/",STEP);
         
         //calcular o raio do mapa 
-       +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a interação
-       !checkPosition(PID,STEP,MapId); //verifica se é possivel coletar os dados do agente vizinho.
+       +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a interaï¿½ï¿½o
+       !checkPosition(PID,STEP,MapId); //verifica se ï¿½ possivel coletar os dados do agente vizinho.
         .
 
 +!do_areyou(_,_,_,_,_,_,_,_,_).
@@ -344,7 +346,10 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
        .abolish(map(OL,_,_,_));      
        ?step(S); .print("... SYNC areyou origin: ", ORIGIN, " Agent: ", AG, " Step ", S, " from(",Xnow_2,",",Ynow_2,") to (",AX+RX + (Xnow_2-MX),",",AY+RY + (Ynow_2-MY)," - PID: ", PID); 
        .abolish(pending_isme(_,_,_,_,_,_,_,_,_)); //discard pending synchronizations after sync
-       .abolish(to_replace_map(_,_,_,_,_)); //discard map replacement after sync            
+       .abolish(to_replace_map(_,_,_,_,_)); //discard map replacement after sync     
+       .abolish(agentA_data(_,_,_,_,_,_,_)); //discard map size data 
+       .abolish(my_data(_,_,_)); //discard map size data
+       
        !after_sync(PID). 
 
 
@@ -385,7 +390,9 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
        .abolish(map(OL,_,_,_));
        ?step(S); .print("... SYNC 2 areyou origin: ", OL, " New Map: ",ORIGIN ," Agent: ", AG, " Step ", S, " from(",Xnow_2,",",Ynow_2,") to (",AX+RX + (Xnow_2-MX),",",AY+RY + (Ynow_2-MY),") - PID: ", PID);
        .abolish(pending_isme(_,_,_,_,_,_,_,_,_));  //discard pending synchronizations after synching             
-       .abolish(to_replace_map(_,_,_,_,_)); //discard map replacement after sync   
+       .abolish(to_replace_map(_,_,_,_,_)); //discard map replacement after sync
+       .abolish(agentA_data(_,_,_,_,_,_,_)); //discard map size data 
+       .abolish(my_data(_,_,_)); //discard map size data   
        !after_sync(PID).
 
 //If the agent has not updated its position in the current step, ignore the synchronization
