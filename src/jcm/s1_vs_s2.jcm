@@ -1,0 +1,32 @@
+mas s1_vs_s2 {
+
+/**
+ * TEAM A - strategy 1: only individualists
+ */
+
+    agent agentA : strategies/individualist.asl {
+        join : envA
+        instances: 50
+    }
+
+/**
+ * TEAM B - strategy 2: only collectivists
+ */
+
+    agent coordinatorB : strategies/collectivist_coordinator.asl
+
+    agent agentB : strategies/collectivist.asl {
+        join : envB
+        instances: 50
+        // massim_prefix should be the username prefix used on clientconf
+        // Usually it is "agentA" for local tests and "agentJaCaMo_Builders" for remotes
+        beliefs: massim_prefix("agentB")
+    }
+
+/** 
+ * ENVIRONMENTS 
+ */
+    workspace envA {}
+    workspace envB {}
+
+}
