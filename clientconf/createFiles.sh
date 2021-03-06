@@ -40,9 +40,7 @@ new=$(printf "eisB%d.json" "$i")
 "times":false,
 "notifications":false,
 "queued":false,
-"entities": [
-{"name":"connectionB%d", "username": "agentB%d", "password": "1", "print-iilang":false, "print-json":false}
-  ]
+"entities": [{"name":"agentB%d", "username": "agentB%d", "password": "1", "print-iilang":false, "print-json":false}]
 }
 ' "$i" "$i") > $new
 done
