@@ -37,6 +37,21 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
         }
         for (thing(I,J,taskboard,_)) {
             !addMap(I,J,X+INCX, Y+INCY,taskboard);
+
+            !addMap(I-1,J,X+INCX, Y+INCY,taskboard);
+            !addMap(I+1,J,X+INCX, Y+INCY,taskboard);
+            !addMap(I,J-1,X+INCX, Y+INCY,taskboard);
+            !addMap(I,J+1,X+INCX, Y+INCY,taskboard);
+
+            !addMap(I-1,J-1,X+INCX, Y+INCY,taskboard);
+            !addMap(I+1,J+1,X+INCX, Y+INCY,taskboard);
+            !addMap(I+1,J-1,X+INCX, Y+INCY,taskboard);
+            !addMap(I-1,J+1,X+INCX, Y+INCY,taskboard);
+
+            !addMap(I-2,J,X+INCX, Y+INCY,taskboard);
+            !addMap(I+2,J,X+INCX, Y+INCY,taskboard);
+            !addMap(I,J-2,X+INCX, Y+INCY,taskboard);
+            !addMap(I,J+2,X+INCX, Y+INCY,taskboard);
         }
         for (thing(I,J,entity,TEAM) & team(TEAM)) {
             !sincMap(I,J);

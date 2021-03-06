@@ -13,7 +13,7 @@
     not accepted(_) &
     task(T,DL,Y,REQs) &
     thing(TX,TY,taskboard,_) &
-    distance(0,0,TX,TY,DIST) & DIST <= 1 &
+    distance(0,0,TX,TY,DIST) & DIST <= 2 &
     .my_name(ME)
     <-
     !do(accept(T),R0);
@@ -38,7 +38,7 @@
     not accepted(_)
     <-
     //.log(warning,"Accepting ",T," : ",myposition(X,Y));
-    !goto_nearest_neighbour(taskboard);
+    !goto_nearest(taskboard);
     .wait(step(Step) & Step > S); //wait for the next step to continue
     !accept_task(T);
 .
