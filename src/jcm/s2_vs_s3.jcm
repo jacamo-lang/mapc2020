@@ -8,7 +8,7 @@ mas s2_vs_s3 {
 
     agent agentA : strategies/collectivist.asl {
         join : envA
-        instances: 50
+        instances: 30
         // massim_prefix should be the username prefix used on clientconf
         // Usually it is "agentA" for local tests and "agentJaCaMo_Builders" for remotes
         beliefs: massim_prefix("agentB")
@@ -105,92 +105,6 @@ mas s2_vs_s3 {
     }
 
     agent agentB30 : strategies/collectivist.asl {
-        join : envB
-        beliefs: massim_prefix("agentB")
-    }
-
-    agent agentB31 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB32 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB33 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB34 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB35 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB36 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB37 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB38 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB39 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB40 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB41 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB42 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB43 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB44 : strategies/individualist.asl {
-        join : envB
-    }
-
-    agent agentB45 : strategies/collectivist.asl {
-        join : envB
-        beliefs: massim_prefix("agentB")
-    }
-
-    agent agentB46 : strategies/collectivist.asl {
-        join : envB
-        beliefs: massim_prefix("agentB")
-    }
-
-    agent agentB47 : strategies/collectivist.asl {
-        join : envB
-        beliefs: massim_prefix("agentB")
-    }
-
-    agent agentB48 : strategies/collectivist.asl {
-        join : envB
-        beliefs: massim_prefix("agentB")
-    }
-
-    agent agentB49 : strategies/collectivist.asl {
-        join : envB
-        beliefs: massim_prefix("agentB")
-    }
-
-    agent agentB50 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentB")
     }
