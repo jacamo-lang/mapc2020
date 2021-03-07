@@ -32,7 +32,7 @@ gps_map(XB,YB,entity(E),MyMAP) :-
 +!goto(X,Y,RET):
     myposition(X,Y)
     <-
-    .log(warning,"-------> " ,arrived_at(X,Y));
+    //.log(warning,"-------> " ,arrived_at(X,Y));
     RET = success;
 .
 

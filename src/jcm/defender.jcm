@@ -1,0 +1,146 @@
+mas collectivist {
+
+agent coordinator : strategies/collectivist_coordinator.asl
+
+agent agentA : strategies/defender.asl {
+    //ag-bb-class: bb.FullTextPersistentBB
+    join : envA
+    instances: 50
+    // massim_prefix should be the username prefix used on clientconf
+    // Usually it is "agentA" for local tests and "agentJaCaMo_Builders" for remotes
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentB : strategies/agent_do_nothing.asl {
+    join : envB
+    instances: 50
+}
+
+/*
+agent agentA21 : strategies/explorer.asl {
+    join : envA
+}
+
+agent agentA22 : strategies/explorer.asl {
+    join : envA
+}
+
+agent agentA23 : strategies/explorer.asl {
+    join : envA
+}
+
+agent agentA24 : strategies/explorer.asl {
+    join : envA
+}
+
+agent agentA25 : strategies/explorer.asl {
+    join : envA
+}
+
+agent agentA26 : strategies/explorer.asl {
+    join : envA
+}
+
+agent agentA27 : strategies/explorer.asl {
+    join : envA
+}
+
+agent agentA28 : strategies/explorer.asl {
+    join : envA
+}
+
+agent agentA29 : strategies/explorer.asl {
+    join : envA
+}
+
+agent agentA30 : strategies/explorer.asl {
+    join : envA
+}
+
+agent agentA31 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA32 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA33 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA34 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA35 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA36 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA37 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA38 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA39 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA40 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA41 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA42 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA43 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA44 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA45 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA46 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA47 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA48 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA49 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+
+agent agentA50 : strategies/agent_do_nothing.asl {
+    join : envA
+}
+*/
+workspace envA {
+
+}
+
+//platform: jacamo.web.JCMWeb("--main 2181 --restPort 8080") // zookeeper at 2181, rest/web at 8080
+
+}
