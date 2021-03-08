@@ -1,7 +1,7 @@
 mas collectivist {
 
 agent coordinator : strategies/collectivist_coordinator.asl
-
+/*
 agent agentA : strategies/defender.asl {
     //ag-bb-class: bb.FullTextPersistentBB
     join : envA
@@ -10,50 +10,148 @@ agent agentA : strategies/defender.asl {
     // Usually it is "agentA" for local tests and "agentJaCaMo_Builders" for remotes
     beliefs: massim_prefix("agentA")
 }
-
+*/
 agent agentB : strategies/agent_do_nothing.asl {
     join : envB
     instances: 50
 }
 
-/*
-agent agentA21 : strategies/explorer.asl {
+agent agentA1 : strategies/defender.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA2 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA3 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA4 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA5 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA6 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA7 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA8 : strategies/defender.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA9 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA10 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA11 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA12 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA13 : strategies/defender.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA14 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA15 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA16 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA17 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA18 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA19 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+
+agent agentA20 : strategies/agent_do_nothing.asl {
+    join : envA
+    beliefs: massim_prefix("agentA")
+}
+agent agentA21 : strategies/agent_do_nothing.asl {
     join : envA
 }
 
-agent agentA22 : strategies/explorer.asl {
+agent agentA22 : strategies/agent_do_nothing.asl {
     join : envA
 }
 
-agent agentA23 : strategies/explorer.asl {
+agent agentA23 : strategies/agent_do_nothing.asl {
     join : envA
 }
 
-agent agentA24 : strategies/explorer.asl {
+agent agentA24 : strategies/agent_do_nothing.asl {
     join : envA
 }
 
-agent agentA25 : strategies/explorer.asl {
+agent agentA25 : strategies/agent_do_nothing.asl {
     join : envA
 }
 
-agent agentA26 : strategies/explorer.asl {
+agent agentA26 : strategies/agent_do_nothing.asl {
     join : envA
 }
 
-agent agentA27 : strategies/explorer.asl {
+agent agentA27 : strategies/agent_do_nothing.asl {
     join : envA
 }
 
-agent agentA28 : strategies/explorer.asl {
+agent agentA28 : strategies/agent_do_nothing.asl {
     join : envA
 }
 
-agent agentA29 : strategies/explorer.asl {
+agent agentA29 : strategies/agent_do_nothing.asl {
     join : envA
 }
 
-agent agentA30 : strategies/explorer.asl {
+agent agentA30 : strategies/agent_do_nothing.asl {
     join : envA
 }
 
@@ -136,7 +234,7 @@ agent agentA49 : strategies/agent_do_nothing.asl {
 agent agentA50 : strategies/agent_do_nothing.asl {
     join : envA
 }
-*/
+
 workspace envA {
 
 }
