@@ -101,6 +101,7 @@ public class rpMapSize extends rp {
     }
 
     int adaptSize(int axisSize, int size) {
+    	if(size==0) return 0;
         int center = axisSize/2;
         if(size>=center)
             return adaptSize(axisSize, size-axisSize);
