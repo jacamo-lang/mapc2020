@@ -85,7 +85,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
       -+myposition(X+Dx,Y+Dy);
       -+origin(NewMapId);      
       -to_replace_map(OldMapId, NewMapId, Dx, Dy,S); 
-      .print(">>>> I should replaceMap from ", OldMapId, " to ", NewMapId, " - Step: ", S,"/",Step, ". Moved from(",X,",",Y,") to(",X+Dx,",",Y+Dy,") - (",Dx,",",Dy,")");
+      //.print(">>>> I should replaceMap from ", OldMapId, " to ", NewMapId, " - Step: ", S,"/",Step, ". Moved from(",X,",",Y,") to(",X+Dx,",",Y+Dy,") - (",Dx,",",Dy,")");
       .
 
 +!do_replace_map(OldMapId, NewMapId): origin(O) & compare_bels(OldMapId,O) &
@@ -220,7 +220,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
     <-
         +pending_isme(PID,MX,MY,AG,RX,RY,AX,AY,MapId);
         .send( AG,achieve, isme(PID) );
-        .print("1. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")   Step: ", S,"/",STEP);
+        //.print("1. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")   Step: ", S,"/",STEP);
         
        //calcular o raio do mapa
        +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a intera��o
@@ -234,7 +234,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
         step(S)
     <-
         .send( AG,achieve, isme(PID) );
-        .print("2. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")    Step: ", S,"/",STEP);
+        //.print("2. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")    Step: ", S,"/",STEP);
        
        //calcular o raio do mapa 
        +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a intera��o
@@ -249,7 +249,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
         step(S)
     <-
         .send( AG,achieve, isme(PID) );
-        .print("3. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")    Step: ", S,"/",STEP);
+        //.print("3. Areyou ",RX,",",RY,",",AX,",",AY,",",SCENE,",",PID,") from ", AG, " Coord.: (",X,",",Y,")  MyPos: (",MX,",",MY,")    Step: ", S,"/",STEP);
         
         //calcular o raio do mapa 
        +agentA_data(PID,RX,RY,AX,AY,MapId,STEP); //dados do agente que iniciou a intera��o
@@ -265,7 +265,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
     <- .concat([AG],L,NewL);
        -pending_areyou(PID,Step,L);
        +pending_areyou(PID,Step,NewL);
-       .print("### Received isme PID: ", PID, " - L", L, "  NewL: ",  NewL, " Step: ", Step , "###");
+       //.print("### Received isme PID: ", PID, " - L", L, "  NewL: ",  NewL, " Step: ", Step , "###");
        .
 
 +!isme(PID).
@@ -292,7 +292,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
                      step(Step) & steps_for_sync(SS) & Step-S > SS & //the minimum number of steps has been achieved
                      update_position_step(Step) & //the position has been updated in the current step
                      .length(L,Size) & Size==1 & .nth(0,L,Ag) //
-   <-  .print("2. sync_areyou steps achieved ONE answer PID: ", PID, "  S: ", S, "  Step: ", Step, " Ag: ", Ag, " L: ", L);
+   <-  //.print("2. sync_areyou steps achieved ONE answer PID: ", PID, "  S: ", S, "  Step: ", Step, " Ag: ", Ag, " L: ", L);
        //.send( Ag, achieve, sync_isme(PID)[critical_section(sync), priority(0)]); //sends a message to the neighbour to update its coordinates
        .send( Ag, achieve, sync_isme(PID)); //sends a message to the neighbour to update its coordinates
        //.send( Ag, achieve, sync_isme(PID)); //sends a message to the neighbour to update its coordinates
@@ -344,7 +344,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
        .my_name(Me);
        replaceMap(OL,ORIGIN,AX+RX-MX,AY+RY-MY,Me); //remove the old map from the shared representation
        .abolish(map(OL,_,_,_));      
-       ?step(S); .print("... SYNC areyou origin: ", ORIGIN, " Agent: ", AG, " Step ", S, " from(",Xnow_2,",",Ynow_2,") to (",AX+RX + (Xnow_2-MX),",",AY+RY + (Ynow_2-MY)," - PID: ", PID); 
+       ?step(S); //.print("... SYNC areyou origin: ", ORIGIN, " Agent: ", AG, " Step ", S, " from(",Xnow_2,",",Ynow_2,") to (",AX+RX + (Xnow_2-MX),",",AY+RY + (Ynow_2-MY)," - PID: ", PID); 
        .abolish(pending_isme(_,_,_,_,_,_,_,_,_)); //discard pending synchronizations after sync
        .abolish(to_replace_map(_,_,_,_,_)); //discard map replacement after sync     
        .abolish(agentA_data(_,_,_,_,_,_,_)); //discard map size data 
@@ -388,7 +388,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
        .my_name(Me);
        replaceMap(OL,ORIGIN,AX+RX-MX,AY+RY-MY,Me); //remove the old map from the shared representation
        .abolish(map(OL,_,_,_));
-       ?step(S); .print("... SYNC 2 areyou origin: ", OL, " New Map: ",ORIGIN ," Agent: ", AG, " Step ", S, " from(",Xnow_2,",",Ynow_2,") to (",AX+RX + (Xnow_2-MX),",",AY+RY + (Ynow_2-MY),") - PID: ", PID);
+       ?step(S); //.print("... SYNC 2 areyou origin: ", OL, " New Map: ",ORIGIN ," Agent: ", AG, " Step ", S, " from(",Xnow_2,",",Ynow_2,") to (",AX+RX + (Xnow_2-MX),",",AY+RY + (Ynow_2-MY),") - PID: ", PID);
        .abolish(pending_isme(_,_,_,_,_,_,_,_,_));  //discard pending synchronizations after synching             
        .abolish(to_replace_map(_,_,_,_,_)); //discard map replacement after sync
        .abolish(agentA_data(_,_,_,_,_,_,_)); //discard map size data 
@@ -411,7 +411,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
                                     step(Step)   
    <- 
       .concat(Agent, " Sync - Step: ", " PID: ", PID, Step, Legend);      
-      .print("sync mark 1");
+      //.print("sync mark 1");
       !sync_mark(XX,YY,Type,Legend,MapId, PID).                                    
 
 
@@ -424,7 +424,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1)
                                     step(Step)   
    <- 
       .concat(Agent, " Sync - Step: ", " PID: ", PID, Step, Legend);
-      .print("sync mark 2 X: ", X, ", Y: ", Y, " XX: ", XX, "YY: ", YY, " Type: ", Type, "  Map: ", MapId);      
+      //.print("sync mark 2 X: ", X, ", Y: ", Y, " XX: ", XX, "YY: ", YY, " Type: ", Type, "  Map: ", MapId);      
       !sync_mark(XX,YY,Type,Legend,MapId).                                    
 
 
