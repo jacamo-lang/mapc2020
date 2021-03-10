@@ -41,7 +41,7 @@
                         not raioY(CalcY)& //se o valor calculado é novo
                         step(S) & .my_name(Me)
 <-  +raioY(CalcY);
-    //.send(explorationMonitor,tell,raioY(CalcY,S,Me));
+    //.send(explorationMonitor,tell,raioY(CalcY,S,Me)); //for testing
     setMapSize("y",CalcY);
     //.broadcast (tell,raioY(CalcY));
     .

@@ -35,7 +35,7 @@ public class lps extends Artifact {
      * Mark an element in the viewer and add it as observable property to the shared map identified by mapId
      */
     @OPERATION
-    void mark(int i, int j, String type, String info, int vision, String mapId) {       
+    protected void mark(int i, int j, String type, String info, int vision, String mapId) {       
         if (viewOn != 0) //draw in the viewer
             this.view.mark(i, j, type, info, vision);                
         this.execInternalOp("mark",i, j, type, mapId);
@@ -45,7 +45,7 @@ public class lps extends Artifact {
      * Add as observable property to the shared map identified by mapId without mark in the viewer
      */
     @OPERATION
-    void mark(int i, int j, String type, String mapId) {     
+    protected void mark(int i, int j, String type, String mapId) {     
         if(!type.equals("self")) {
             ObsProperty prop = this.getObsPropertyByTemplate("gps_map",i,j,null,ASSyntax.createAtom(mapId));
             if(prop==null) 

@@ -17,6 +17,14 @@ newpid(PID):-(PID=math.random(1000000) & not pid(PID)) | newpid(PID).
 //testing_exploration. //<< if true, the exploration runs in test mode to count the found objects
 
 
+//turn the coordinate A into B considering the size S. Ex. A=100,S=70
+adapt_coordinate(A,B,0) :- B=A.
+adapt_coordinate(A,B,S) :- axis_center(S,C) & (A>=C) & B=A-S.
+adapt_coordinate(A,B,S) :- axis_center(S,C) & (A<C*-1) & B=A+S.
+adapt_coordinate(A,B,S) :- B=A.
+//return the center C of an axis of size S
+axis_center(S,C):- C=S div 2.
+
 +!mapping(success,Step,D): myposition(X,Y) & directionIncrement(D, INCX,  INCY) & step(S) & origin(MyMap) 
    <- !map_position(X+INCX,Y+INCY);
       -+update_position_step(S);
