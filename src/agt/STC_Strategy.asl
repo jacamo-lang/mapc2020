@@ -78,7 +78,9 @@ next_direction(X,Y,ND) :- step(S) & S > 5 &
 next_direction(X,Y,-1) :- not(free_direction(X,Y,_)).                          
 
 
-parent(X,Y,D,XX,YY) :- edge(X,Y,D,XX,YY,Map) & origin(O) & .substring(O,Map). //using substring as a workaround since Map is a string (e.g. "agenta0") while Me is a term (e.g. agentaO) 
+parent(X,Y,D,XX,YY) :- edge(X,Y,D,XX,YY,Map) & origin(Map).
+parent(X,Y,D,XX,YY) :- origin(O) &  .concat("\"",O,"\"",Map) & edge(X,Y,D,XX,YY,Map) . //using substring as a workaround since Map is a string (e.g. "agenta0") while Me is a term (e.g. agentaO)
+
 
 
 ancestor(X,Y,XX,YY):- parent(X,Y,_,XX,YY).
@@ -113,28 +115,34 @@ cycle(X,Y,XX,YY) :- false.
                     current_moving_step(MS) & vision(CS) & 
                     MS>=CS & ((X mod CS)\==0) & //free_direction(X,Y,ND) & (ND==1|ND==3)                       
                     free_direction(X,Y,ND) & ND=1
-                    & last_node(LX,LY) 
    <- //.print("01. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);
       -+last_adapting_direction(ND);       
-      -+current_direction_stc(ND).
+      -+current_direction_stc(ND);
+      -+forward;
+      -+last_node(X,Y);
+      -+current_moving_step(99).
             
 +!update_direction: exploration_strategy(stc) &
                     myposition(X,Y) & 
                     current_moving_step(MS) & vision(CS) & 
                     MS>=CS & ((Y mod CS)\==0) //& free_direction(X,Y,ND) & (ND==0|ND==2)                       
                     & free_direction(X,Y,ND) & ND=0
-                    & last_node(LX,LY)
    <- //.print("02. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
-      -+current_direction_stc(ND).
+      -+current_direction_stc(ND);
+      -+forward;
+      -+last_node(X,Y);
+      -+current_moving_step(99).
       
 +!update_direction: exploration_strategy(stc) &
                     myposition(X,Y) & 
                     current_moving_step(MS) & vision(CS) & 
                     MS>=CS & ((X mod CS)\==0|(Y mod CS)\==0) //& free_direction(X,Y,ND) & (ND==0|ND==2)                       
                     & not((obstacle_direction(ND)))
-                    & last_node(LX,LY)
    <- //.print("03. Moved from (", LX, ",", LY, ") to (", X,",",Y,"). Next direction: ", ND);      
-      -+current_direction_stc(ND). 
+      -+current_direction_stc(ND);
+      -+forward;
+      -+last_node(X,Y);
+      -+current_moving_step(99).
 
 
 //the agent has reached the next node and there is a free path from there in the direction (ND)     
