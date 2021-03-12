@@ -35,6 +35,7 @@
  +!submit_task(T) :  // In case the agent is far away from goal area
      step(S) &
      not goal(0,0) &
+     task(T,DL,Y,REQs) &
      direction_increment(D,I,J) &
      goal(I,J)
      <-
