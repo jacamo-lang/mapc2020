@@ -10,6 +10,11 @@ agent watchA0 : statistics/individualist_watcher.asl {
     join : envA
 }
 
+agent updateMapSize: exploration/updateMapSize.asl {
+    beliefs: originlead(agentA1)
+    join : envA
+}
+
 agent agentB: strategies/agent_do_nothing.asl{
     join: envB
     instances: 50

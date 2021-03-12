@@ -51,7 +51,7 @@ public class rpMapSize extends rp {
                     defineObsProperty("size_".concat(axis),checkAgreement(map));
                     if(axis.equals("x")) size_x = checkAgreement(map);
                     if(axis.equals("y")) size_y = checkAgreement(map);
-                    updateMapSize(); 
+                    //updateMapSize(); 
                 }
             }
         }
@@ -113,7 +113,7 @@ public class rpMapSize extends rp {
     @OPERATION
     protected void mark(int i, int j, String type, String info, int vision, String mapId) {        
         super.mark(i,j,type,info,vision,mapId);        
-        markMapSize(i,j,type,mapId);
+        //markMapSize(i,j,type,mapId);
         //if(size_x>0&&size_y>0&&!type.equals("obstacle")) 
         //    replicateMapSizeProp(i,j, ASSyntax.createAtom(type),ASSyntax.createAtom(mapId), 3);
     }
@@ -121,7 +121,7 @@ public class rpMapSize extends rp {
     @OPERATION
     protected void mark(int i, int j, String type, String mapId) {   
         super.mark(i,j,type,mapId);
-        markMapSize(i,j,type,mapId);
+        //markMapSize(i,j,type,mapId);
         //if(size_x>0&&size_y>0&&!type.equals("obstacle")) 
         //    replicateMapSizeProp(i,j, ASSyntax.createAtom(type),ASSyntax.createAtom(mapId), 3);
     }
@@ -140,7 +140,7 @@ public class rpMapSize extends rp {
     }
 
     void updateMapSize() {
-        if(size_x>0&&size_y>0) {     
+        /*if(size_x>0&&size_y>0) {     
             try {
                 int x, y;
                 ArtifactInfo info = CartagoService.getController(this.getId().getWorkspaceId().getName()).getArtifactInfo(this.getId().getName());
@@ -161,7 +161,7 @@ public class rpMapSize extends rp {
             } catch (Throwable e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
   //disabled due to performance issues. TODO: test and improve
