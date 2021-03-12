@@ -65,7 +65,7 @@ adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & (A>=C) & AA=A-S &
 adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & (A<(C*-1)) & AA=A+S & adapt_coordinate_map(AA,B).
 adapt_coordinate_map(A,B) :- field_size(S) & field_center(C) & A<C & A >= (C*-1) &  B=A.                                             
 
-//+origin(O) <- .print("++++++++++++++++++++++++++++ origin", O).
+
 
 +replace_map(OldMapId, NewMapId, Dx, Dy) : origin(O) & compare_bels(OldMapId,O) & step(S)
    <- +to_replace_map(OldMapId, NewMapId, Dx, Dy,S);
