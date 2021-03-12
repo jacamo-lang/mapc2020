@@ -27,7 +27,8 @@
         .log(warning,"Fail on submitting ",T," ",R0);
         .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
         .findall(t(I,J,T,TT),thing(I,J,T,TT),LT);
-        .concat("[",task(T,DL,Y,REQs),",",return(R0),",",step(S),",",a(L),",",t(LT),"]",STR);
+        .findall(o(I,J),obstacle(I,J),LO);
+        .concat("[",task(T,DL,Y,REQs),",",return(R0),",",step(S),",",a(L),",",t(LT),",",o(LO),"]",STR);
         .save_stats("submit_failed",STR);
     }
  .
@@ -46,7 +47,10 @@
          .log(warning,"Fail on doing one step towards a goal area: ",D);
      }
      .wait(step(Step) & Step > S); //wait for the next step to continue
-     .concat("[",task(T,DL,Y,REQs),",",return(R),",",step(S),"]",STR);
+     .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
+     .findall(t(I,J,T,TT),thing(I,J,T,TT),LT);
+     .findall(o(I,J),obstacle(I,J),LO);
+     .concat("[",task(T,DL,Y,REQs),",",return(R0),",",step(S),",",a(L),",",t(LT),",",o(LO),",",direction_increment(D,I,J),"]",STR);
      .save_stats("one_step_fix",STR);
      !submit_task(T);
  .
@@ -73,7 +77,10 @@
     .log(warning,"Retrying to submit ",T);
     .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
     .findall(t(I,J,Thing,TT),thing(I,J,Thing,TT),LT);
-    .concat("[",task(T,DL,Y,REQs),",",step(S),",",a(L),",",t(LT),"]",STR);
+    .findall(o(I,J),obstacle(I,J),LO);
+    ?nearest(goal,X1,Y1);
+    ?nearest_walkable(goal,X2,Y2);
+    .concat("[",task(T,DL,Y,REQs),",",step(S),",",a(L),",",t(LT),",",o(LO),",",nearest(goal,X1,Y1),",",nearest_walkable(goal,X2,Y2),"]",STR);
     .save_stats("submit_retry",STR);
     !submit_task(T);
 .
