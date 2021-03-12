@@ -29,6 +29,7 @@
     
     !test_nearest_walkable(MIN_I);
     !test_nearest_walkable_situation(MIN_I);
+    !test_nearest_walkable_situation2(MIN_I);
     //!print_map;
 .
 
@@ -349,6 +350,12 @@
 
 /**
  * nearest walkable test on a specific situation
+ [test_common_walking]       # #                       g        ######           #    g            # #           -24
+ [test_common_walking]           #                               #####               ggg               #         -23
+ [test_common_walking]           #                                            #      Bg      #         #         -22
+ [test_common_walking]                                                              B                            -21
+ [test_common_walking]    #      #                                               A BB           #      #         -20
+ [test_common_walking]       ##                                                  bBBB              ##            -19
  */
 @[atomic]
 +!test_nearest_walkable_situation(MIN_I)
@@ -396,5 +403,81 @@
     !assert_equals(51,X2);
     !assert_equals(-22,Y2);
 
+    .abolish(thing(_,_,_,_));
+    .abolish(obstacle(_,_));
     //!print_map;
+.
+
+/**
+ * nearest walkable test on a specific situation 2
+[test_common_walking]                   #             g                           ##                          # -28
+[test_common_walking]                                ggg                                                        -27
+[test_common_walking]                            ###ggggg                                                       -26
+[test_common_walking]                             ###ggg       ######                                           -25
+[test_common_walking]       # #                       g        ######           #    g            # #           -24
+[test_common_walking]           #                               #####               ggg               #         -23
+[test_common_walking]           #                                            #      Bg      #         #         -22
+[test_common_walking]                                                              B                            -21
+[test_common_walking]    #      #               A                               A BB           #      #         -20
+[test_common_walking]       ##                  B                               bBBB              ##            -19
+
+ */
+@[atomic]
++!test_nearest_walkable_situation2(MIN_I)
+    <-
+    -+myposition(14,-20);
+    -+vision(5);
+
+    // obstacles
+    !add_item_to_map(15,-27,obstacle,MIN_I,"#");
+    !add_item_to_map(16,-27,obstacle,MIN_I,"#");
+    !add_item_to_map(17,-27,obstacle,MIN_I,"#");
+    !add_item_to_map(18,-27,obstacle,MIN_I,"#");
+    !add_item_to_map(17,-26,obstacle,MIN_I,"#");
+    !add_item_to_map(16,-26,obstacle,MIN_I,"#");
+    !add_item_to_map(15,-26,obstacle,MIN_I,"#");
+    !add_item_to_map(16,-25,obstacle,MIN_I,"#");
+    !add_item_to_map(17,-25,obstacle,MIN_I,"#");
+    !add_item_to_map(18,-25,obstacle,MIN_I,"#");
+
+    // the agent
+    !add_thing_to_map(0,0,entity,a,MIN_I,"A");
+    !add_thing_to_map(0,1,block,b2,MIN_I,"B");
+    +attached(0,1);
+
+    ?nearest(goal,X1,Y1);
+    !assert_equals(18,X1);
+    !assert_equals(-26,Y1);
+    ?nearest_walkable(goal,X2,Y2);
+    !assert_equals(19,X2);
+    !assert_equals(-25,Y2);
+    !add_item_to_map(18,-26,goal,MIN_I,"*");
+    !add_item_to_map(19,-25,goal,MIN_I,"&");
+
+    !print_map;
+
+    .abolish(thing(_,_,_,_));
+    .abolish(obstacle(_,_));
+.
+
++!add_item_to_map(X,Y,Item,MIN_I,Char):
+    myposition(X0,Y0) &
+    vision(V)
+    <-
+    +gps_map(X,Y,Item,agenta0);
+    !update_line(X,Y,MIN_I,Char);
+
+    //it is a thing or obstacle in my vision
+    if ((X-X0 <= V) & (Y-Y0 <= V)) {
+        if (Item == obstacle) {
+            +obstacle(X-X0,Y-Y0);
+        }
+    }
+.
+
++!add_thing_to_map(I,J,T,D,MIN_I,Char):
+    myposition(X,Y)
+    <-
+    +thing(I,J,T,D);
+    !update_line(X+I,Y+J,MIN_I,Char);
 .
