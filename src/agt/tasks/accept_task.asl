@@ -14,17 +14,18 @@
     task(T,DL,Y,REQs) &
     thing(TX,TY,taskboard,_) &
     distance(0,0,TX,TY,DIST) & DIST <= 2 &
-    .my_name(ME)
+    .my_name(ME) &
+    step(S)
     <-
     !do(accept(T),R0);
     if (R0 == success) {
         .log(warning,"Task ",T," accepted!");
         ?accepted(LT);
-        .concat("[",task(T,DL,Y,REQs),",",accepted(LT),"]",STR);
+        .concat("[",task(T,DL,Y,REQs),",",accepted(LT),",",step(S),"]",STR);
         .save_stats("taskAccepted",STR);
     } else {
         .log(warning,"Could not accept task ",T);
-        .concat("[",task(T,DL,Y,REQs),"]",STR);
+        .concat("[",task(T,DL,Y,REQs),",",step(S),"]",STR);
         .save_stats("errorOnAccept",STR);
         .fail;
     }

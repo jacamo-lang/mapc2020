@@ -3,6 +3,13 @@
  * goal area and submitting the task T
  */
 
+ +!submit_task(T) : //thing(0,1,block,b1)
+     task(T,DL,Y,REQs) &
+     step(S) &
+     S > DL
+     <-
+     +status(tardy);
+  .
 +!submit_task(T) : //thing(0,1,block,b1)
     task(T,DL,Y,REQs) &
     goal(0,0) &        // I am over a goal
@@ -55,4 +62,18 @@
 +!submit_task(T) // Should not occur
     <-
     .log(warning,"Could not find a proper plan to ",submit_task(T));
+.
+-!submit_task(T): // It is probably due fail on goto_nearest
+    task(T,DL,Y,REQs) &
+    step(S)
+    <-
+    !do(skip,R);
+    .wait(step(Step) & Step > S); //wait for the next step to continue
+    //A submit may fail for instance if another agent already submitted T
+    .log(warning,"Retrying to submit ",T);
+    .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,block,BB),L);
+    .findall(t(I,J,Thing,TT),thing(I,J,Thing,TT),LT);
+    .concat("[",task(T,DL,Y,REQs),",",step(S),",",a(L),",",t(LT),"]",STR);
+    .save_stats("submit_retry",STR);
+    !submit_task(T);
 .
