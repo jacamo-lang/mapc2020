@@ -52,6 +52,7 @@ nearest_walkable(T,X,Y) :-
         (   // there is nothing attached or if there is something the spot is also walkable
             not attached(I,J) | (attached(I,J) & is_walkable(X2-X1+I,Y2-Y1+J))
         ) &
+        not (gps_map(X2+I,Y2+J,obstacle,MyMAP) & attached(I,J)) &
         distance(X1,Y1,X2,Y2,D),
         FL) &
     .min(FL,p(_,X,Y))
