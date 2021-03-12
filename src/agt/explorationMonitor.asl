@@ -1,3 +1,6 @@
+{ include("simulation/massim.asl") }
+
+
 mapId(agenta0).
 
 inMap(Map) :- mapId(M) & .substring(M,Map). 
@@ -14,12 +17,22 @@ inMap(Map) :- mapId(M) & .substring(M,Map).
 +step(701) 
    <- .findall(mapping(S,M),mapping(S,M),L);
       .sort(L,LSort);
-      !print_list(LSort).
+      !print_list(LSort);
+      
+      .findall(rX(x,Rx,S,Ag),raioX(Rx,S,Ag),Lx);
+      !print_map_size(Lx);
+      .findall(rY(y,Ry,S,Ag),raioY(Ry,S,Ag),Ly);
+      !print_map_size(Ly).
 
 +!print_list([]).      
 +!print_list([mapping(S,M)|T])
    <- .print(S,";",M);
-      !print_list(T).      
+      !print_list(T).
+      
++!print_map_size([]).
++!print_map_size([rX(Axis,R,S,Ag)|T])
+   <- .print(Axis, R,";",S,"Ag");
+      !print_map_size(T).            
       
 +!areyou(_,_,_,_,_,_,_,_).      
 

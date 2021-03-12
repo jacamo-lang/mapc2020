@@ -13,7 +13,7 @@
     .concat("artGPS",TEAM,ArtGPS)
     <-
     .log(warning,"Making and focusing on artifact ",ArtGPS);
-    makeArtifact(ArtGPS,"localPositionSystem.rp.rp",[90,0],ArtId);
+    makeArtifact(ArtGPS,"localPositionSystem.rp.rpMapSize",[90,0],ArtId);
     focusWhenAvailable(ArtGPS);
 .
 
