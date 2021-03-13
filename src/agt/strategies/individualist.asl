@@ -71,10 +71,8 @@
             // In case submit did not succeed
             .log(warning,"Dropping blocks for ",T);
             !drop_all_blocks;
-            removeMyCFPs; // in case the agent did not succeed, another agent can try
 
-            //No matter if it succeed or failed, it is supposed to be ready for another task
-            +exploring;
+            //After submit or dropping blocks the agent will be restarted by -attached(_,_)
         } else {
             +unwanted_task(T);
         }
@@ -90,6 +88,15 @@
     //No matter if it succeed or failed, it is supposed to be ready for another task
     .drop_desire(perform_task(_));
     +exploring;
+.
+
+// If the agent has delivered a task or it was target of a clear, other agents can do a new CFP
+-attached(_,_) :
+    not attached(_,_) // avoids restart in simple rotations
+    <-
+    removeMyCFPs;
+    .wait(500);
+    !restart_agent
 .
 
 /**
