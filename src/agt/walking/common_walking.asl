@@ -268,6 +268,9 @@ is_meeting_area(X,Y,R) :-
                }
                .log(warning,"No success on: ",goto(XA,YA,RET)," ",myposition(X1,Y1)," ",nearest_adjacent(B,XA,YA,DIR));
            }
+        } else {
+            !do(skip,R);
+            .log(warning,"My map says I am at the target ",myposition(X1,Y1)," ",nearest_adjacent(B,XA,YA,DIR));
         }
     }
 .
