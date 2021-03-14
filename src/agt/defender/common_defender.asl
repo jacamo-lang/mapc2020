@@ -1,9 +1,9 @@
-center_goal_small(X,Y) :-
+center_goal_small(X,Y,small) :-
     (goal(X-1,Y)) & (goal(X+1,Y)) & (goal(X,Y+1)) & (goal(X,Y-1)) &
     (not goal(X-1,Y-1)) & (not goal(X-1,Y+1)) &
     (not goal(X+1,Y-1)) & (not goal(X+1,Y+1))
     .
-center_goal_big(X,Y) :-
+center_goal_big(X,Y,big) :-
     (goal(X-1,Y)) & (goal(X+1,Y)) & (goal(X,Y+1)) & (goal(X,Y-1)) &
     (goal(X-1,Y-1)) & (goal(X-1,Y+1)) &
     (goal(X+1,Y-1)) & (goal(X+1,Y+1))
@@ -22,4 +22,10 @@ position_e(X,Y,1,0)    :- (X>=1 & Y>=-1 & Y<=1)  | X>=2.
 position_ne(X,Y,1,-1)  :- (X>=-3 & X<=-1 & Y<=2 & Y>=1).
 position_se(X,Y,1,1)   :- (X<=3 & X>=1 & Y<=2 & Y>=1).
 
-center_goal(X,Y) :- center_goal_small(X,Y) | center_goal_big(X,Y).
+center_goal(X,Y,TYPE) :- center_goal_small(X,Y,TYPE) | center_goal_big(X,Y,TYPE).
+
+is_defending(A,B):-
+  thing(A,B,entity,TEAM) &
+  team(TEAM) &
+  goal(A,B)
+  .

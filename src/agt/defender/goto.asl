@@ -1,71 +1,70 @@
-
-+!goto_center_goal(X,Y, I, J):
++!go_defender(I,J,TYPE):
+  true
+  <-
+    !goto_center_goal(_,_,I,J,TYPE);
+  .
+//Finding Center of goal
++!goto_center_goal(X,Y,I,J,T):
   goal(0,0)
   <-
     // Find Center
     for (goal(I,J)) {
-      if (center_goal(I,J)) {
+      if (center_goal(I,J,T)) {
         ?myposition(K,L);
         !goto(K+I,L+J,R);
-        !goto_center_goal(X,Y, K+I,L+J);
+        !goto_center_goal(X,Y, K+I,L+J,T);
       }
     }
   .
 
-+!goto_center_goal(X,Y, I, J):
+//In center of goal
++!goto_center_goal(X,Y, I, J,T):
   goal(0,0) &
-  center_goal(I,J)
+  center_goal(I,J,T)
   .
 
-// +!goto_center_goal(X,Y, I, J):
-//   not goal(0,0) &
-//   thing(A,B,entity,TEAM) &
-//   team(TEAM) &
-//   goal(A,B) &
-//   origin(MyMAP) &
-//   gps_map(ID,JD,goal,MyMAP)    // I know a goal area position
-//   <-
-//     .log(warning,"TERIA QUE ENVIAR AAAAA=================================");
-//     !goto_center_goal(X,Y, I,J);
-//   .
-//
-// +!goto_center_goal(X,Y, I, J):
-//   not goal(0,0) &
-//   not thing(_,_,entity,TEAM) &
-//   not team(TEAM) &
-//   origin(MyMAP) &
-//   gps_map(ID,JD,goal,MyMAP)    // I know a goal area position
-//   <-
-//     !goto(ID,JD, R);
-//     !goto_center_goal(X,Y, I,J);
-//
-+!goto_center_goal(X,Y, I, J):
+//There is somebody in this gol, come back to defense
++!goto_center_goal(X,Y, I, J,T):
   not goal(0,0) &
-  thing(A,B,entity,TEAM) &
-  team(TEAM) &
-  goal(A,B)
-  //center_goal(A,B)
+  is_defending(A,B) &
+  nearest_walkable(goal,ID,JD)
   <-
     .log(warning,"====================>>>>>DESISTA PQ JA TEM ALGUEMMMMM");
     //!goto_center_goal(X,Y, I,J);
+    //?nearest_walkable(goal,K,L);
+    //K/==ID; L/==JD;
     -perform_defender;
     -goto_center_goal;
     +exploring;
   .
 
-//
-// +!goto_center_goal(X,Y, I, J):
-//   not goal(0,0) &
-//   not (thing(A,B,entity,TEAM) &
-//   team(TEAM) & goal(A,B) & center_goal(A,B)) &
-//   origin(MyMAP) &
-//   (thing(ID,JD,goal,MyMAP) & distance(0,0,ID,JD,L) & (L < 4))
-//   <-
-//     .log(warning,"====================>>>>>NAO TEM NINGUEM");
-//     !goto(ID,JD, R);
-//     !goto_center_goal(X,Y, I,J);
-//
+// Going to center of goal because there is nobody
++!goto_center_goal(X,Y, I, J,T):
+  not goal(0,0) &
+  not is_defending(A,B) &
+  (goal(K,L) & distance(0,0,K,L,D) & D < 6)
+  <-
+    .log(warning,"====================>>>>>NORMAL CENTRO");
+    ?myposition(O,P);
+    !goto_XY_A(O+K,P+L);
+    !goto_center_goal(X,Y, I,J,T);
+  .
 
+// Make aproch from goal area in not goal location
++!goto_center_goal(X,Y, I, J,T):
+  not goal(0,0) &
+  nearest_walkable(goal,ID,JD) &
+  nearest_neighbour(ID,JD, K,L) &
+  nearest_neighbour(K,L, O,P) &
+  not goal(O,P)
+  <-
+    .log(warning,"====================>>>>>NORMAL APPROCH");
+    !goto_XY_A(O,P);
+    !goto_center_goal(X,Y, I,J,T);
+  .
+
+
+//Return even if don't achive the especific location
 +!goto_XY_A(X,Y)
     <-
     !goto(X,Y,RET);
@@ -76,50 +75,7 @@
         }
         .log(warning,"No success on: ",goto(X,Y,RET)," ",myposition(XP,YP));
     } else {
-        //Try again
-        //!goto_XY(X,Y);
+        //Don't Try again
         .log(warning,"Ja Elvis: ",goto(X,Y,RET)," ",myposition(XP,YP));
     }
 .
-
-+!goto_center_goal(X,Y, I, J):
-  not goal(0,0) &
-  not (thing(A,B,entity,TEAM) &
-  team(TEAM) &
-  goal(A,B)) &
-  (goal(K,L) & distance(0,0,K,L,D) & D < 6)
-  <-
-    //!goto_nearest_neighbour(goal);
-    //!goto(ID-1,JD, R);
-    //==?nearest_walkable(goal,K,L);
-    .log(warning,"====================>>>>>NORMAL CENTRO");
-    //!goto_nearest_neighbour(goal);
-    //?nearest_walkable(goal,A,B);
-    //?nearest_neighbour(A,B,K,L);
-    //?nearest_neighbour(ID,JD,IN,JN);
-    ?myposition(O,P);
-    !goto_XY_A(O+K,P+L);
-    !goto_center_goal(X,Y, I,J);
-  .
-
-+!goto_center_goal(X,Y, I, J):
-  not goal(0,0) &
-  //origin(MyMAP) &
-  //gps_map(ID,JD,goal,MyMAP) &   // I know a goal area position
-  nearest_walkable(goal,ID,JD) &
-  nearest_neighbour(ID,JD, K,L) &
-  nearest_neighbour(K,L, O,P) &
-  not goal(O,P)
-  <-
-    //!goto_nearest_neighbour(goal);
-    //!goto(ID-1,JD, R);
-    //==?nearest_walkable(goal,K,L);
-    .log(warning,"====================>>>>>NORMAL APPROCH");
-    //!goto_nearest_neighbour(goal);
-    //?nearest_walkable(goal,A,B);
-    //?nearest_neighbour(A,B,K,L);
-    //not ()
-    //?nearest_neighbour(ID,JD,IN,JN);
-    !goto_XY_A(O,P);
-    !goto_center_goal(X,Y, I,J);
-  .

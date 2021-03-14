@@ -1,9 +1,8 @@
 { include("defender/common_defender.asl") }
 { include("defender/get_blocks.asl") }
-{ include("defender/meeting.asl") }
 { include("defender/goto.asl") }
+{ include("defender/simple_defender.asl") }
 
-{ include("tasks/drop_block.asl") }
 { include("walking/common_walking.asl") }
 { include("walking/goto_iaA_star.asl") }
 { include("simulation/watch_dog.asl") }
@@ -15,9 +14,11 @@
 +thing(X, Y, dispenser, B):
     exploring &
     origin(MyMAP) &
-    gps_map(ID,JD,goal,MyMAP)  &  // I know a goal area position
+    gps_map(ID,JD,goal,MyMAP) // I know a goal area position
     <-
-      .log(warning,"=====================++>>>>>>>> ACHEI UM DISPENSER");
+      //.log(warning,"=====================++>>>>>>>> ACHEI UM DISPENSER");
+      //!do(clear(0,0),_);
+      .log(warning,"CLEANS");
       !!perform_defender(B);
 .
 
@@ -30,13 +31,21 @@
     -exploring;
     .log(warning,"=====================++>>>>>>>> DEFENDENDO");
     !fill_blocks(B);
-    !go_goal(I,J);
-    .log(warning,"CONSEGUIIIIIIIIIII!!!!!!!!");
-    !defenderSimple(I,J);
+    !go_defender(I,J,TYPE);
+    !defenderSimple(I,J,TYPE);
   .
 
-+!go_goal(X,Y):
-  true
++!perform_defender(B).
+
+-attached(_,_):
+  .count(attached(_,_)) \== 4 &
+  not lastAction(detach) &
+  .intend(defenderSimple(_,_,_))
   <-
-    !goto_center_goal(_,_,X,Y);
+    .log(warning,"==========LEVOU UM CLEAN");
+    !defines_places;
+    //!do(clear(0,0),_);
+    -defenderSimple;
+    -perform_defender;
+    !restart_agent;
   .
