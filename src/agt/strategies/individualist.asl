@@ -125,8 +125,11 @@
 .
 
 +unwanted_task(T) :
-    (.intend(perform_task(T)) | accepted(T))
+    (.intend(perform_task(T)) | accepted(T)) &
+    step(S)
     <-
+    .concat("[",task(T,DL,Y,REQs),",",step(S),"]",STR);
+    .save_stats("drop_perform",STR);
     removeMyCFPs;
     !restart_agent;
 .
