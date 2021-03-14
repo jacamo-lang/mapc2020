@@ -124,7 +124,8 @@
     .abolish(unwanted_task(T));
 .
 
-+unwanted_task(T) :
++unwanted_task(T)[source(S)] :
+    .my_name(ME) & S \== ME &
     (.intend(perform_task(T)) | accepted(T)) &
     step(S)
     <-
