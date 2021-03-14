@@ -31,7 +31,7 @@
     .count(attached(_,_)) == 4 &
     not is_defending(A,B)
     <-
-      .log(warning,"=====================++>>>>>>>> ACHEI UM GOAL");
+      //''.log(warning,"=====================++>>>>>>>> ACHEI UM GOAL");
       //!do(clear(0,0),_);
       !perform_defender(B);
 .
@@ -41,39 +41,63 @@
   not .intend(defenderSimple(_)) &
   thing(X, Y, dispenser, B) &
   origin(MyMAP) &
-  gps_map(ID,JD,goal,MyMAP)    // I know a goal area position
+  gps_map(ID,JD,goal,MyMAP) &  // I know a goal area position
+  not is_defending(A,B)
   <-
     -exploring;
-    .log(warning,"=====================++>>>>>>>> DEFENDENDO");
+    //.log(warning,"=====================++>>>>>>>> DEFENDENDO");
     !fill_blocks;
     !goto_center_goal(_,_,I,J,TYPE);
     !defenderSimple(I,J,TYPE);
     +exploring;
   .
 
-  +!perform_defender(B)
-      <-
-      .log(warning,"Could not defende ",B);
-  .
-  -!perform_task(T)
-      <-
-      .log(warning,"Failed on ",perform_defender(B));
-      //No matter if it succeed or failed, it is supposed to be ready for another task
-      .drop_desire(perform_defender(_));
-      +exploring;
-  .
+
++!perform_defender(B)
+    <-
+    .log(warning,"Could not defende ",B);
+.
+-!perform_task(T)
+    <-
+    .log(warning,"Failed on ",perform_defender(B));
+    //No matter if it succeed or failed, it is supposed to be ready for another task
+    .drop_desire(perform_defender(_));
+    +exploring;
+.
 
 //
-// -attached(_,_):
-//   .count(attached(_,_)) \== 4 &
-//   not lastAction(detach) &
-//   .intend(defenderSimple(_,_,_))
-//   <-
-//     .log(warning,"==========LEVOU UM CLEAN");
-//     !defines_places;
-//     //!do(clear(0,0),_);
-//     -perform_defender;
-//     .drop_desire(_);
-//     //-restart_agent;
-//     +exploring
-//   .
+-attached(_,_):
+  .count(attached(I,J)) <= 4 &
+  not attached(K,L) &
+  direction_increment(DIR,K,L) &
+  not lastAction(detach) &
+  check_if_neighbour(DIR,success) &
+  .intend(defenderSimple(_,_,_))
+  <-
+    .log(warning,"==========LEVOU UM Falso CLEAN");
+    //!fill_blocks;
+    //!defines_places;
+    //!do(clear(0,0),_);
+    //-defenderSimple;
+    //-perform_defender;
+    //-restart_agent;
+  //  +exploring;
+  .
+
+-attached(_,_):
+  .count(attached(I,J)) <= 4 &
+  not attached(K,L) &
+  direction_increment(DIR,K,L) &
+  not lastAction(detach) &
+  .intend(defenderSimple(_,_,_))
+  <-
+    .log(warning,"==========LEVOU UM CLEAN");
+    //!fill_blocks;
+    //!defines_places;
+    //!do(clear(0,0),_);
+    -defenderSimple;
+    -perform_defender;
+    !check_if_neighbour(DIR,T);
+    //-restart_agent;
+    +exploring;
+  .

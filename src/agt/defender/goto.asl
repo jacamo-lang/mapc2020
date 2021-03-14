@@ -28,12 +28,10 @@
   is_defending(A,B) &
   nearest_walkable(goal,ID,JD)
   <-
-    .log(warning,"====================>>>>>DESISTA PQ JA TEM ALGUEMMMMM");
-    //!goto_center_goal(X,Y, I,J);
-    //K/==ID; L/==JD;
+    //.log(warning,"====================>>>>>DESISTA PQ JA TEM ALGUEMMMMM");
     -perform_defender;
     -goto_center_goal;
-    !goto(0,0,R);
+    //!goto(0,0,R);
     !goto_XY(K,L);
     +exploring;
   .
@@ -44,7 +42,7 @@
   not is_defending(A,B) &
   (goal(K,L) & distance(0,0,K,L,D) & D < 6)
   <-
-    .log(warning,"====================>>>>>NORMAL CENTRO");
+    //.log(warning,"====================>>>>>NORMAL CENTRO");
     ?myposition(O,P);
     !goto_XY_A(O+K,P+L);
     !goto_center_goal(X,Y, I,J,T);
@@ -58,7 +56,7 @@
   nearest_neighbour(K,L, O,P) &
   not goal(O,P)
   <-
-    .log(warning,"====================>>>>>NORMAL APPROCH");
+    //.log(warning,"====================>>>>>NORMAL APPROCH");
     !goto_XY_A(O,P);
     !goto_center_goal(X,Y, I,J,T);
   .

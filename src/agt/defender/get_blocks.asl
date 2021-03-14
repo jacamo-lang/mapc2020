@@ -32,6 +32,9 @@
     not attached(I,J)
     <-
       !do(attach(DIR),R1);
+      if (R \==success){
+        !do(skip,_)
+      }
     .
 +!check_if_neighbour(DIR,failure).
 
