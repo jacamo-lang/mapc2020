@@ -1,6 +1,9 @@
 { include("defender/common_defender.asl") }
 { include("defender/get_blocks.asl") }
+{ include("defender/meeting.asl") }
 { include("defender/goto.asl") }
+
+{ include("tasks/drop_block.asl") }
 { include("walking/common_walking.asl") }
 { include("walking/goto_iaA_star.asl") }
 { include("simulation/watch_dog.asl") }
@@ -26,8 +29,14 @@
   <-
     -exploring;
     .log(warning,"=====================++>>>>>>>> DEFENDENDO");
-    !fill_blocks(X,Y,B);
-    !goto_center_goal(_,_, I,J);
+    !fill_blocks(B);
+    !go_goal(I,J);
     .log(warning,"CONSEGUIIIIIIIIIII!!!!!!!!");
     !makeSquare(I,J);
+  .
+
++!go_goal(X,Y):
+  true
+  <-
+    !goto_center_goal(_,_,X,Y);
   .

@@ -1,12 +1,15 @@
 
-+!fill_blocks(I,J,B):
-  thing(I,J,dispenser,B)
++!fill_blocks(B):
+  step(S)
   <-
     .log(warning,"FULLFILING BLOCKS");
     //?myposition(X,Y);
-    !goto(I,J,R);
+    //!goto(I,J,R);
     .log(warning,"CHEGUEIII");
-    !get_block(req(1,0,B));
+    !get_block(req(0,1,G));
+    !get_block(req(0,-1,B));
+    !get_block(req(-1,0,R));
+    !get_block(req(1,0,F));
     .log(warning,"PPICKED BLOCK");
   .
 
@@ -17,8 +20,9 @@
     not attached(ID,JD) &
     .my_name(ME)
     <-
-    !pick_blocks(DD, 4, R1, R0);
-
+    //!pick_blocks(DD, 4, R1, R0);
+    !do(request(DD),R0);
+    !do(attach(DD),R1);
     if (R1 == success) {
         .log(warning,"I have attached a block ",B);
         .findall(a(IB,JB,BB),attached(IB,JB) & thing(IB,JB,BB), L);
@@ -33,14 +37,42 @@
         .save_stats("errorOnAttach",STR);
     }
 .
+//
+// +!get_block(req(I,J,B)) :  // In case the agent is far away from B
+//      step(S)
+//      //direction_increment(DIR,I,J)
+//      <-
+//      //!goto_nearest_adjacent(B,DIR);
+//      //?nearest_walkable(B,X,Y);
+//      //!goto(X,Y);
+//      //!goto_nearest(B);
+//      //?thing(_,_,dispenser,B);
+//      //!drop_all_blocks;
+//      !do(skip,_);
+//      .wait(step(Step) & Step > S); //wait for the next step to continue
+//      !goto_nearest_neighbour(B);
+//      !get_block(req(I,J,B));
+// .
+
 +!get_block(req(I,J,B)) :  // In case the agent is far away from B
      step(S) &
-     direction_increment(DIR,I,J)
+     direction_increment(DIR,I,J) &
+     thing(_,_,dispenser,B)
      <-
      !goto_nearest_adjacent(B,DIR);
-     .wait(step(Step) & Step > S); //wait for the next step to continue
+     //.wait(step(Step) & Step > S); //wait for the next step to continue
      !get_block(req(I,J,B));
 .
+
+
++!get_block(req(I,J,B)) :  // In case the agent is far away from B
+     true
+     <-
+     !do(skip,_);
+     !get_block(req(I,J,B));
+.
+
+
 
 
 +!pick_blocks(_, 0, R1, R0):

@@ -23,17 +23,33 @@ position_ne(X,Y,1,-1)  :- (X>=-3 & X<=-1 & Y<=2 & Y>=1).
 position_se(X,Y,1,1)   :- (X<=3 & X>=1 & Y<=2 & Y>=1).
 
 center_goal(X,Y) :- center_goal_small(X,Y) | center_goal_big(X,Y).
+//
+// +!makeSquare(X,Y):
+//   not .intend(makeSquare(_,_)) &
+//   thing(I,J,entity,TEAM) &
+//   team(TEAM) &
+//   not goal(I,J) &
+//   .my_name(ME) &
+//   gps_map(I,J,entity,A)
+//   <-
+//   //.send(ME,achieve,hello);
+//   .log(warning,"------------>TELL WHO I AM ",A);
+//   !do(skip,_);
+//   !makeSquare(X,Y);
+//   .
+
 
 +!makeSquare(X,Y):
   not .intend(makeSquare(_,_))
   <-
-    !goto(X,Y,R);
-    !goto(X,Y-1,_);
-    !goto(X-1,Y-1,_);
-    !goto(X-1,Y+1,_);
-    !goto(X+1,Y+1,_);
-    !goto(X+1,Y-1,_);
-    !goto(X,Y-1,_);
-    !goto(X,Y,_);
+    // !goto(X,Y,R);
+    // !goto(X,Y-1,_);
+    // !goto(X-1,Y-1,_);
+    // !goto(X-1,Y+1,_);
+    // !goto(X+1,Y+1,_);
+    // !goto(X+1,Y-1,_);
+    // !goto(X,Y-1,_);
+    // !goto(X,Y,_);
+    !do(skip,_);
     !!makeSquare(X,Y);
     .

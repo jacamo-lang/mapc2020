@@ -21,12 +21,12 @@ agent agentA1 : strategies/defender.asl {
     beliefs: massim_prefix("agentA")
 }
 
-agent agentA2 : strategies/agent_do_nothing.asl {
+agent agentA2 : strategies/defender.asl {
     join : envA
     beliefs: massim_prefix("agentA")
 }
 
-agent agentA3 : strategies/agent_do_nothing.asl {
+agent agentA3 : strategies/defender.asl {
     join : envA
     beliefs: massim_prefix("agentA")
 }
