@@ -15,7 +15,7 @@
 +thing(X, Y, dispenser, B):
     exploring &
     origin(MyMAP) &
-    gps_map(ID,JD,goal,MyMAP)    // I know a goal area position
+    gps_map(ID,JD,goal,MyMAP)  &  // I know a goal area position
     <-
       .log(warning,"=====================++>>>>>>>> ACHEI UM DISPENSER");
       !!perform_defender(B);
@@ -32,7 +32,7 @@
     !fill_blocks(B);
     !go_goal(I,J);
     .log(warning,"CONSEGUIIIIIIIIIII!!!!!!!!");
-    !makeSquare(I,J);
+    !defenderSimple(I,J);
   .
 
 +!go_goal(X,Y):

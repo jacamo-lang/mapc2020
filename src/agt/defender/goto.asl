@@ -47,7 +47,10 @@
   //center_goal(A,B)
   <-
     .log(warning,"====================>>>>>DESISTA PQ JA TEM ALGUEMMMMM");
-    !goto_center_goal(X,Y, I,J);
+    //!goto_center_goal(X,Y, I,J);
+    -perform_defender;
+    -goto_center_goal;
+    +exploring;
   .
 
 //
