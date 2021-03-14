@@ -52,6 +52,7 @@ nearest_walkable(T,X,Y) :-
         (   // there is nothing attached or if there is something the spot is also walkable
             not attached(I,J) | (attached(I,J) & is_walkable(X2-X1+I,Y2-Y1+J))
         ) &
+        not (gps_map(X2+I,Y2+J,obstacle,MyMAP) & attached(I,J)) &
         distance(X1,Y1,X2,Y2,D),
         FL) &
     .min(FL,p(_,X,Y))
@@ -253,19 +254,21 @@ is_meeting_area(X,Y,R) :-
     direction_increment(DIR,I,J) & not (X+I = XA & Y+J = YA) // I am not at the target position
     <-
     .log(warning,"Going to ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));
-    if (XA==X&YA==Y) { //the agent is in the nearest adjacent - nothing to do
+    if (thing(I,J,dispenser,B) | (B = taskboard & thing(I,J,B,_))) { //the agent is in the nearest adjacent - nothing to do
             .log(warning,"I am in ", nearest_adjacent(B,XA,YA,DIR));
             !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
     }  else{ //ToDo: rewrite this ugly plan to avoid if and else
-        !goto(XA,YA,RET);
+        if (not (XA == X & YA == Y)) { //the agent is not in the target position
+            !goto(XA,YA,RET);
 
-       if (RET \== success & myposition(X1,Y1)) {
-           if(RET==no_route){
-               !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
-               // A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance
+           if (RET \== success & myposition(X1,Y1)) {
+               if(RET==no_route){
+                   !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
+                   // A .fail would be the best option but it could cause a plan failure in the beginning/middle of perform task resulting in not successful performance
+               }
+               .log(warning,"No success on: ",goto(XA,YA,RET)," ",myposition(X1,Y1)," ",nearest_adjacent(B,XA,YA,DIR));
            }
-           .log(warning,"No success on: ",goto(XA,YA,RET)," ",myposition(X1,Y1)," ",nearest_adjacent(B,XA,YA,DIR));
-       }
+        }
     }
 .
 /**
