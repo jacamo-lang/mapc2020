@@ -37,7 +37,7 @@
     if ( ID == "1" & focused(Envterm,ArtCounterTerm,_) ) {
         resetStepCounter(-1);
     }
-    
+
     if ( ID == "1" & focused(Envterm,ArtGPSterm,_) ) {
         resetRP;
     }
@@ -45,7 +45,7 @@
     if ( ID == "1" & focused(Envterm,ArtCFPterm,_) ) {
         resetSimpleCFP;
     }
-    
+
     !!start;
 .
 
@@ -80,10 +80,15 @@
     .abolish(myposition(_,_));
     .abolish(origin(_));
     .abolish(edge(_,_,_,_,_,_)); //from stc exploration strategy
-    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol 
+    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol
     .abolish(pending_areyou(_,_,_)); //from meeting protocol
-    .abolish(task(_,_,_,_));    
-    .abolish(performing(_,_));    
+    .abolish(task(_,_,_,_));
+    .abolish(performing(_,_));
+
+    .abolish(perform_defender(_));
+    .abolish(defenderSimple(_,_));
+    .abolish(goto_center_goal(_,_,_,_,_));
+    .abolish(defines_places);
 .
 
 /**

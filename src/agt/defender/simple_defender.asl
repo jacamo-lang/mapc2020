@@ -2,10 +2,7 @@
 +!defenderSimple(X,Y,TYPE):
   .count(attached(_,_)) \== 4
   <-
-    -perform_defender;
-    -defenderSimple;
-    !fill_blocks(B);
-    +exploring
+    !fill_blocks;
   .
 
 +!defenderSimple(X,Y,small):
@@ -15,7 +12,7 @@
   myposition(X-I,Y-J)
   <-
     !do(skip,_);
-    !!defenderSimple(X,Y,TYPE);
+    !defenderSimple(X,Y,TYPE);
     .
 
 +!defenderSimple(X,Y,small):
@@ -25,7 +22,7 @@
   myposition(X-I,Y-J)
   <-
     !goto(X-I,Y-J);
-    !!defenderSimple(X,Y,TYPE);
+    !defenderSimple(X,Y,TYPE);
     .
 
 +!defenderSimple(X,Y,TYPE):
@@ -35,7 +32,7 @@
   myposition(X+XM,Y+YM)
   <-
     !do(skip,_);
-    !!defenderSimple(X,Y,TYPE);
+    !defenderSimple(X,Y,TYPE);
     .
 
 +!defenderSimple(X,Y,TYPE):
@@ -44,7 +41,7 @@
   <-
     ?position_defenser(I,J,XM,YM);
     !goto(X+XM,Y+YM);
-    !!defenderSimple(X,Y,TYPE);
+    !defenderSimple(X,Y,TYPE);
     .
 
 
@@ -52,14 +49,14 @@
   myposition(X,Y)
   <-
     !do(skip,_);
-    !!defenderSimple(X,Y,TYPE);
+    !defenderSimple(X,Y,TYPE);
     .
 
 +!defenderSimple(X,Y,TYPE):
   not myposition(X,Y)
   <-
     !goto(X,Y);
-    !!defenderSimple(X,Y,TYPE);
+    !defenderSimple(X,Y,TYPE);
     .
 +!defenderSimple(X,Y,TYPE) <- !do(skip,_).
 +!makeSquare(X,Y,TYPE):
@@ -74,5 +71,5 @@
     // !goto(X,Y-1,_);
     // !goto(X,Y,_);
     !do(skip,_);
-    !!makeSquare(X,Y,TYPE);
+    !makeSquare(X,Y,TYPE);
     .

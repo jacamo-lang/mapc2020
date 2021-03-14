@@ -21,7 +21,7 @@
     <-
       //.log(warning,"=====================++>>>>>>>> ACHEI UM DISPENSER");
       //!do(clear(0,0),_);
-      !!perform_defender(B);
+      !perform_defender(B);
 .
 
 +thing(X, Y, goal, _):
@@ -33,20 +33,22 @@
     <-
       .log(warning,"=====================++>>>>>>>> ACHEI UM GOAL");
       //!do(clear(0,0),_);
-      !!perform_defender(B);
+      !perform_defender(B);
 .
 
 +!perform_defender(B):
   not .intend(perform_defender(_)) &
+  not .intend(defenderSimple(_)) &
   thing(X, Y, dispenser, B) &
   origin(MyMAP) &
   gps_map(ID,JD,goal,MyMAP)    // I know a goal area position
   <-
     -exploring;
     .log(warning,"=====================++>>>>>>>> DEFENDENDO");
-    !fill_blocks(B);
-    !go_defender(I,J,TYPE);
-    !!defenderSimple(I,J,TYPE);
+    !fill_blocks;
+    !goto_center_goal(_,_,I,J,TYPE);
+    !defenderSimple(I,J,TYPE);
+    +exploring;
   .
 
   +!perform_defender(B)

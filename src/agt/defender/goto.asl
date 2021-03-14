@@ -1,7 +1,6 @@
-+!go_defender(I,J,TYPE):
-  true
++!go_defender(I,J,TYPE)
   <-
-    !goto_center_goal(_,_,I,J,TYPE);
+    !goto_center_goal(_,_,I,J,TYPE)
   .
 //Finding Center of goal
 +!goto_center_goal(X,Y,I,J,T):
@@ -34,7 +33,7 @@
     //K/==ID; L/==JD;
     -perform_defender;
     -goto_center_goal;
-    ?nearest_walkable(task,K,L);
+    !goto(0,0_R);
     !goto_XY(K,L);
     +exploring;
   .
@@ -58,6 +57,17 @@
   nearest_neighbour(ID,JD, K,L) &
   nearest_neighbour(K,L, O,P) &
   not goal(O,P)
+  <-
+    .log(warning,"====================>>>>>NORMAL APPROCH");
+    !goto_XY_A(O,P);
+    !goto_center_goal(X,Y, I,J,T);
+  .
+
++!goto_center_goal(X,Y, I, J,T):
+  not goal(0,0) &
+  nearest_walkable(goal,ID,JD) &
+  nearest_neighbour(ID,JD, K,L) &
+  nearest_neighbour(K,L, O,P)
   <-
     .log(warning,"====================>>>>>NORMAL APPROCH");
     !goto_XY_A(O,P);

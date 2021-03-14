@@ -1,39 +1,37 @@
-+!fill_blocks(B):
-  step(S)
-  <-
-    //.log(warning,"FULLFILING BLOCKS");
-    !defines_places;
-  .
++!fill_blocks: .count(attached(_,_)) == 4.
 
-+!defines_places: .count(attached(_,_)) == 4.
-
-+!defines_places:
++!fill_blocks:
   .findall(not attached(I,J), not attached(I,J),LA) &
   .count(attached(_,_)) \== 4
   <-
     for (.member(not attached(I,J),LA) & directionIncrement(D,I,J)) {
-        !check_if_neighbour(D,R1);
-        if (R1 \== success) {
-          !check_if_can(D,R);
-          if (R \==success){
-            !do(skip,_);
-            !goto_nearest(goal);
-            -perform_defender;
-            +exploring;
-          }
-        }
+      !check_block_dir(D,R);
     };
-    !defines_places;
+    !fill_blocks;
   .
+
++!check_block_dir(DIR,R):
+  true
+  <-
+  !check_if_neighbour(DIR,R1);
+  if (R1 \== success) {
+    !check_if_can(DIR,R);
+    if (R \==success){
+      !do(skip,_);
+      //!goto_nearest(goal);
+      -check_block_dir;
+      -perform_defender;
+      +exploring;
+    }
+  }
+.
 
 +!check_if_neighbour(DIR,success):
     direction_increment(DIR,I,J) &
     thing(I,J,block,B) &
     not attached(I,J)
     <-
-      .log(warning,"====++++++=.>JA EXISTE ",I,"   ",J);
       !do(attach(DIR),R1);
-      .log(warning,"---------------->DEU OU N? ",R1);
     .
 +!check_if_neighbour(DIR,failure).
 
