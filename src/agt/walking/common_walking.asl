@@ -254,7 +254,7 @@ is_meeting_area(X,Y,R) :-
     direction_increment(DIR,I,J) & not (X+I = XA & Y+J = YA) // I am not at the target position
     <-
     .log(warning,"Going to ",nearest_adjacent(B,XA,YA,DIR)," : ",distance(X,Y,XA,YA,DIST));
-    if (XA==X&YA==Y) { //the agent is in the nearest adjacent - nothing to do
+    if (thing(I,J,dispenser,B) | (B = taskboard & thing(I,J,B,_))) { //the agent is in the nearest adjacent - nothing to do
             .log(warning,"I am in ", nearest_adjacent(B,XA,YA,DIR));
             !do(skip,R); //ToDo: check whether skipping is the better action here (couldn't it move to a neighbour point to find a route?)
     }  else{ //ToDo: rewrite this ugly plan to avoid if and else
