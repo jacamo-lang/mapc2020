@@ -134,6 +134,12 @@
     .abolish(unwanted_task(T));
 .
 
++unwanted_task(T) :
+    (.intend(perform_task(T)) | accepted(T))
+    <-
+    removeMyCFPs;
+    !restart_agent;
+.
 /**
  * For debugging if an unexpected error occurs
 -!P[code(C),code_src(S),code_line(L),error_msg(M)] :
