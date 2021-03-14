@@ -33,7 +33,7 @@
     //K/==ID; L/==JD;
     -perform_defender;
     -goto_center_goal;
-    !goto(0,0_R);
+    !goto(0,0,R);
     !goto_XY(K,L);
     +exploring;
   .
@@ -63,16 +63,6 @@
     !goto_center_goal(X,Y, I,J,T);
   .
 
-+!goto_center_goal(X,Y, I, J,T):
-  not goal(0,0) &
-  nearest_walkable(goal,ID,JD) &
-  nearest_neighbour(ID,JD, K,L) &
-  nearest_neighbour(K,L, O,P)
-  <-
-    .log(warning,"====================>>>>>NORMAL APPROCH");
-    !goto_XY_A(O,P);
-    !goto_center_goal(X,Y, I,J,T);
-  .
 
 
 //Return even if don't achive the especific location
