@@ -4,7 +4,7 @@
   <-
     -perform_defender;
     -defenderSimple;
-    !defines_places;
+    !fill_blocks(B);
     +exploring
   .
 

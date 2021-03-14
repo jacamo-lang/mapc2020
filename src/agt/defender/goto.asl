@@ -31,10 +31,11 @@
   <-
     .log(warning,"====================>>>>>DESISTA PQ JA TEM ALGUEMMMMM");
     //!goto_center_goal(X,Y, I,J);
-    //?nearest_walkable(goal,K,L);
     //K/==ID; L/==JD;
     -perform_defender;
     -goto_center_goal;
+    ?nearest_walkable(task,K,L);
+    !goto_XY(K,L);
     +exploring;
   .
 

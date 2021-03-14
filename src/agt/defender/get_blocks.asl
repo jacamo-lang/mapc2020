@@ -33,6 +33,7 @@
     <-
       .log(warning,"====++++++=.>JA EXISTE ",I,"   ",J);
       !do(attach(DIR),R1);
+      .log(warning,"---------------->DEU OU N? ",R1);
     .
 +!check_if_neighbour(DIR,failure).
 

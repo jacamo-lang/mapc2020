@@ -12,13 +12,25 @@
 
 // when I see a dispenser
 +thing(X, Y, dispenser, B):
+    not .intend(perform_defender(_)) &
     exploring &
+    .count(attached(_,_)) \== 4 &
     origin(MyMAP) &
     gps_map(ID,JD,goal,MyMAP) // I know a goal area position
     <-
       //.log(warning,"=====================++>>>>>>>> ACHEI UM DISPENSER");
       //!do(clear(0,0),_);
-      .log(warning,"CLEANS");
+      !!perform_defender(B);
+.
+
++thing(X, Y, goal, _):
+    not .intend(perform_defender(_)) &
+    exploring &
+    .count(attached(_,_)) == 4 &
+    not is_defending(A,B)
+    <-
+      .log(warning,"=====================++>>>>>>>> ACHEI UM GOAL");
+      //!do(clear(0,0),_);
       !!perform_defender(B);
 .
 
@@ -35,17 +47,29 @@
     !defenderSimple(I,J,TYPE);
   .
 
-+!perform_defender(B).
-
--attached(_,_):
-  .count(attached(_,_)) \== 4 &
-  not lastAction(detach) &
-  .intend(defenderSimple(_,_,_))
-  <-
-    .log(warning,"==========LEVOU UM CLEAN");
-    !defines_places;
-    //!do(clear(0,0),_);
-    -defenderSimple;
-    -perform_defender;
-    !restart_agent;
+  +!perform_defender(B)
+      <-
+      .log(warning,"Could not defende ",B);
   .
+  -!perform_task(T)
+      <-
+      .log(warning,"Failed on ",perform_defender(B));
+      //No matter if it succeed or failed, it is supposed to be ready for another task
+      .drop_desire(perform_defender(_));
+      +exploring;
+  .
+
+//
+// -attached(_,_):
+//   .count(attached(_,_)) \== 4 &
+//   not lastAction(detach) &
+//   .intend(defenderSimple(_,_,_))
+//   <-
+//     .log(warning,"==========LEVOU UM CLEAN");
+//     !defines_places;
+//     //!do(clear(0,0),_);
+//     -perform_defender;
+//     .drop_desire(_);
+//     //-restart_agent;
+//     +exploring
+//   .
