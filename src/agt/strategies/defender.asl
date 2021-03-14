@@ -13,6 +13,7 @@
 // when I see a dispenser
 +thing(X, Y, dispenser, B):
     not .intend(perform_defender(_)) &
+    not .intend(defenderSimple(_)) &
     exploring &
     .count(attached(_,_)) \== 4 &
     origin(MyMAP) &
@@ -25,6 +26,7 @@
 
 +thing(X, Y, goal, _):
     not .intend(perform_defender(_)) &
+    not .intend(defenderSimple(_)) &
     exploring &
     .count(attached(_,_)) == 4 &
     not is_defending(A,B)
@@ -44,7 +46,7 @@
     .log(warning,"=====================++>>>>>>>> DEFENDENDO");
     !fill_blocks(B);
     !go_defender(I,J,TYPE);
-    !defenderSimple(I,J,TYPE);
+    !!defenderSimple(I,J,TYPE);
   .
 
   +!perform_defender(B)
