@@ -73,6 +73,8 @@
             !drop_all_blocks;
 
             //After submit or dropping blocks the agent will be restarted by -attached(_,_)
+            removeMyCFPs;
+            !restart_agent;
         } else {
             +unwanted_task(T);
         }
@@ -86,17 +88,18 @@
     <-
     .log(warning,"Failed on ",perform_task(T)," dropping desire, back to explore.");
     //No matter if it succeed or failed, it is supposed to be ready for another task
-    .drop_desire(perform_task(_));
-    +exploring;
+    removeMyCFPs;
+    !restart_agent;
 .
 
-// If the agent has delivered a task or it was target of a clear, other agents can do a new CFP
+// If the agent was target of a clear, other agents can do a new CFP
 -attached(_,_) :
-    not attached(_,_) // avoids restart in simple rotations
+    not attached(_,_) & // avoids restart in simple rotations
+    not lastAction(submit) & // avoids restart after submit
+    not lastAction(detach) // avoids restart after voluntary detach
     <-
     removeMyCFPs;
-    .wait(500);
-    !restart_agent
+    !restart_agent;
 .
 
 /**
