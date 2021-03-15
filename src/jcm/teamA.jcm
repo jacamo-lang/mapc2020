@@ -8,47 +8,29 @@ mas teamA {
 
     agent agentA : strategies/individualist.asl {
         join : envA
-        instances: 7
-    }
-
-    agent agentA8 : strategies/defender.asl {
-        join : envA
-        beliefs: massim_prefix("agentA")
-    }
-
-    agent agentA9 : strategies/defender.asl {
-        join : envA
-        beliefs: massim_prefix("agentA")
-    }
-
-    agent agentA10 : strategies/defender.asl {
-        join : envA
-        beliefs: massim_prefix("agentA")
-    }
-
-    agent agentA11 : strategies/defender.asl {
-        join : envA
-        beliefs: massim_prefix("agentA")
+        instances: 11
     }
 
     agent agentA12 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        // massim_prefix should be the username prefix used on clientconf
+        // Usually it is "agentA" for local tests and "agentJaCaMo_Builders" for remotes
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA13 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA14 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA15 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA16 : strategies/individualist.asl {
@@ -83,7 +65,7 @@ mas teamA {
         join : envA
     }
 
-    agent agentA24 : strategies/individualist.asl {
+    agent agentA24 : strategies/defender.asl {
         join : envA
     }
 
@@ -97,22 +79,22 @@ mas teamA {
 
     agent agentA27 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA28 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA29 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA30 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA31 : strategies/individualist.asl {
@@ -159,46 +141,46 @@ mas teamA {
         join : envA
     }
 
-    agent agentA42 : strategies/individualist.asl {
+    agent agentA42 : strategies/defender.asl {
         join : envA
     }
 
-    agent agentA43 : strategies/individualist.asl {
+    agent agentA43 : strategies/defender.asl {
         join : envA
     }
 
-    agent agentA44 : strategies/individualist.asl {
+    agent agentA44 : strategies/defender.asl {
         join : envA
     }
 
     agent agentA45 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA46 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA47 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA48 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA49 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
     agent agentA50 : strategies/collectivist.asl {
         join : envA
-        beliefs: massim_prefix("agentA")
+        beliefs: massim_prefix("agentJaCaMo_Builders")
     }
 
 /*
