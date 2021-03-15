@@ -6,7 +6,7 @@ mas s1_vs_s2 {
 
     agent agentA : strategies/individualist.asl {
         join : envA
-        instances: 50
+        instances: 30
     }
 
 /**
@@ -17,7 +17,7 @@ mas s1_vs_s2 {
 
     agent agentB : strategies/collectivist.asl {
         join : envB
-        instances: 50
+        instances: 30
         // massim_prefix should be the username prefix used on clientconf
         // Usually it is "agentA" for local tests and "agentJaCaMo_Builders" for remotes
         beliefs: massim_prefix("agentB")

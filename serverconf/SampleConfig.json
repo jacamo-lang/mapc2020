@@ -11,7 +11,7 @@
     "logPath" : "logs",
     "replayPath" : "replays",
     "maxPacketLength" : 65536,
-    "waitBetweenSimulations" : 5000
+    "waitBetweenSimulations" : 15000
   },
 
   "manual-mode" : [
@@ -22,8 +22,7 @@
 
   "match" : [
     "$(sim/sim1.json)",
-    "$(sim/sim2.json)",
-    "$(sim/sim3.json)"
+    "$(sim/sim2.json)"
   ],
 
   "teams" : {
