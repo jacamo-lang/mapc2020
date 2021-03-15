@@ -11,7 +11,7 @@ mas s2_vs_s3 {
         instances: 50
         // massim_prefix should be the username prefix used on clientconf
         // Usually it is "agentA" for local tests and "agentJaCaMo_Builders" for remotes
-        beliefs: massim_prefix("agentB")
+        beliefs: massim_prefix("agentA")
     }
 
 /**
@@ -195,8 +195,8 @@ mas s2_vs_s3 {
         beliefs: massim_prefix("agentB")
     }
 
-/** 
- * ENVIRONMENTS 
+/**
+ * ENVIRONMENTS
  */
 
     workspace envA {}
