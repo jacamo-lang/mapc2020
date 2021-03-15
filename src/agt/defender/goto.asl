@@ -75,6 +75,7 @@
         .log(warning,"No success on: ",goto(X,Y,RET)," ",myposition(XP,YP));
     } else {
         //Don't Try again
+        !do(skip,R);
         .log(warning,"Ja Elvis: ",goto(X,Y,RET)," ",myposition(XP,YP));
     }
 .

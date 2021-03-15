@@ -15,23 +15,10 @@
     not .intend(perform_defender(_)) &
     not .intend(defenderSimple(_,_,_)) &
     exploring &
-    .count(attached(_,_)) \== 4 &
     origin(MyMAP) &
     gps_map(ID,JD,goal,MyMAP) // I know a goal area position
     <-
-      //.log(warning,"=====================++>>>>>>>> ACHEI UM DISPENSER");
-      //!do(clear(0,0),_);
-      !perform_defender(B);
-.
-
-+thing(X, Y, goal, _):
-    not .intend(perform_defender(_)) &
-    not .intend(defenderSimple(_,_,_)) &
-    exploring &
-    .count(attached(_,_)) == 4 &
-    not is_defending(A,B)
-    <-
-      //''.log(warning,"=====================++>>>>>>>> ACHEI UM GOAL");
+      .log(warning,"=====================++>>>>>>>> ACHEI UM DISPENSER");
       //!do(clear(0,0),_);
       !perform_defender(B);
 .
@@ -42,10 +29,10 @@
   thing(X, Y, dispenser, B) &
   origin(MyMAP) &
   gps_map(ID,JD,goal,MyMAP) &  // I know a goal area position
-  not is_defending(A,B)
+  not is_defending(O,P)
   <-
     -exploring;
-    //.log(warning,"=====================++>>>>>>>> DEFENDENDO");
+    .log(warning,"=====================++>>>>>>>> DEFENDENDO");
     !fill_blocks;
     !goto_center_goal(_,_,I,J,TYPE);
     !defenderSimple(I,J,TYPE);
@@ -57,7 +44,7 @@
     <-
     .log(warning,"Could not defende ",B);
 .
--!perform_task(T)
+-!perform_defender(B)
     <-
     .log(warning,"Failed on ",perform_defender(B));
     //No matter if it succeed or failed, it is supposed to be ready for another task

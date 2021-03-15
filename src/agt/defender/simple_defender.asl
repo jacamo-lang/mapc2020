@@ -3,6 +3,7 @@
   .count(attached(_,_)) < 4
   <-
     //-defenderSimple;
+    !do(skip,_);
     !perform_defender(_);
   .
 
@@ -59,7 +60,9 @@
     !goto(X,Y);
     !defenderSimple(X,Y,TYPE);
     .
-+!defenderSimple(X,Y,TYPE) <- !do(skip,_).
+
++!defenderSimple(X,Y,TYPE) <- !do(skip,_); !defenderSimple(,X,Y,TYPE).
+
 +!makeSquare(X,Y,TYPE):
   not .intend(makeSquare(_,_))
   <-

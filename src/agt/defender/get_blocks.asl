@@ -4,6 +4,7 @@
   .findall(not attached(I,J), not attached(I,J),LA) &
   .count(attached(_,_)) \== 4
   <-
+    !do(skip,_);
     for (.member(not attached(I,J),LA) & directionIncrement(D,I,J)) {
       !check_block_dir(D,R);
     };
@@ -18,6 +19,9 @@
     !check_if_can(DIR,R);
     if (R \==success){
       !do(skip,_);
+      .drop_intention(perform_defender(_));
+      .drop_intention(check_block_dir(_,_));
+      +exploring;
       //!goto_nearest(goal);
       //-check_block_dir;
       //-perform_defender;
@@ -73,14 +77,16 @@
         .findall(t(I,J,T),thing(I,J,T,_), LT);
         .concat("[",req(I,J,B),",",myposition(X,Y),",",R0,"/",R1,"]",STR);
         .save_stats("errorOnAttach",STR);
+        !do(skip,_);
     }
 .
 
-+!get_block(req(I,J,B),R) :  // In case the agent is far away from B
-     step(S) &
-     direction_increment(DIR,I,J)
-     <-
-     !goto_nearest_adjacent(B,DIR);
-     //.wait(step(Step) & Step > S); //wait for the next step to continue
-     !get_block(req(I,J,B),R);
-.
++!get_block(req(I,J,B),R1): true <- !do(skip,_).
+// +!get_block(req(I,J,B),R) :  // In case the agent is far away from B
+//      step(S) &
+//      direction_increment(DIR,I,J)
+//      <-
+//      !goto_nearest_adjacent(B,DIR);
+//      //.wait(step(Step) & Step > S); //wait for the next step to continue
+//      !get_block(req(I,J,B),R);
+// .

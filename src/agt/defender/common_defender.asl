@@ -29,3 +29,16 @@ is_defending(A,B):-
   team(TEAM) &
   goal(A,B)
   .
+
+can_full_fill(DIR):-
+  thing(X, Y, dispenser, B) &
+  nearest_adjacent(B,X,Y,DIR) &
+  is_walkable(X,Y)
+  .
+
+can_full_fill:-
+  can_full_fill(n)
+  // can_full_fill(s) &
+  // can_full_fill(e) &
+  // can_full_fill(w)
+  .
