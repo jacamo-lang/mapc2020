@@ -35,7 +35,7 @@
 .
 +!get_block(req(I,J,B)) :  // In case the agent is far away from B
      step(S) &
-     direction_increment(DIR,I,J)
+     direction_increment(DIR,-I,-J)
      <-
      !goto_nearest_adjacent(B,DIR);
      .wait(step(Step) & Step > S); //wait for the next step to continue
