@@ -2,15 +2,15 @@
 +!defenderSimple(X,Y,TYPE):
   .count(attached(_,_)) < 4
   <-
-    //defenderSimple;
-    //!perform_defender(B);
+    //-defenderSimple;
+    !perform_defender();
   .
 
 +!defenderSimple(X,Y,small):
   thing(I,J,entity,TEAM) &
   team(TEAM) &
-  (distance(0,0,I,J,L) & L <= 2) &
-  myposition(X-I,Y-J)
+  (distance(0,0,I,J,L) & L <= 4) &
+  myposition(X-2,Y-2)
   <-
     !do(skip,_);
     !defenderSimple(X,Y,TYPE);
@@ -19,10 +19,10 @@
 +!defenderSimple(X,Y,small):
   thing(I,J,entity,TEAM) &
   team(TEAM) &
-  (distance(0,0,I,J,L) & L <= 2) &
-  myposition(X-I,Y-J)
+  (distance(0,0,I,J,L) & L <= 4) &
+  myposition(X,Y)
   <-
-    !goto(X-I,Y-J);
+    !goto(X-2,Y-2);
     !defenderSimple(X,Y,TYPE);
     .
 
