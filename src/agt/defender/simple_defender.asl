@@ -1,8 +1,9 @@
 //If for some reason he lost some block
 +!defenderSimple(X,Y,TYPE):
-  .count(attached(_,_)) \== 4
+  .count(attached(_,_)) < 4
   <-
-    !fill_blocks;
+    //defenderSimple;
+    //!perform_defender(B);
   .
 
 +!defenderSimple(X,Y,small):

@@ -19,9 +19,9 @@
     if (R \==success){
       !do(skip,_);
       //!goto_nearest(goal);
-      -check_block_dir;
-      -perform_defender;
-      +exploring;
+      //-check_block_dir;
+      //-perform_defender;
+      //+exploring;
     }
   }
 .
@@ -32,6 +32,9 @@
     not attached(I,J)
     <-
       !do(attach(DIR),R1);
+      if (R \==success){
+        !do(skip,_)
+      }
     .
 +!check_if_neighbour(DIR,failure).
 
