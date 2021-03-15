@@ -7,7 +7,17 @@
  */
 
 +simStart :
-    step(0) &
+    step(0)
+    <-
+    .drop_all_events;
+    .drop_all_desires;
+    .drop_all_intentions;
+    !drop_beliefs;
+
+    !init_agent;
+.
+
++!init_agent :
     .my_name(NAME) &
     .substring(NAME,ID,6) &
     .substring(NAME,TEAM,5,6) &
@@ -22,13 +32,8 @@
     <-
     .log(warning,"****** Initialising agent");
 
-    .drop_all_events;
-    .drop_all_desires;
-    .drop_all_intentions;
-    !drop_beliefs;
-
-    +exploring;
-    +myposition(0,0);
+    -+exploring;
+    -+myposition(0,0);
     -+last_node(-1,-1); //for stc exploration strategy
     -+current_moving_step(99); //for stc exploration strategy
     -+forward; //for stc strategy
@@ -46,7 +51,9 @@
         resetSimpleCFP;
     }
 
-    !!start;
+    if (not .intend(explore)) {
+        !!start;
+    }
 .
 
 +simStart : // to avoid a flood of register, only agent1 of each team generate the simStart event
