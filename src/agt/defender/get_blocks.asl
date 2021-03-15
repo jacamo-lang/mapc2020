@@ -44,7 +44,7 @@
     is_walkable(X,Y)
     <-
       //.log(warning,"Indo perto do dispenser");
-      !goto(X,Y,R);
+      !goto_XY_A(X,Y);
       ?direction_increment(DIR,I,J);
       !get_block(req(I,J,B),R);
     .

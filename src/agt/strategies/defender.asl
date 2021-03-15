@@ -13,7 +13,7 @@
 // when I see a dispenser
 +thing(X, Y, dispenser, B):
     not .intend(perform_defender(_)) &
-    not .intend(defenderSimple(_)) &
+    not .intend(defenderSimple(_,_,_)) &
     exploring &
     .count(attached(_,_)) \== 4 &
     origin(MyMAP) &
@@ -26,7 +26,7 @@
 
 +thing(X, Y, goal, _):
     not .intend(perform_defender(_)) &
-    not .intend(defenderSimple(_)) &
+    not .intend(defenderSimple(_,_,_)) &
     exploring &
     .count(attached(_,_)) == 4 &
     not is_defending(A,B)
@@ -38,7 +38,7 @@
 
 +!perform_defender(B):
   not .intend(perform_defender(_)) &
-  not .intend(defenderSimple(_)) &
+  not .intend(defenderSimple(_,_,_)) &
   thing(X, Y, dispenser, B) &
   origin(MyMAP) &
   gps_map(ID,JD,goal,MyMAP) &  // I know a goal area position
