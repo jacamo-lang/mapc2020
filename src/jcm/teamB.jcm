@@ -16,176 +16,216 @@ mas teamB {
     agent agentB : strategies/individualist.asl {
         join : envB
         instances: 11
+        goals : init_agent
     }
 
     agent agentB12 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB13 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB14 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB15 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB16 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB17 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB18 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB19 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB20 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB21 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB22 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB23 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB24 : strategies/defender.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB25 : strategies/defender.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB26 : strategies/defender.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB27 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB28 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB29 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB30 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB31 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB32 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB33 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB34 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB35 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB36 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB37 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB38 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB39 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB40 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB41 : strategies/individualist.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB42 : strategies/defender.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB43 : strategies/defender.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB44 : strategies/defender.asl {
         join : envB
+        goals : init_agent
     }
 
     agent agentB45 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB46 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB47 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB48 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB49 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
     agent agentB50 : strategies/collectivist.asl {
         join : envB
         beliefs: massim_prefix("agentJaCaMo_Builders")
+        goals : init_agent
     }
 
 /**
