@@ -33,7 +33,7 @@
     //K/==ID; L/==JD;
     -perform_defender;
     -goto_center_goal;
-    !goto(0,0_R);
+    !goto(0,0,R);
     !goto_XY(K,L);
     +exploring;
   .
