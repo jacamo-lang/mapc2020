@@ -93,7 +93,7 @@ public class lps extends Artifact {
             prop = this.getObsPropertyByTemplate("gps_map", null, null, null, oldMapId);
         }
          signal("replace_map", new Atom(oldMapId), new Atom(newMapId),dx,dy);
-         log("replace map " + oldMapId + " to " +  newMapId  + " agent: " + oldMapId);
+         //log("replace map " + oldMapId + " to " +  newMapId  + " agent: " + oldMapId);
     }
     
     @OPERATION
