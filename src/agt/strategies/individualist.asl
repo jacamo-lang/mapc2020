@@ -124,6 +124,16 @@
     .abolish(unwanted_task(T));
 .
 
++unwanted_task(T)[source(S)] :
+    .my_name(ME) & S \== ME &
+    (.intend(perform_task(T)) | accepted(T)) &
+    step(S)
+    <-
+    .concat("[",task(T,DL,Y,REQs),",",step(S),"]",STR);
+    .save_stats("drop_perform",STR);
+    removeMyCFPs;
+    !restart_agent;
+.
 /**
  * For debugging if an unexpected error occurs
 -!P[code(C),code_src(S),code_line(L),error_msg(M)] :
