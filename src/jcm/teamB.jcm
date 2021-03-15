@@ -1,10 +1,11 @@
 mas teamB {
 
+/*
     agent agentA: strategies/agent_do_nothing.asl{
         join: envA
         instances: 50
     }
-
+*/
 /**
  * TEAM - strategy 3: individualists + defenders + collectivists
  */
@@ -204,8 +205,9 @@ mas teamB {
 /**
  * ENVIRONMENTS
  */
-
+/*
     workspace envA {}
+*/
     workspace envB {}
 
 }
