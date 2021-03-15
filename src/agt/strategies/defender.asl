@@ -95,8 +95,8 @@
     //!fill_blocks;
     //!defines_places;
     //!do(clear(0,0),_);
-    -defenderSimple;
-    -perform_defender;
+    .drop_intention(defenderSimple(_,_,_));
+    .drop_intention(perform_defender(_));
     !check_if_neighbour(DIR,T);
     //-restart_agent;
     +exploring;

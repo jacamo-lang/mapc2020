@@ -2,8 +2,8 @@
 +!defenderSimple(X,Y,TYPE):
   .count(attached(_,_)) < 4
   <-
-    -defenderSimple;
-    !perform_defender(B);
+    //defenderSimple;
+    //!perform_defender(B);
   .
 
 +!defenderSimple(X,Y,small):

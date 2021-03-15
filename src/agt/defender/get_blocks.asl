@@ -19,9 +19,9 @@
     if (R \==success){
       !do(skip,_);
       //!goto_nearest(goal);
-      -check_block_dir;
-      -perform_defender;
-      +exploring;
+      //-check_block_dir;
+      //-perform_defender;
+      //+exploring;
     }
   }
 .
