@@ -3,7 +3,7 @@
   .count(attached(_,_)) < 4
   <-
     //-defenderSimple;
-    !perform_defender();
+    !perform_defender(_);
   .
 
 +!defenderSimple(X,Y,small):
