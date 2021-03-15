@@ -8,7 +8,12 @@ mas teamA {
 
     agent agentA : strategies/individualist.asl {
         join : envA
-        instances: 8
+        instances: 7
+    }
+
+    agent agentA8 : strategies/defender.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
     }
 
     agent agentA9 : strategies/defender.asl {

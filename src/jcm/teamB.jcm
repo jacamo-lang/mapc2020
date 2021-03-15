@@ -5,6 +5,7 @@ mas teamB {
         join: envA
         instances: 50
     }
+
 */
 /**
  * TEAM - strategy 3: individualists + defenders + collectivists
@@ -14,7 +15,12 @@ mas teamB {
 
     agent agentB : strategies/individualist.asl {
         join : envB
-        instances: 8
+        instances: 7
+    }
+
+    agent agentB8 : strategies/defender.asl {
+        join : envB
+        beliefs: massim_prefix("agentB")
     }
 
     agent agentB9 : strategies/defender.asl {
