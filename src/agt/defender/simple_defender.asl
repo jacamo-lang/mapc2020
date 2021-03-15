@@ -61,7 +61,7 @@
     !defenderSimple(X,Y,TYPE);
     .
 
-+!defenderSimple(X,Y,TYPE) <- !do(skip,_); !defenderSimple(,X,Y,TYPE).
++!defenderSimple(X,Y,TYPE) <- !do(skip,_); !defenderSimple(X,Y,TYPE).
 
 +!makeSquare(X,Y,TYPE):
   not .intend(makeSquare(_,_))
