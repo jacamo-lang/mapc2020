@@ -1,0 +1,213 @@
+mas teamA {
+
+/**
+ * TEAM - strategy 3: individualists + defenders + collectivists
+ */
+
+    agent coordinatorA : strategies/collectivist_coordinator.asl
+
+    agent agentA : strategies/individualist.asl {
+        join : envA
+        instances: 8
+    }
+
+    agent agentA9 : strategies/defender.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA10 : strategies/defender.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA11 : strategies/defender.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA12 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA13 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA14 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA15 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA16 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA17 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA18 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA19 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA20 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA21 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA22 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA23 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA24 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA25 : strategies/defender.asl {
+        join : envA
+    }
+
+    agent agentA26 : strategies/defender.asl {
+        join : envA
+    }
+
+    agent agentA27 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA28 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA29 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA30 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA31 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA32 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA33 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA34 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA35 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA36 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA37 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA38 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA39 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA40 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA41 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA42 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA43 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA44 : strategies/individualist.asl {
+        join : envA
+    }
+
+    agent agentA45 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA46 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA47 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA48 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA49 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+    agent agentA50 : strategies/collectivist.asl {
+        join : envA
+        beliefs: massim_prefix("agentA")
+    }
+
+/*
+    agent agentB: strategies/agent_do_nothing.asl{
+        join: envB
+        instances: 50
+    }
+*/
+/**
+ * ENVIRONMENTS
+ */
+
+    workspace envA {}
+/*
+    workspace envB {}
+*/
+}
