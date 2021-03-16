@@ -6,7 +6,19 @@ JaCaMo team for [MAPC 2020](https://multiagentcontest.org/2020/)
 Requirements:
 - jdk >= 13
 
-Execute `./gradlew run`, press enter to start the simulation, and see the execution on a [browser](http://127.0.0.1:8000).
+# Running local server and client together
+
+1. Edit the script `/clientconf/createFile.sh`, setting on both teams the `host` parameter to `localhost`, `password` to `1`, and set the parameter `username` to `agentA%d` and `agentB%d` on team A and B respectivelly. 
+2. Execute the script to create the client configuration files.
+3. Make sure the server is being launched by setting the instruction `Server.main(...)` at the file `src/java/runMAPC2020/Control.java`.
+4. Execute the default strategy running `./gradlew run`, press enter to start the simulation, and see the execution on a [browser](http://127.0.0.1:8000). You can set another strategy giving arguments, for instance: `./gradlew run --args="src/jcm/individualist.jcm`
+
+# Running for the competition (just client side)
+
+1. Edit the script `/clientconf/createFile.sh`, setting on both teams configuration the `host`, `password`, and `username` that will be used for the competition (e.g.: `agentcontest1.in.tu-clausthal.de`, `some-password`, `agentJaCaMo_Builders%d`). In this case, you can set teamA to play on a server (e.g. `agentcontest1.in.tu-clausthal.de`) and team B to play on a second server (e.g. `agentcontest2.in.tu-clausthal.de`). 
+2. Execute the script to create the client configuration files.
+3. Make sure the server is NOT being launched removing/commenting the instruction `Server.main(...)` at the file `src/java/runMAPC2020/Control.java`.
+4. Execute `./gradlew run --args="src/jcm/teamA.jcm` or `./gradlew run --args="src/jcm/teamB.jcm` according to the server.
 
 # Configuring an Eclipse Project
 
