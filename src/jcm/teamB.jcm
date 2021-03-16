@@ -83,17 +83,17 @@ mas teamB {
         goals : init_agent
     }
 
-    agent agentB24 : strategies/defender.asl {
+    agent agentB24 : strategies/individualist.asl {
         join : envB
         goals : init_agent
     }
 
-    agent agentB25 : strategies/defender.asl {
+    agent agentB25 : strategies/individualist.asl {
         join : envB
         goals : init_agent
     }
 
-    agent agentB26 : strategies/defender.asl {
+    agent agentB26 : strategies/individualist.asl {
         join : envB
         goals : init_agent
     }
@@ -162,17 +162,17 @@ mas teamB {
         goals : init_agent
     }
 
-    agent agentB39 : strategies/individualist.asl {
+    agent agentB39 : strategies/defender.asl {
         join : envB
         goals : init_agent
     }
 
-    agent agentB40 : strategies/individualist.asl {
+    agent agentB40 : strategies/defender.asl {
         join : envB
         goals : init_agent
     }
 
-    agent agentB41 : strategies/individualist.asl {
+    agent agentB41 : strategies/defender.asl {
         join : envB
         goals : init_agent
     }
