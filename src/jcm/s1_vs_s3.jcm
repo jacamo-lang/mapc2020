@@ -1,0 +1,114 @@
+mas s1_vs_s3 {
+
+/**
+ * TEAM A - strategy 1: only individualists
+ */
+
+    agent agentA : strategies/individualist.asl {
+        join : envA
+        instances: 30
+    }
+
+/**
+ * TEAM B - strategy 3: individualists + 28% collectivists
+ */
+
+    agent coordinatorB : strategies/collectivist_coordinator.asl
+
+    agent agentB : strategies/individualist.asl {
+        join : envB
+        instances: 11
+    }
+
+    agent agentB12 : strategies/collectivist.asl {
+        join : envB
+        beliefs: massim_prefix("agentB")
+    }
+
+    agent agentB13 : strategies/collectivist.asl {
+        join : envB
+        beliefs: massim_prefix("agentB")
+    }
+
+    agent agentB14 : strategies/collectivist.asl {
+        join : envB
+        beliefs: massim_prefix("agentB")
+    }
+
+    agent agentB15 : strategies/collectivist.asl {
+        join : envB
+        beliefs: massim_prefix("agentB")
+    }
+
+    agent agentB16 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB17 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB18 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB19 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB20 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB21 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB22 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB23 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB24 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB25 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB26 : strategies/individualist.asl {
+        join : envB
+    }
+
+    agent agentB27 : strategies/collectivist.asl {
+        join : envB
+        beliefs: massim_prefix("agentB")
+    }
+
+    agent agentB28 : strategies/collectivist.asl {
+        join : envB
+        beliefs: massim_prefix("agentB")
+    }
+
+    agent agentB29 : strategies/collectivist.asl {
+        join : envB
+        beliefs: massim_prefix("agentB")
+    }
+
+    agent agentB30 : strategies/collectivist.asl {
+        join : envB
+        beliefs: massim_prefix("agentB")
+    }
+
+/** 
+ * ENVIRONMENTS 
+ */
+
+    workspace envA {}
+    workspace envB {}
+
+}
