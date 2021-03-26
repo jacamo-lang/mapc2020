@@ -65,8 +65,7 @@ axis_center(S,C):-C=(S)div(2).
 <-  mark(NX, NY, Object, MapId);
     .
    
-+!insert_into_map(X,Y,Object,MapId)
-   <- .print("------------------------------- ignoring ",m(X,Y,Object,MapId)).
++!insert_into_map(X,Y,Object,MapId).
       
       
       

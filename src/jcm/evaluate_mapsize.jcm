@@ -1,0 +1,32 @@
+mas individualist {
+
+agent agentA : strategies/explorer.asl { 
+    join : envA 
+    instances: 50
+} 
+
+agent updateMapSize: exploration/updateMapSize.asl {
+    beliefs: originlead(agentA1)
+    join : envA
+}
+
+agent evaluateMapSize: exploration/evaluateMapSize.asl {
+    beliefs: originlead(agentA1)
+    join : envA
+}
+
+agent agentB: strategies/explorer.asl{
+    join: envB
+    instances: 50
+}
+
+workspace envA {
+
+}
+
+workspace envB {
+}
+
+//platform: jacamo.web.JCMWeb("--main 2181 --restPort 8080") // zookeeper at 2181, rest/web at 8080
+
+}

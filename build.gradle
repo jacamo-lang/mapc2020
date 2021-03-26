@@ -104,6 +104,20 @@ task testGoal (type: JavaExec, dependsOn: 'classes') {
     classpath sourceSets.main.runtimeClasspath
 }
 
+task evalMapSize (type: JavaExec, dependsOn: 'classes') {
+    group      ' MAPC'
+    description 'run teams'
+    doFirst {
+        mkdir 'log'
+    }
+    standardInput = System.in
+    //jvmArgs = ['-Xss15m','-Djava.awt.headless=true']
+    main 'runMAPC2020.RunTeam'
+    args = ['src/jcm/evaluate_mapsize.jcm']
+    classpath sourceSets.main.runtimeClasspath
+}
+
+
 task playground (type: JavaExec, dependsOn: 'classes') {
     group      ' MAPC'
     description 'run teams'
