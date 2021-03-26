@@ -25,7 +25,6 @@ axis_center(S,C):-C=(S)div(2).
             .findall(n(XX,YY,Object,Map),originlead(Map)&gps_map(XX,YY,Object,Map)&Object\==obstacle&(XX<math.abs(CX)|YY>math.abs(CY)) , N)
    <- !adapt_map_size(L);
       !replicate_map_size(N);
-      //.print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  ", sizes, " ", L);
       .
    
 +size_y(Y) : size_x(X) & axis_center(X,CX) & axis_center(X,CY)& 
@@ -33,7 +32,6 @@ axis_center(S,C):-C=(S)div(2).
             .findall(n(XX,YY,Object,Map),originlead(Map)&gps_map(XX,YY,Object,Map)&Object\==obstacle&(XX<math.abs(CX)|YY>math.abs(CY)) , N)
    <- !adapt_map_size(L); 
       !replicate_map_size(N);  
-      //.print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  ", sizes, " ", L);
       .
       
       
@@ -64,8 +62,7 @@ axis_center(S,C):-C=(S)div(2).
                                       adapt_coordinate(X,NX,SX) &
                                       adapt_coordinate(Y,NY,SY) &
                                       not(gps_map(NX,NY,Object,MapId))  
-<-  .print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! marking ",gps_map(X,Y,Object,MapId), " to ", gps_map(NX, NY, Object,  MapId));
-    mark(NX, NY, Object, MapId);
+<-  mark(NX, NY, Object, MapId);
     .
    
 +!insert_into_map(X,Y,Object,MapId)
@@ -74,16 +71,14 @@ axis_center(S,C):-C=(S)div(2).
       
       
 +!replicate_map_x(X,Y,Object,MapId,Times) : size_x(SX) & X+SX < SX*(Times+1) & not(gps_map(X+SX,Y,Object,MapId))
-   <-  mark(X+SX,Y, Object, MapId);
-       .print("================== replicating ", from(X,Y,Object,MapId,Times), " to ", mark(X+SX,Y, Object, MapId)).
-       //!replicate_map_x(X+SX,Y,Object,MapId,Times).        
+   <-  mark(X+SX,Y, Object, MapId).
+           
 +!replicate_map_x(X,Y,Object,MapId,Times).   
 
 
 +!replicate_map_y(X,Y,Object,MapId,Times) : size_y(SY) & Y+SY < SY*(Times+1) & not(gps_map(X,Y+SY,Object,MapId))
-   <-  mark(X,Y+SY, Object, MapId);
-       .print("xxxxxxxxxxxxxxxxxx replicating ", from(X,Y,Object,MapId,Times), " to ", mark(X,Y+SY, Object, MapId)).
-       //!replicate_map_x(X+SX,Y,Object,MapId,Times).        
+   <-  mark(X,Y+SY, Object, MapId).
+           
 +!replicate_map_y(X,Y,Object,MapId,Times).   
 
 +!areyou(_,_,_,_,_,_,_,_). 
