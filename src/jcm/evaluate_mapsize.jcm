@@ -2,7 +2,7 @@ mas individualist {
 
 agent agentA : strategies/explorer.asl { 
     join : envA 
-    instances: 50
+    instances: 15
 } 
 
 agent updateMapSize: exploration/updateMapSize.asl {
@@ -17,7 +17,7 @@ agent evaluateMapSize: exploration/evaluateMapSize.asl {
 
 agent agentB: strategies/explorer.asl{
     join: envB
-    instances: 50
+    instances: 15
 }
 
 workspace envA {
