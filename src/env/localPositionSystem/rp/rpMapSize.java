@@ -74,7 +74,7 @@ public class rpMapSize extends rp {
      */
     private int checkAgreement(Map<Integer,Integer> map) {
         int largestSize = -1;
-        int MINIMUM = 5; //minimal votes for agreement
+        int MINIMUM = 10; //minimal votes for agreement
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             if(largestSize==-1 || entry.getValue()>map.get(largestSize))
                 largestSize = entry.getKey();
@@ -101,7 +101,7 @@ public class rpMapSize extends rp {
     }
 
     int adaptSize(int axisSize, int size) {
-    	if(size==0) return 0;
+        if(size==0) return 0;
         int center = axisSize/2;
         if(size>=center)
             return adaptSize(axisSize, size-axisSize);
@@ -166,8 +166,8 @@ public class rpMapSize extends rp {
 
   //disabled due to performance issues. TODO: test and improve
     /*void replicateMapSizeProp(int x, int y, Atom type, Atom mapId, int times) {
-    	
-    	
+        
+        
         int factorX = (x!=0) ? x/Math.abs(x) : 1;
         int factorY = (y!=0) ? y/Math.abs(y) : 1;
         if(x>(size_x/2*-1)&x<(size_x/2)) {  //if x is in the fieldsize
