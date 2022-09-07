@@ -7,7 +7,17 @@
  */
 
 +simStart :
-    step(0) &
+    step(0)
+    <-
+    .drop_all_events;
+    .drop_all_desires;
+    .drop_all_intentions;
+    !drop_beliefs;
+
+    !init_agent;
+.
+
++!init_agent :
     .my_name(NAME) &
     .substring(NAME,ID,6) &
     .substring(NAME,TEAM,5,6) &
@@ -22,13 +32,8 @@
     <-
     .log(warning,"****** Initialising agent");
 
-    .drop_all_events;
-    .drop_all_desires;
-    .drop_all_intentions;
-    !drop_beliefs;
-
-    +exploring;
-    +myposition(0,0);
+    -+exploring;
+    -+myposition(0,0);
     -+last_node(-1,-1); //for stc exploration strategy
     -+current_moving_step(99); //for stc exploration strategy
     -+forward; //for stc strategy
@@ -37,7 +42,7 @@
     if ( ID == "1" & focused(Envterm,ArtCounterTerm,_) ) {
         resetStepCounter(-1);
     }
-    
+
     if ( ID == "1" & focused(Envterm,ArtGPSterm,_) ) {
         resetRP;
     }
@@ -45,8 +50,10 @@
     if ( ID == "1" & focused(Envterm,ArtCFPterm,_) ) {
         resetSimpleCFP;
     }
-    
-    !!start;
+
+    if (not .intend(explore)) {
+        !!start;
+    }
 .
 
 +simStart : // to avoid a flood of register, only agent1 of each team generate the simStart event
@@ -80,10 +87,15 @@
     .abolish(myposition(_,_));
     .abolish(origin(_));
     .abolish(edge(_,_,_,_,_,_)); //from stc exploration strategy
-    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol 
+    .abolish(pending_isme(_,_,_,_,_,_,_,_)); //from meeting protocol
     .abolish(pending_areyou(_,_,_)); //from meeting protocol
-    .abolish(task(_,_,_,_));    
-    .abolish(performing(_,_));    
+    .abolish(task(_,_,_,_));
+    .abolish(performing(_,_));
+
+    .abolish(perform_defender(_));
+    .abolish(defenderSimple(_,_));
+    .abolish(goto_center_goal(_,_,_,_,_));
+    .abolish(defines_places);
 .
 
 /**

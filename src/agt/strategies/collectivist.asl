@@ -42,7 +42,9 @@
     } else {
         .log(warning,"I want to perform the task ",T);
         .abolish(pending_isme(_,_,_,_,_,_,_,_,_)); // discard pending map synchronizations
-        .send(coordinator,achieve,find_helper(BH,ME,T,MAP));
+        .substring(ME,TEAM,5,6);
+        .concat(coordinator,TEAM,COORD);
+        .send(COORD,achieve,find_helper(BH,ME,T,MAP));
     }
 .
 +!perform_task(T).// <- .log(warning,"Could not perform ",T).
@@ -119,7 +121,9 @@
     !submit_task(T);
     .broadcast(tell,unwanted_task(T));
 
-    .send(coordinator,tell,task_done(T,ME,Helper));
+    .substring(ME,TEAM,5,6);
+    .concat(coordinator,TEAM,COORD);
+    .send(COORD,tell,task_done(T,ME,Helper));
 
     // In case submit did not succeed
     .log(warning,"Dropping blocks for ",T);
@@ -132,12 +136,16 @@
 +origin(MAP):
     .my_name(ME)
     <-
-    .send(coordinator,achieve,inform_map(ME,MAP));
+    .substring(ME,TEAM,5,6);
+    .concat(coordinator,TEAM,COORD);
+    .send(COORD,achieve,inform_map(ME,MAP));
 .
 +status(restarted):
     .my_name(ME)
     <-
-    .send(coordinator,tell,restarted(ME));
+    .substring(ME,TEAM,5,6);
+    .concat(coordinator,TEAM,COORD);
+    .send(COORD,tell,restarted(ME));
 .
 
 /**

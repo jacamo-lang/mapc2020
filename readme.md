@@ -6,7 +6,19 @@ JaCaMo team for [MAPC 2020](https://multiagentcontest.org/2020/)
 Requirements:
 - jdk >= 13
 
-Execute `./gradlew run`, press enter to start the simulation, and see the execution on a [browser](http://127.0.0.1:8000).
+# Running local server and client together
+
+1. Edit the script `/clientconf/createFile.sh`, setting on both teams the `host` parameter to `localhost`, `password` to `1`, and set the parameter `username` to `agentA%d` and `agentB%d` on team A and B respectivelly. 
+2. Execute the script to create the client configuration files.
+3. Make sure the server is being launched by setting the instruction `Server.main(...)` at the file `src/java/runMAPC2020/Control.java`.
+4. Execute the default strategy running `./gradlew run`, press enter to start the simulation, and see the execution on a [browser](http://127.0.0.1:8000). You can set another strategy giving arguments, for instance: `./gradlew run --args="src/jcm/individualist.jcm`
+
+# Running for the competition (just client side)
+
+1. Edit the script `/clientconf/createFile.sh`, setting on both teams configuration the `host`, `password`, and `username` that will be used for the competition (e.g.: `agentcontest1.in.tu-clausthal.de`, `some-password`, `agentJaCaMo_Builders%d`). In this case, you can set teamA to play on a server (e.g. `agentcontest1.in.tu-clausthal.de`) and team B to play on a second server (e.g. `agentcontest2.in.tu-clausthal.de`). 
+2. Execute the script to create the client configuration files.
+3. Make sure the server is NOT being launched removing/commenting the instruction `Server.main(...)` at the file `src/java/runMAPC2020/Control.java`.
+4. Execute `./gradlew run --args="src/jcm/teamA.jcm` or `./gradlew run --args="src/jcm/teamB.jcm` according to the server.
 
 # Configuring an Eclipse Project
 
@@ -86,14 +98,14 @@ mapc2020/
 * Each round usually has 750 steps.
 * The agents have to explore the area and map it to properly navigate and accomplish tasks.
 * Tasks ask for delivering some structures composed by blocks (b0, b1 or b2) which must be attached to the agent that has accepted the task and must be delivered on goal areas. The blocks must be positioned exactly as specified by the task and only the agent must be on a goal square. And the given deadline (in steps) for the task must be respected in order to get a reward.
-* Tasks rewards falls dramatically each step.
+* Tasks rewards falls dramatically each step until they get their minimum reward. For instance, by default a single block task gives at least `1` point and a 2 blocks task gives `4` points.
 * Normal terrains, `goal` areas, `dispensers` and `taskboards` are walkable, but `obstacles` or terrains occupied by agents/`entities` or `blocks` are not.
-* To attach a block the agent must go to an adjacent position of a `dropped block` to grab it (?is necessary a kind of request or just attach?), or it can go to an adjacent position (?is it possible to request a block while occupying a dispenser?) of a specific `dispenser` to request and attach it.
-* The whole local simulation is composed by three rounds, the first starts with 15 agents and the other ones with 50 agents.
+* To attach a block the agent must go to an adjacent position of a `dropped block` to attach it, or it can go to an adjacent position of a specific `dispenser` to request and attach it.
+* The whole local simulation is composed by three rounds, the first starts with 15 agents and the other ones with 30 and 50 agents respectivelly.
 ** Currently, the strategy for the qualification is starting with 50 agents. In the first round, only 15 agents take place in the simulation which does not bring major problems.
 ** Notice that `src/agt/simulation` provides libraries to deal with the end of a round in order to clean agents' mids and artifacts.
 * There are two teams (`a` and `b`). In most of our tests we are developing the team `a` and running against `b` composed by `do_nothing` agents, i.e., these agents just `skip` their actions every step.
-* On each team, agents identifications start from the number 1 (e.g.: agenta1, agenta2,... and, agentb1, agentb2,...)
+* Default agents' identifications start with the word `agent`, followed by the team identification (`A` or `B`) and an unique number for each team starting from the number 1 (e.g.: agentA1, agentA2,... and, agentB1, agentB2,...)
 
 # Developing new strategies
 

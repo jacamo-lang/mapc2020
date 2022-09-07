@@ -1,6 +1,6 @@
 mas collectivist {
 
-agent coordinator : strategies/collectivist_coordinator.asl
+agent coordinatorA : strategies/collectivist_coordinator.asl
 
 agent agentA : strategies/collectivist.asl {
     //ag-bb-class: bb.FullTextPersistentBB

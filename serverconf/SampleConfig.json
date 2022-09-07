@@ -11,7 +11,7 @@
     "logPath" : "logs",
     "replayPath" : "replays",
     "maxPacketLength" : 65536,
-    "waitBetweenSimulations" : 5000
+    "waitBetweenSimulations" : 15000
   },
 
   "manual-mode" : [
